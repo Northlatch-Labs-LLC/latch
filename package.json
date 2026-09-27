@@ -46,7 +46,8 @@
     "architecture:report": "node scripts/architecture/architecture-check.mjs report",
     "architecture:baseline:update": "node scripts/architecture/architecture-check.mjs baseline:update",
     "architecture:context": "node scripts/architecture/architecture-check.mjs context",
-    "doctor": "node scripts/latch-doctor.mjs"
+    "doctor": "node scripts/latch-doctor.mjs",
+    "latch": "node scripts/latch.mjs"
   },
   "dependencies": {
     "border-beam": "^1.0.1",

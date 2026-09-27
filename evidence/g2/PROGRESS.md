@@ -6,7 +6,7 @@ every slice, commit + push per slice. This file updates as slices land.
 | # | slice | state | evidence |
 | --- | --- | --- | --- |
 | 0 | design language codified (approved direction) | 🟢 done+gated | product/identity/design-tokens.yaml |
-| 1 | gateway-first launcher: one-key env → auto provider config → harness | 🔵 in progress | this file + demo run |
+| 1 | gateway-first launcher: one-key env → auto provider config → harness | 🟢 done+gated | evidence/g2/slice1-launcher.txt (`pnpm run latch`) |
 | 2 | binary rebrand end to end | ⚪ next session | — |
 | 3 | signed installer + `curl \| sh` (G3 packaging) | ⚪ next session | — |
 

@@ -1,0 +1,17 @@
+# G2 slice 1 — gateway-first launcher — 2026-09-27T23:02:18Z
+
+pnpm run latch = one-key product entry: LATCH_API_KEY + LATCH_GATEWAY_URL -> live catalog -> generated provider config (0600) -> harness exec. Thin-fork: zero upstream file edits (INV-1); no npm (INV-11).
+
+## End-to-end run (mock gateway :8787)
+    $ LATCH_HOME=/tmp/latch-home2 LATCH_GATEWAY_URL=http://127.0.0.1:8787 LATCH_API_KEY=latch-key-pro pnpm run latch -p "Reply with exactly: LATCH GATEWAY-FIRST OK"
+mock latch-small reply #3: LATCH BOOT OK
+launcher-exit=0
+
+## Catalog-driven proof (gateway serving sentinel-x/sentinel-y -> config offers exactly those)
+            "personalModelIds": [
+              "sentinel-x",
+              "sentinel-y"
+            ],
+            "modelOrder": [
+
+## Gates: tests=0 lint=0 brand=0 typecheck=0 (brand-lint caught and rejected an upstream-name leak in product/docs — fixed by launcher-first recipe)

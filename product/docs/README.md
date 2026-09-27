@@ -23,19 +23,13 @@ Product-facing documentation for the Latch overlay.
 ### Boot the harness against the local gateway
 
 ```sh
-pnpm exec tsx scripts/latch-mock-gateway.mts &        # metered gateway on :8787
-cp scripts/latch-provider-config.example.json /tmp/latch-provider-config.json
-ZCODE_DATA_BASE_DIR=/tmp/latch-home \
-ZCODE_PERSONAL_PROVIDER_CONFIG_FILE=/tmp/latch-provider-config.json \
-  node dist/runtime/zcode/bin/zcode.mjs -p "any prompt"
+pnpm exec tsx scripts/latch-mock-gateway.mts &     # metered gateway on :8787
+LATCH_GATEWAY_URL=http://127.0.0.1:8787 LATCH_API_KEY=latch-key-pro \
+  pnpm run latch -p "any prompt"
 ```
 
-The config template points the harness at the mock gateway
-(`openai-chat-completions`, bearer key `latch-key-pro`, default model
-`latch-small`); the gateway logs every call's metered cost.
-
-## Design language
-
-`../identity/design-tokens.yaml` is the token source of record for all
-surfaces: full expression on the product site, token subset in the harness
-UI, mono micro-labels for anything a user is billed by.
+`pnpm run latch` is the product entry point: it reads the gateway target
+and unified key from the environment, fetches the live model catalog,
+generates the provider config under the product config dir, and execs the
+harness. The gateway meters every call; `scripts/latch-provider-config.example.json`
+documents the generated shape.
