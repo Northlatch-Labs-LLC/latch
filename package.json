@@ -114,7 +114,8 @@
       "@ai-sdk/provider-utils": ">=4.0.33",
       "nanoid": ">=5.1.16",
       "linkify-it": ">=5.0.1",
-      "uuid": ">=11.1.1"
+      "uuid": ">=11.1.1",
+      "lodash-es": ">=4.18.0"
     },
     "patchedDependencies": {
       "@arms/rum-electron@0.0.3": "patches/@arms__rum-electron@0.0.3.patch",
