@@ -1,0 +1,18 @@
+# Latch harness end-to-end — 2026-09-27T22:34:25Z
+
+Build (from checkout, no npm publication): pnpm build:zcode --base-url http://127.0.0.1/zcode/deps/zcode/ → BUILD_EXIT=0
+Bundle: dist/zcode/releases/3.14.3/zcode-3.14.3.tar.gz → dist/runtime/zcode/bin/zcode.mjs
+3.14.3
+
+Provider config: /tmp/latch-provider-config.json (openai-chat-completions → http://127.0.0.1:8787/v1, Bearer latch-key-pro, default model latch-small)
+Mock gateway: scripts/latch-mock-gateway.mts on :8787
+
+## One-shot run
+    $ ZCODE_DATA_BASE_DIR=/tmp/latch-home ZCODE_PERSONAL_PROVIDER_CONFIG_FILE=/tmp/latch-provider-config.json \
+        node dist/runtime/zcode/bin/zcode.mjs -p "Reply with exactly: LATCH BOOT OK"
+mock latch-small reply #2: LATCH BOOT OK
+cli-exit=0
+
+## Gateway metering (same run)
+[mock-gateway] call 1: latch-small pt=8443 ct=24 cost=$0.004257 session=$0.004257
+[mock-gateway] call 2: latch-small pt=8451 ct=24 cost=$0.004261 session=$0.008519
