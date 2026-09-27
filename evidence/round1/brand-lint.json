@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-27T22:24:34.973Z",
+  "generatedAt": "2026-09-27T23:02:11.993Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -8,7 +8,7 @@
   ],
   "strict": {
     "scope": "git-tracked files under product/ excluding product/identity/brand.yaml",
-    "filesScanned": 4,
+    "filesScanned": 5,
     "violations": [],
     "clean": true
   },
@@ -23,11 +23,11 @@
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7084,
-    "filesWithOccurrences": 2991,
-    "totalOccurrences": 30111,
+    "filesScanned": 7095,
+    "filesWithOccurrences": 2992,
+    "totalOccurrences": 30124,
     "byTerm": {
-      "ZCode": 28978,
+      "ZCode": 28991,
       "Z.ai": 257,
       "GLM": 876
     },
@@ -7652,13 +7652,20 @@
         "total": 252
       },
       {
+        "file": "evidence/g1/harness-e2e.txt",
+        "counts": {
+          "ZCode": 11
+        },
+        "total": 11
+      },
+      {
         "file": "evidence/round1/brand-lint.json",
         "counts": {
-          "ZCode": 4218,
+          "ZCode": 4220,
           "Z.ai": 72,
           "GLM": 109
         },
-        "total": 4399
+        "total": 4401
       },
       {
         "file": "evidence/round1/dependency-audit.json",
