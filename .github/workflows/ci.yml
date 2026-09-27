@@ -18,6 +18,13 @@ jobs:
         with:
           node-version: 22
 
+      # The workspace build scripts drive pnpm filters (packageManager pin);
+      # corepack ships with Node and activates exactly that pinned version.
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.33.2 --activate
+
       - name: Install dependencies
         run: npm install
 
