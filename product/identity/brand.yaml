@@ -1,0 +1,10 @@
+# Latch brand truth — single source of record for product identity fields.
+# scripts/brand-lint.mjs treats this file as the only place under product/
+# allowed to carry upstream names.
+product_name: Latch
+binary_name: latch
+config_dir: ~/.latch/
+gateway_base_url: https://gateway.xlaunch.work
+billing_url: https://billing.xlaunch.work
+upstream_remote: https://github.com/zai-org/ZCode.git
+overlay_paths: ["product/*"]

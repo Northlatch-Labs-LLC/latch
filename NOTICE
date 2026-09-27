@@ -1,0 +1,11 @@
+Latch
+Copyright 2026 Northlatch Labs LLC
+
+This distribution is a fork of zai-org/ZCode, licensed under the Apache
+License, Version 2.0 (see the LICENSE file in this directory), with
+modifications by Northlatch Labs LLC.
+
+The upstream project's own notices are preserved unmodified in NOTICE.md, and
+third-party component notices are preserved in THIRD-PARTY-NOTICES.md. This
+file does not replace them; it records the fork's derivation and the party
+responsible for the modifications.
