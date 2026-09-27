@@ -1,0 +1,52 @@
+{
+  "node": "v26.7.0",
+  "npm": "12.0.2",
+  "criticals": 0,
+  "highs": 3,
+  "moderates": 0,
+  "lows": 0,
+  "topFindings": [
+    {
+      "name": "@release-it/conventional-changelog",
+      "severity": "high",
+      "range": "10.0.0 - 10.0.6",
+      "fixAvailable": {
+        "name": "@release-it/conventional-changelog",
+        "version": "12.0.2",
+        "isSemVerMajor": true
+      },
+      "path": "node_modules/@release-it/conventional-changelog"
+    },
+    {
+      "name": "release-it",
+      "severity": "high",
+      "range": "18.0.0-next.0 - 19.2.4",
+      "fixAvailable": {
+        "name": "release-it",
+        "version": "21.1.0",
+        "isSemVerMajor": true
+      },
+      "path": "node_modules/release-it"
+    },
+    {
+      "name": "undici",
+      "severity": "high",
+      "range": "<=6.27.0",
+      "fixAvailable": {
+        "name": "release-it",
+        "version": "21.1.0",
+        "isSemVerMajor": true
+      },
+      "path": "node_modules/undici"
+    }
+  ],
+  "fixPlan": [
+    "Bump root devDependency release-it from ^19.2.4 to ^21.1.0 (package.json:69; npm audit fixAvailable {name: release-it, version: 21.1.0, isSemVerMajor: true} - a breaking major bump; re-verify the release workflow after bumping).",
+    "Bump root devDependency @release-it/conventional-changelog from ^10.0.6 to ^12.0.2 (package.json:55; npm audit fixAvailable {version: 12.0.2, isSemVerMajor: true} - a breaking major bump; re-verify conventional-changelog generation after bumping).",
+    "These two bumps pull undici >= 6.28.0 transitively (installed today: undici@6.23.0 via release-it@19.2.4), which clears all 12 undici advisories (GHSA-f269-vfmq-vjvj, GHSA-2mjp-6q6p-2qxm, GHSA-vrm6-8vpv-qv8q, GHSA-v9p9-hfj2-hcw8, GHSA-4992-7rv2-5pvq, GHSA-p88m-4jfj-68fv, GHSA-vxpw-j846-p89q, GHSA-g8m3-5g58-fq7m, GHSA-8xcm-r25x-g524, GHSA-m8rv-5g2x-5cg5, GHSA-v3r7-h72x-cjcm, GHSA-35p6-xmwp-9g52). Verify with: npm ls undici",
+    "Alternative if the two major bumps must wait: pin undici via a root override - npm form: add \"overrides\": {\"undici\": \"^6.28.0\"} to the root package.json; pnpm form (this repo declares packageManager pnpm@10.33.2): add \"undici\": \"^6.28.0\" inside the existing pnpm.overrides block (package.json:82-86). ^6.28.0 stays within undici major 6 (semver-compatible) and exceeds every fixed-in threshold in the advisories; release-it is the only undici consumer in this tree.",
+    "Do NOT run npm audit fix --force blindly: --force is what applies release-it@21.1.0 but can also pull unrelated breaking changes; prefer the explicit bumps above.",
+    "After applying 1-2 (or 4), re-run: npm audit --json  ... and confirm metadata.vulnerabilities.total === 0.",
+    "Coverage caveat (do not skip): this npm audit covers only the ROOT package tree (337 packages installed, 444 deps in metadata) because the root package.json has no npm \"workspaces\" field; the workspace globs (packages/*, apps/zcode-cli, apps/zcode-cli/packages/*, apps/zcode-cli/tools/*) are declared in pnpm-workspace.yaml only. Run pnpm audit for whole-repo coverage; nothing was applied in this round."
+  ]
+}
