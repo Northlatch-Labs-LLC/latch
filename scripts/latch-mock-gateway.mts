@@ -20,6 +20,29 @@ const RATES: Record<string, { prompt: number; completion: number }> = {
 
 let served = 0;
 let spentUsd = 0;
+/** Last metered calls, newest last — the `/` status page renders these. */
+const calls: { n: number; time: string; model: string; promptTokens: number; completionTokens: number; costUsd: number }[] = [];
+
+/** Human status page at `/` — the gateway is an API, so the root explains
+ *  itself instead of 401-ing a browser. Auth stays mandatory on /v1/*. */
+function statusPage(): string {
+  const rows = [...calls]
+    .reverse()
+    .map(
+      (c) =>
+        `<tr><td>${c.n}</td><td>${c.time}</td><td>${c.model}</td><td>${c.promptTokens}</td><td>${c.completionTokens}</td><td>$${c.costUsd.toFixed(6)}</td></tr>`,
+    )
+    .join('\n');
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Latch mock gateway</title>
+<style>body{font-family:ui-sans-serif,system-ui;margin:2rem;color:#1a1a1a}table{border-collapse:collapse;margin-top:1rem}th,td{border:1px solid #ddd;padding:.35rem .7rem;text-align:left;font-variant-numeric:tabular-nums}th{background:#f5f5f5}h1{font-size:1.2rem}code{background:#f1f1f1;padding:.1rem .3rem;border-radius:3px}</style>
+</head><body>
+<h1>Latch mock gateway — metering live</h1>
+<p><strong>${served}</strong> completions metered, <strong>$${spentUsd.toFixed(6)}</strong> accumulated this process.</p>
+<p>API surface: <code>GET /v1/models</code>, <code>POST /v1/chat/completions</code> — every <code>/v1/*</code> request must carry <code>Authorization: Bearer latch-key-pro</code>; anything else is refused with 401.</p>
+<table><tr><th>#</th><th>time</th><th>model</th><th>prompt</th><th>completion</th><th>cost</th></tr>
+${rows || '<tr><td colspan="6">no calls yet — run the harness one-shot to see metering rows appear</td></tr>'}</table>
+</body></html>`;
+}
 
 const server = createServer((req, res) => {
   const chunks: Buffer[] = [];
@@ -31,6 +54,13 @@ const server = createServer((req, res) => {
       res.end(JSON.stringify(body));
     };
     if (auth !== `Bearer ${KEY}`) {
+      // Unauthenticated: /v1/* is refused (the one-key contract); the root
+      // serves the human status page so a browser sees metering, not a 401.
+      if (!(req.url ?? '').startsWith('/v1/')) {
+        res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+        res.end(statusPage());
+        return;
+      }
       send(401, { error: { message: 'invalid api key', type: 'invalid_request_error', code: 'invalid_api_key' } });
       return;
     }
@@ -58,6 +88,15 @@ const server = createServer((req, res) => {
         (promptTokens * RATES[model].prompt + completionTokens * RATES[model].completion) / 1000;
       served += 1;
       spentUsd += costUsd;
+      calls.push({
+        n: served,
+        time: new Date().toISOString().slice(11, 19),
+        model,
+        promptTokens,
+        completionTokens,
+        costUsd,
+      });
+      if (calls.length > 50) calls.shift();
       const content = `mock ${model} reply #${served}: LATCH BOOT OK`;
       const usage = {
         prompt_tokens: promptTokens,
