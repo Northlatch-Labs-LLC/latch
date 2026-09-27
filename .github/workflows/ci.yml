@@ -31,6 +31,11 @@ jobs:
       - name: Test
         run: npm test --if-present
 
+      # The repo's tsc -b resolves @zcode/* subpaths through built dist output,
+      # so the workspace packages must be built before typecheck can see them.
+      - name: Build workspace packages
+        run: npm run build:bootstrap
+
       - name: Typecheck
         run: npm run typecheck --if-present
 
