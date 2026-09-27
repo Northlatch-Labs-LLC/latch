@@ -1,0 +1,36 @@
+# Latch design language — the token source of record.
+# Direction approved by the founder 2026-09-27 (reference: SceneAI "Mundfish
+# Hero Section" — direction only; we build our own assets, lift none).
+#
+# Surface rules:
+#   product site + marketing .... full expression (hero, grid, centerpiece)
+#   harness UI (TUI/desktop) .... token subset, calm density, no brutalist hero
+#   metering/cost readouts ...... mono micro-labels, amber accent
+version: 1
+
+palette:
+  bone: "#F2EFE9"                 # base surface (marketing, light surfaces)
+  ink: "#0A0A0A"                  # type, hairlines, dark surfaces
+  amber: "#E8A33D"                # THE single warm accent — live/metering state
+  signal_green: "#3D7A4E"         # pass / success only
+  signal_red: "#B3452F"           # fail / danger only
+  grid_line: "rgba(10,10,10,0.08)" # hairline technical grid on bone
+
+type:
+  display: "massive clipped sans, tight tracking, sentence case, can sit under the centerpiece"
+  body: "regular sans, generous leading"
+  micro: "monospace, uppercase, letter-spaced index labels (00.1, +18K NETWORK)"
+
+layout:
+  hairline_technical_grid: true    # engineering-schematic framing modules
+  corner_crop_marks: true          # print registration marks on hero corners
+  single_centerpiece: true         # exactly one hero render, never two
+  implicit_cta: true               # CTAs read as text until hover/press
+
+motion:
+  character: "slow mechanical reveals, 200-400ms ease-out, no bounce"
+
+rules:
+  - one accent color per surface, and it is amber unless semantically pass/fail
+  - never fill a surface with more than one large visual asset
+  - every number a user is billed by renders in mono micro-label style

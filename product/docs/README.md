@@ -33,3 +33,9 @@ ZCODE_PERSONAL_PROVIDER_CONFIG_FILE=/tmp/latch-provider-config.json \
 The config template points the harness at the mock gateway
 (`openai-chat-completions`, bearer key `latch-key-pro`, default model
 `latch-small`); the gateway logs every call's metered cost.
+
+## Design language
+
+`../identity/design-tokens.yaml` is the token source of record for all
+surfaces: full expression on the product site, token subset in the harness
+UI, mono micro-labels for anything a user is billed by.
