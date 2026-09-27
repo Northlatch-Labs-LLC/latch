@@ -1,0 +1,29 @@
+=== Latch G1 end-to-end demo (mock gateway on http://127.0.0.1:51796) ===
+
+Latch doctor
+  PASS  config        gateway URL http://127.0.0.1:51796 (from LATCH_GATEWAY_URL)
+  PASS  key           LATCH_API_KEY is set (value hidden)
+  PASS  reachability  answered HTTP 200 within 5s
+  PASS  auth          credential accepted
+  PASS  catalog       2 models: latch-small, latch-large
+  PASS  provider      @latch/provider-gateway entry imports cleanly (19 exports)
+all checks passed
+
+catalog: latch-small, latch-large
+
+live metering:
+  call  1  latch-small  prompt  120  completion   40  cost $0.000120  running $0.000120
+  call  2  latch-large  prompt  157  completion   93  cost $0.001866  running $0.001986
+  call  3  latch-large  prompt  194  completion  146  cost $0.002772  running $0.004758
+  call  4  latch-small  prompt  231  completion  199  cost $0.000414  running $0.005172
+  call  5  latch-large  prompt  268  completion  252  cost $0.004584  running $0.009756
+  call  6  latch-large  prompt  305  completion   45  cost $0.001590  running $0.011346
+  call  7  latch-small  prompt  342  completion   98  cost $0.000318  running $0.011664
+  call  8  latch-large  prompt  379  completion  151  cost $0.003402  running $0.015066
+  call  9  latch-large  prompt  416  completion  204  cost $0.004308  running $0.019374
+  call 10  latch-small  prompt  453  completion  257  cost $0.000612  running $0.019986
+  call 11  latch-large  prompt  490  completion   50  cost $0.002220  running $0.022206
+  call 12  latch-large  prompt  527  completion  103  cost $0.003126  running $0.025332
+
+reconciliation: metered 3¢ vs arithmetic 3¢ → EXACT
+demo-exit=0

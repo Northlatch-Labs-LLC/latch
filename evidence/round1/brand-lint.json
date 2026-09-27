@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-27T11:45:49.520Z",
+  "generatedAt": "2026-09-27T22:24:34.973Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -8,7 +8,7 @@
   ],
   "strict": {
     "scope": "git-tracked files under product/ excluding product/identity/brand.yaml",
-    "filesScanned": 3,
+    "filesScanned": 4,
     "violations": [],
     "clean": true
   },
@@ -23,13 +23,13 @@
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7074,
-    "filesWithOccurrences": 2986,
-    "totalOccurrences": 25704,
+    "filesScanned": 7084,
+    "filesWithOccurrences": 2991,
+    "totalOccurrences": 30111,
     "byTerm": {
-      "ZCode": 24751,
-      "Z.ai": 185,
-      "GLM": 768
+      "ZCode": 28978,
+      "Z.ai": 257,
+      "GLM": 876
     },
     "rootReadme": {
       "file": "README.md",
@@ -873,6 +873,13 @@
           "Z.ai": 6
         },
         "total": 18
+      },
+      {
+        "file": ".github/workflows/ci.yml",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
       },
       {
         "file": ".github/workflows/upstream-sync.yml",
@@ -7643,6 +7650,36 @@
           "GLM": 224
         },
         "total": 252
+      },
+      {
+        "file": "evidence/round1/brand-lint.json",
+        "counts": {
+          "ZCode": 4218,
+          "Z.ai": 72,
+          "GLM": 109
+        },
+        "total": 4399
+      },
+      {
+        "file": "evidence/round1/dependency-audit.json",
+        "counts": {
+          "ZCode": 3
+        },
+        "total": 3
+      },
+      {
+        "file": "evidence/round1/repository.json",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "evidence/round1/sbom.cdx.json",
+        "counts": {
+          "ZCode": 4
+        },
+        "total": 4
       },
       {
         "file": "knip.json",
@@ -20853,9 +20890,9 @@
         "file": "pnpm-lock.yaml",
         "counts": {
           "ZCode": 117,
-          "GLM": 5
+          "GLM": 4
         },
-        "total": 122
+        "total": 121
       },
       {
         "file": "pnpm-workspace.yaml",

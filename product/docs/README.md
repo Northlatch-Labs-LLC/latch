@@ -6,3 +6,16 @@ Product-facing documentation for the Latch overlay.
 - Brand facts (names, URLs, paths) come from `../identity/brand.yaml`.
 - Keep this tree free of upstream brand strings; `../../scripts/brand-lint.mjs`
   enforces that for everything under `product/`.
+
+## Diagnostics and demo
+
+- `pnpm run doctor` (or `node scripts/latch-doctor.mjs`, `--json` for CI) checks
+  an install in six steps — config URL, key presence (value never printed),
+  gateway reachability with a 5s budget, credential acceptance, catalog parse,
+  and provider package importability — and exits non-zero unless every check
+  passes. Against a dead gateway it fails loudly in under a second.
+- `pnpm exec tsx scripts/latch-demo.mts` boots the mock gateway on an ephemeral
+  localhost port, runs the doctor against it, then drives metered chat
+  completions through the real provider client, printing per-call costs and an
+  exact-to-the-cent reconciliation. It is the fastest way to see the product
+  run end to end from this checkout.
