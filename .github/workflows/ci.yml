@@ -1,5 +1,9 @@
 name: CI
 
+# Blocking gate ladder (SYNAPSE-HANDOUT §4.4 / DevOps standard). The repo is a
+# pnpm workspace (pnpm-workspace.yaml, packageManager pin), so every step runs
+# under that exact pnpm via corepack — an npm install produces a node_modules
+# layout the pnpm-filtered build scripts cannot execute against.
 on:
   push:
     branches: [main]
@@ -7,7 +11,7 @@ on:
 
 jobs:
   ci:
-    name: CI (brand-lint, audit, test, typecheck, lint)
+    name: CI (brand-lint, audit, product tests, build, typecheck, lint)
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -18,33 +22,31 @@ jobs:
         with:
           node-version: 22
 
-      # The workspace build scripts drive pnpm filters (packageManager pin);
-      # corepack ships with Node and activates exactly that pinned version.
-      - name: Enable pnpm
+      - name: Enable the pinned pnpm
         run: |
           corepack enable
           corepack prepare pnpm@10.33.2 --activate
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Brand lint
         run: node scripts/brand-lint.mjs
 
       # Honest gate: if the fresh audit reports criticals, this job is red.
-      - name: npm audit (production dependencies, critical only)
-        run: npm audit --omit=dev --audit-level=critical
+      - name: Dependency audit (production, critical only)
+        run: pnpm audit --prod --audit-level=critical
 
-      - name: Test
-        run: npm test --if-present
+      - name: Product tests
+        run: pnpm run test:product
 
       # The repo's tsc -b resolves @zcode/* subpaths through built dist output,
       # so the workspace packages must be built before typecheck can see them.
       - name: Build workspace packages
-        run: npm run build:bootstrap
+        run: pnpm run build:bootstrap
 
       - name: Typecheck
-        run: npm run typecheck --if-present
+        run: pnpm run typecheck
 
       - name: Lint
-        run: npm run lint --if-present
+        run: pnpm run lint
