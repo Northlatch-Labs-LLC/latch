@@ -19,3 +19,17 @@ Product-facing documentation for the Latch overlay.
   completions through the real provider client, printing per-call costs and an
   exact-to-the-cent reconciliation. It is the fastest way to see the product
   run end to end from this checkout.
+
+### Boot the harness against the local gateway
+
+```sh
+pnpm exec tsx scripts/latch-mock-gateway.mts &        # metered gateway on :8787
+cp scripts/latch-provider-config.example.json /tmp/latch-provider-config.json
+ZCODE_DATA_BASE_DIR=/tmp/latch-home \
+ZCODE_PERSONAL_PROVIDER_CONFIG_FILE=/tmp/latch-provider-config.json \
+  node dist/runtime/zcode/bin/zcode.mjs -p "any prompt"
+```
+
+The config template points the harness at the mock gateway
+(`openai-chat-completions`, bearer key `latch-key-pro`, default model
+`latch-small`); the gateway logs every call's metered cost.
