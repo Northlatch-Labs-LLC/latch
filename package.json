@@ -83,7 +83,8 @@
   "pnpm": {
     "overrides": {
       "react": "19.2.7",
-      "react-dom": "19.2.7"
+      "react-dom": "19.2.7",
+      "shell-quote": ">=1.8.4"
     },
     "patchedDependencies": {
       "@arms/rum-electron@0.0.3": "patches/@arms__rum-electron@0.0.3.patch",
