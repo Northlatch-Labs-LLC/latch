@@ -1,0 +1,76 @@
+name: Upstream sync
+
+# Weekly merge of upstream (zai-org/ZCode) main into this fork's main.
+# Opens a PR for review; on merge conflict the job fails so a human resolves it.
+
+on:
+  schedule:
+    # Every Monday 06:00 UTC.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    name: Merge upstream/main and open PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main with full history
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream main
+        run: |
+          git remote add upstream https://github.com/zai-org/ZCode.git
+          git fetch upstream main
+
+      - name: Detect whether upstream has new commits
+        id: changes
+        run: |
+          if git merge-base --is-ancestor upstream/main main; then
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "Upstream main is already merged; nothing to do."
+          else
+            echo "updated=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create sync branch
+        if: steps.changes.outputs.updated == 'true'
+        run: |
+          BRANCH="upstream-sync/$(date +%Y-%m-%d)"
+          echo "BRANCH=$BRANCH" >> "$GITHUB_ENV"
+          git checkout -b "$BRANCH"
+
+      # Exits non-zero on conflict, failing the job so a human resolves it.
+      - name: Merge upstream/main
+        if: steps.changes.outputs.updated == 'true'
+        run: git merge --no-edit upstream/main
+
+      - name: Push sync branch
+        if: steps.changes.outputs.updated == 'true'
+        run: git push origin "$BRANCH"
+
+      - name: Open PR to main
+        if: steps.changes.outputs.updated == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$(gh pr list --head "$BRANCH" --state open --json number --jq length)" -gt 0 ]; then
+            echo "PR for $BRANCH is already open; skipping creation."
+          else
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "Sync upstream zai-org/ZCode main into main" \
+              --body "Automated weekly merge of \`upstream/main\` (zai-org/ZCode) into this repository's \`main\`. Review and merge. If this job failed instead, the merge conflicted and needs manual resolution."
+          fi

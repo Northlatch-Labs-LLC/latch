@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    name: CI (brand-lint, audit, test, typecheck, lint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Brand lint
+        run: node scripts/brand-lint.mjs
+
+      # Honest gate: if the fresh audit reports criticals, this job is red.
+      - name: npm audit (production dependencies, critical only)
+        run: npm audit --omit=dev --audit-level=critical
+
+      - name: Test
+        run: npm test --if-present
+
+      - name: Typecheck
+        run: npm run typecheck --if-present
+
+      - name: Lint
+        run: npm run lint --if-present
