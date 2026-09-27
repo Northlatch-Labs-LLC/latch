@@ -1,0 +1,15 @@
+# Latch gateway price table — usage metering truth for @latch/provider-gateway.
+#
+# Rates are USD per 1k tokens, keyed by model id (the `model` field echoed by
+# POST /v1/chat/completions). Each entry may split prompt (input) and
+# completion (output) rates; a bare decimal rates both alike.
+#
+# The table is optional: a model absent from it is priced at $0, and metering
+# still records its token counts, so the cost HUD shows free usage rather than
+# dropping the request.
+latch-large:
+  prompt: 0.003
+  completion: 0.015
+latch-small:
+  prompt: 0.0005
+  completion: 0.0015

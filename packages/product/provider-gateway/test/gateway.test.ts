@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { createServer, type IncomingHttpHeaders, type Server } from "node:http";
-import type { AddressInfo } from "node:net";
 import test from "node:test";
 import {
   chatCompletion,
@@ -12,61 +10,7 @@ import {
   type ChatCompletionRequest,
   type GatewayConfig,
 } from "../src/index.js";
-
-interface CapturedRequest {
-  method: string;
-  url: string;
-  headers: IncomingHttpHeaders;
-  rawBody: string;
-}
-
-type MockHandler = (
-  request: CapturedRequest,
-  respond: (status: number, body: unknown) => void,
-) => void;
-
-interface MockServer {
-  url: string;
-  requests: CapturedRequest[];
-  close: () => Promise<void>;
-}
-
-/**
- * Local node:http mock gateway. Listens on an ephemeral 127.0.0.1 port so the
- * client under test exercises real fetch + header serialization.
- */
-function startMockServer(handler: MockHandler): Promise<MockServer> {
-  const requests: CapturedRequest[] = [];
-  const server: Server = createServer((req, res) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => {
-      const captured: CapturedRequest = {
-        method: req.method ?? "",
-        url: req.url ?? "",
-        headers: req.headers,
-        rawBody: Buffer.concat(chunks).toString("utf8"),
-      };
-      requests.push(captured);
-      handler(captured, (status, body) => {
-        res.writeHead(status, { "content-type": "application/json" });
-        res.end(JSON.stringify(body));
-      });
-    });
-  });
-  const close = () =>
-    new Promise<void>((resolve, reject) => {
-      // undici keeps the socket pooled; destroy it so close() does not hang.
-      server.closeAllConnections();
-      server.close((error) => (error ? reject(error) : resolve()));
-    });
-  return new Promise((resolve) => {
-    server.listen(0, "127.0.0.1", () => {
-      const address = server.address() as AddressInfo;
-      resolve({ url: `http://127.0.0.1:${address.port}`, requests, close });
-    });
-  });
-}
+import { startMockServer } from "./mock-gateway.js";
 
 test("readConfig defaults the base URL and reads LATCH_API_KEY from the environment", () => {
   const defaults = readConfig({});
@@ -133,7 +77,11 @@ test("chatCompletion posts the authorized JSON shape to /v1/chat/completions", a
       messages: [{ role: "user", content: "ping" }],
     };
     const completion = await chatCompletion(config, request);
-    assert.equal(completion.choices[0]?.message.content, "pong");
+    assert.equal(completion.content, "pong");
+    // No usage object in this response: usage is undefined, metering zeros.
+    assert.equal(completion.usage, undefined);
+    assert.equal(completion.metering.totalTokens, 0);
+    assert.equal(completion.metering.costUsd, 0);
 
     const [captured] = mock.requests;
     assert.ok(captured, "mock gateway received no request");

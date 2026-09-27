@@ -10,6 +10,16 @@
  */
 import type { GatewayConfig } from "./config.js";
 import { GatewayAuthError, GatewayHttpError } from "./errors.js";
+import {
+  ZERO_USAGE,
+  defaultMeteringLog,
+  defaultPriceTable,
+  parseUsage,
+  type MeteringEvent,
+  type MeteringSink,
+  type PriceTable,
+  type Usage,
+} from "./metering.js";
 
 /** One entry of the `/v1/models` catalog. */
 export interface GatewayModel {
@@ -74,17 +84,60 @@ export async function listModels(config: GatewayConfig): Promise<ListModelsRespo
   return parseJsonResponse<ListModelsResponse>("/v1/models", response);
 }
 
-/** `POST {base}/v1/chat/completions` — run a chat completion. */
+/** Result of `POST {base}/v1/chat/completions` with usage accounting. */
+export interface ChatCompletionResult {
+  /** First choice's message content; `""` when the gateway sent no choices. */
+  content: string;
+  /** Parsed `usage` object, or `undefined` when the response carried none. */
+  usage: Usage | undefined;
+  /** The metering event also emitted to the sink (see ChatCompletionOptions). */
+  metering: MeteringEvent;
+}
+
+/** Injection points for `chatCompletion` metering. */
+export interface ChatCompletionOptions {
+  /** Metering sink; defaults to the shared ring buffer (see defaultMeteringLog). */
+  sink?: MeteringSink;
+  /** Price table pricing `costUsd`; defaults to the shipped price-table.yaml. */
+  priceTable?: PriceTable;
+}
+
+/**
+ * `POST {base}/v1/chat/completions` — run a chat completion, metered.
+ *
+ * On a 2xx response the usage object is parsed and a {@link MeteringEvent} is
+ * emitted synchronously to `options.sink` (default: the shared in-memory log)
+ * before the result resolves. A response without a valid `usage` still emits —
+ * with zero tokens and $0 cost — so the cost HUD sees every completion. A
+ * non-2xx response throws from {@link GatewayHttpError} mapping and emits
+ * nothing.
+ */
 export async function chatCompletion(
   config: GatewayConfig,
   request: ChatCompletionRequest,
-): Promise<ChatCompletionResponse> {
+  options: ChatCompletionOptions = {},
+): Promise<ChatCompletionResult> {
   const response = await fetch(`${config.baseUrl}/v1/chat/completions`, {
     method: "POST",
     headers: { ...authHeaders(config), "content-type": "application/json" },
     body: JSON.stringify(request),
   });
-  return parseJsonResponse<ChatCompletionResponse>("/v1/chat/completions", response);
+  const parsed = await parseJsonResponse<ChatCompletionResponse>("/v1/chat/completions", response);
+  const usage = parseUsage(parsed.usage);
+  const model = parsed.model ?? request.model;
+  const metering: MeteringEvent = {
+    model,
+    ...(usage ?? ZERO_USAGE),
+    costUsd: usage ? (options.priceTable ?? defaultPriceTable()).costUsd(model, usage) : 0,
+    requestId: parsed.id ?? "",
+    timestamp: new Date().toISOString(),
+  };
+  (options.sink ?? defaultMeteringLog()).emit(metering);
+  return {
+    content: parsed.choices[0]?.message.content ?? "",
+    usage,
+    metering,
+  };
 }
 
 const MAX_ERROR_BODY_CHARS = 200;

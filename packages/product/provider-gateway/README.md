@@ -19,14 +19,50 @@ stripped; an unset/empty `LATCH_API_KEY` yields `undefined`.
 
 - `readConfig(env?)` — read the configuration above.
 - `listModels(config)` — `GET {base}/v1/models`, returns `{ object, data }`.
-- `chatCompletion(config, request)` — `POST {base}/v1/chat/completions`,
-  OpenAI-compatible JSON body.
+- `chatCompletion(config, request, options?)` — `POST {base}/v1/chat/completions`,
+  OpenAI-compatible JSON body; returns `{ content, usage, metering }` (see
+  "Usage metering" below).
+- `parseUsage(raw)` — parse an OpenAI-compatible usage object
+  (`prompt_tokens`, `completion_tokens`, `total_tokens`) into
+  `{ promptTokens, completionTokens, totalTokens }`; invalid/absent input
+  returns `undefined`.
 - `planGate(model)` — **stub**; see below.
 
 Errors: any non-2xx response throws `GatewayHttpError` (with `status` and the
 raw body); HTTP 401/403 throw its subclass `GatewayAuthError`. A missing API
 key means no Authorization header is sent, so the gateway's 401 surfaces as
 `GatewayAuthError`.
+
+## Usage metering
+
+Every 2xx `chatCompletion` is metered. The result carries the parsed
+`usage`, the first choice's `content`, and a `metering` event:
+
+```ts
+interface MeteringEvent {
+  model: string;          // gateway echo of the model, else the requested one
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  costUsd: number;        // exact; $0 when the model is unpriced or usage absent
+  requestId: string;      // gateway response id ("" when the gateway sent none)
+  timestamp: string;      // ISO-8601
+}
+```
+
+The event is emitted synchronously to `options.sink` before the call resolves;
+without one it goes to the shared `defaultMeteringLog()` — an in-memory ring
+buffer of the last 100 events (`recent()`, oldest → newest) with a
+`subscribe(listener)` API the cost HUD can attach to. A throwing listener
+never breaks the emit.
+
+Costs are priced by `options.priceTable`, defaulting to the optional
+`product/identity/price-table.yaml` (USD per 1k tokens, per model; a model
+absent from the table costs $0; a missing file is an empty table). Rates are
+parsed into integer micro-USD and priced as integer nano-USD, so `costUsd`
+equals its decimal literal exactly — e.g. 1500 prompt tokens at `$0.003`/1k
+plus 500 completion tokens at `$0.015`/1k is exactly `0.012`. A response
+without a valid usage object still emits, with zero tokens and `$0`.
 
 ## Header contract
 
