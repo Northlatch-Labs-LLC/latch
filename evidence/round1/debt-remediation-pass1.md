@@ -8,3 +8,4 @@ desktop is excluded from build:bootstrap and the gate ladder; tracked separately
 
 Gates after overrides: brand-lint ok; product tests 6/6; build:bootstrap green (23.6s);
 typecheck green; lint 0 errors (70 pre-existing style warnings).
+2 vulnerabilities found - 1 moderate, 1 high. Outcome: 180 -> 2 findings (99% cleared); extract-zip (high) has no upstream fix - tracked; see dependency-audit follow-ups.
