@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-28T16:45:28.037Z",
+  "generatedAt": "2026-09-28T22:12:05.170Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -44,11 +44,11 @@
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7103,
+    "filesScanned": 7107,
     "filesWithOccurrences": 2996,
-    "totalOccurrences": 30136,
+    "totalOccurrences": 30117,
     "byTerm": {
-      "ZCode": 28999,
+      "ZCode": 28980,
       "Z.ai": 259,
       "GLM": 878
     },
@@ -4062,9 +4062,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/commands-command.ts",
         "counts": {
-          "ZCode": 22
+          "ZCode": 21
         },
-        "total": 22
+        "total": 21
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/dwf-child-command.ts",
@@ -4104,9 +4104,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/hooks-trust-command.ts",
         "counts": {
-          "ZCode": 11
+          "ZCode": 4
         },
-        "total": 11
+        "total": 4
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/index.ts",
@@ -4125,10 +4125,10 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/login-command.ts",
         "counts": {
-          "ZCode": 7,
+          "ZCode": 6,
           "Z.ai": 1
         },
-        "total": 8
+        "total": 7
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/main.ts",
@@ -4140,9 +4140,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/plugin-host-command.ts",
         "counts": {
-          "ZCode": 26
+          "ZCode": 25
         },
-        "total": 26
+        "total": 25
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/plugins-command-format.ts",
@@ -4161,9 +4161,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/plugins-command.ts",
         "counts": {
-          "ZCode": 11
+          "ZCode": 8
         },
-        "total": 11
+        "total": 8
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/plugins-marketplace-command.ts",
@@ -4182,9 +4182,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/prompt-command.ts",
         "counts": {
-          "ZCode": 18
+          "ZCode": 16
         },
-        "total": 18
+        "total": 16
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/protocol-console.ts",
@@ -4203,9 +4203,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/provider-runtime-env.ts",
         "counts": {
-          "ZCode": 51
+          "ZCode": 47
         },
-        "total": 51
+        "total": 47
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/resume.ts",
@@ -4217,9 +4217,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/run.ts",
         "counts": {
-          "ZCode": 15
+          "ZCode": 14
         },
-        "total": 15
+        "total": 14
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/runtime-event-subscriber.ts",
@@ -4259,9 +4259,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/skills-command.ts",
         "counts": {
-          "ZCode": 22
+          "ZCode": 21
         },
-        "total": 22
+        "total": 21
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/tui-auth.ts",
@@ -4308,9 +4308,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/tui-prompt-handler-runtime.ts",
         "counts": {
-          "ZCode": 10
+          "ZCode": 9
         },
-        "total": 10
+        "total": 9
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/tui-prompt-handler.ts",
@@ -7698,11 +7698,11 @@
       {
         "file": "evidence/round1/brand-lint.json",
         "counts": {
-          "ZCode": 4221,
+          "ZCode": 4224,
           "Z.ai": 73,
           "GLM": 110
         },
-        "total": 4404
+        "total": 4407
       },
       {
         "file": "evidence/round1/dependency-audit.json",
