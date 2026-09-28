@@ -340,7 +340,8 @@ test("G1 metering reconciliation: 100 seeded calls accumulate the arithmetic cos
     let completionTokens = 0;
     let totalTokens = 0;
     for (const [index, event] of sink.events.entries()) {
-      const seed = seeds[index];
+      // The sink records exactly one event per seeded call (asserted above).
+      const seed = seeds[index]!;
       assert.equal(event.model, seed.model);
       assert.equal(event.promptTokens, seed.promptTokens);
       assert.equal(event.completionTokens, seed.completionTokens);

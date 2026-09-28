@@ -26,3 +26,21 @@ export class GatewayAuthError extends GatewayHttpError {
     this.name = "GatewayAuthError";
   }
 }
+
+/**
+ * Spend-cap refusal (HTTP 402) — the gateway enforced a cap server-side
+ * (INV-5). `code` distinguishes `per_call_ceiling_exceeded` from
+ * `session_cap_exceeded`; `retryable` is false for per-call ceilings (a
+ * smaller request may pass) and stated by the gateway for session caps.
+ */
+export class GatewayCapError extends GatewayHttpError {
+  readonly code: string;
+  readonly retryable: boolean;
+
+  constructor(message: string, status: number, body: string, code: string, retryable: boolean) {
+    super(message, status, body);
+    this.name = "GatewayCapError";
+    this.code = code;
+    this.retryable = retryable;
+  }
+}

@@ -12,6 +12,9 @@ import { createServer } from 'node:http';
 
 const PORT = Number(process.env.LATCH_MOCK_PORT ?? 8787);
 const KEY = process.env.LATCH_MOCK_KEY ?? 'latch-key-pro';
+/** U-3 (INV-5): server-side caps enforced at the key. Unset = un-capped. */
+const SESSION_CAP_USD = Number(process.env.LATCH_MOCK_SESSION_CAP_USD ?? '') || null;
+const PER_CALL_CEILING_USD = Number(process.env.LATCH_MOCK_PER_CALL_CEILING_USD ?? '') || null;
 /** Mirrors product/identity/price-table.yaml (USD per 1k tokens). */
 const RATES: Record<string, { prompt: number; completion: number }> = {
   'latch-small': { prompt: 0.0005, completion: 0.0015 },
@@ -38,6 +41,7 @@ function statusPage(): string {
 </head><body>
 <h1>Latch mock gateway — metering live</h1>
 <p><strong>${served}</strong> completions metered, <strong>$${spentUsd.toFixed(6)}</strong> accumulated this process.</p>
+<p>Caps: ${SESSION_CAP_USD === null ? 'session cap unset' : `session cap <strong>$${SESSION_CAP_USD.toFixed(2)}</strong> (remaining <strong>$${Math.max(SESSION_CAP_USD - spentUsd, 0).toFixed(6)}</strong>)`} · ${PER_CALL_CEILING_USD === null ? 'per-call ceiling unset' : `per-call ceiling <strong>$${PER_CALL_CEILING_USD.toFixed(2)}</strong>`} — breaches refuse with HTTP 402 before generating.</p>
 <p>API surface: <code>GET /v1/models</code>, <code>POST /v1/chat/completions</code> — every <code>/v1/*</code> request must carry <code>Authorization: Bearer latch-key-pro</code>; anything else is refused with 401.</p>
 <table><tr><th>#</th><th>time</th><th>model</th><th>prompt</th><th>completion</th><th>cost</th></tr>
 ${rows || '<tr><td colspan="6">no calls yet — run the harness one-shot to see metering rows appear</td></tr>'}</table>
@@ -49,8 +53,17 @@ const server = createServer((req, res) => {
   req.on('data', (c) => chunks.push(c));
   req.on('end', () => {
     const auth = req.headers.authorization;
-    const send = (status: number, body: unknown) => {
-      res.writeHead(status, { 'content-type': 'application/json', 'access-control-allow-origin': '*' });
+    const send = (status: number, body: unknown, extraHeaders: Record<string, string> = {}) => {
+      const headers: Record<string, string> = {
+        'content-type': 'application/json',
+        'access-control-allow-origin': '*',
+        ...extraHeaders,
+      };
+      if (SESSION_CAP_USD !== null) {
+        headers['x-latch-session-spend-usd'] = spentUsd.toFixed(6);
+        headers['x-latch-session-remaining-usd'] = Math.max(SESSION_CAP_USD - spentUsd, 0).toFixed(6);
+      }
+      res.writeHead(status, headers);
       res.end(JSON.stringify(body));
     };
     if (auth !== `Bearer ${KEY}`) {
@@ -86,6 +99,33 @@ const server = createServer((req, res) => {
       const completionTokens = 24;
       const costUsd =
         (promptTokens * RATES[model].prompt + completionTokens * RATES[model].completion) / 1000;
+      // U-3 / INV-5: the gateway refuses BEFORE generating when a cap would
+      // be breached — a projected call over the per-call ceiling, or one that
+      // would push the session past its cap. Refusals meter nothing.
+      if (PER_CALL_CEILING_USD !== null && costUsd > PER_CALL_CEILING_USD) {
+        send(402, {
+          error: {
+            message: `projected cost $${costUsd.toFixed(6)} exceeds the per-call ceiling $${PER_CALL_CEILING_USD.toFixed(6)}`,
+            type: 'insufficient_quota',
+            code: 'per_call_ceiling_exceeded',
+            projected_cost_usd: costUsd,
+            per_call_ceiling_usd: PER_CALL_CEILING_USD,
+          },
+        });
+        return;
+      }
+      if (SESSION_CAP_USD !== null && spentUsd + costUsd > SESSION_CAP_USD) {
+        send(402, {
+          error: {
+            message: `projected session spend $${(spentUsd + costUsd).toFixed(6)} exceeds the session cap $${SESSION_CAP_USD.toFixed(6)}`,
+            type: 'insufficient_quota',
+            code: 'session_cap_exceeded',
+            session_spend_usd: spentUsd,
+            session_cap_usd: SESSION_CAP_USD,
+          },
+        });
+        return;
+      }
       served += 1;
       spentUsd += costUsd;
       calls.push({

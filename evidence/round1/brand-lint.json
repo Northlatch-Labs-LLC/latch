@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-28T15:50:41.769Z",
+  "generatedAt": "2026-09-28T16:45:28.037Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -44,11 +44,11 @@
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7098,
-    "filesWithOccurrences": 2993,
-    "totalOccurrences": 30131,
+    "filesScanned": 7103,
+    "filesWithOccurrences": 2996,
+    "totalOccurrences": 30136,
     "byTerm": {
-      "ZCode": 28994,
+      "ZCode": 28999,
       "Z.ai": 259,
       "GLM": 878
     },
@@ -7680,6 +7680,20 @@
           "ZCode": 11
         },
         "total": 11
+      },
+      {
+        "file": "evidence/g2/l1-runtime-check.txt",
+        "counts": {
+          "ZCode": 2
+        },
+        "total": 2
+      },
+      {
+        "file": "evidence/g2/slice2-rebrand.txt",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
       },
       {
         "file": "evidence/round1/brand-lint.json",
@@ -21026,6 +21040,13 @@
       },
       {
         "file": "scripts/generate-third-party-notices.mjs",
+        "counts": {
+          "ZCode": 2
+        },
+        "total": 2
+      },
+      {
+        "file": "scripts/install.sh",
         "counts": {
           "ZCode": 2
         },

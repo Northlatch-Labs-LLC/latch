@@ -9,7 +9,7 @@
  *   gateway answers 401, which the client maps to `GatewayAuthError`.
  */
 import type { GatewayConfig } from "./config.js";
-import { GatewayAuthError, GatewayHttpError } from "./errors.js";
+import { GatewayAuthError, GatewayCapError, GatewayHttpError } from "./errors.js";
 import {
   ZERO_USAGE,
   defaultMeteringLog,
@@ -153,6 +153,17 @@ async function parseJsonResponse<T>(path: string, response: Response): Promise<T
     if (response.status === 401 || response.status === 403) {
       throw new GatewayAuthError(message, response.status, text);
     }
+    if (response.status === 402) {
+      // Spend-cap refusal (INV-5): the gateway names the cap in the body.
+      const code = parseCapCode(text);
+      throw new GatewayCapError(
+        message,
+        response.status,
+        text,
+        code ?? "cap_exceeded",
+        code !== "session_cap_exceeded",
+      );
+    }
     throw new GatewayHttpError(message, response.status, text);
   }
   try {
@@ -163,5 +174,14 @@ async function parseJsonResponse<T>(path: string, response: Response): Promise<T
       response.status,
       text,
     );
+  }
+}
+
+function parseCapCode(body: string): string | undefined {
+  try {
+    const parsed = JSON.parse(body) as { error?: { code?: unknown } };
+    return typeof parsed.error?.code === "string" ? parsed.error.code : undefined;
+  } catch {
+    return undefined;
   }
 }

@@ -1,0 +1,30 @@
+1. passed  : "mock latch-small reply #6: LATCH BOOT OK" cost=$0.000044
+2. refused : gateway 402 code=per_call_ceiling_exceeded retryable=true
+3. preflight: stopped client-side (projected $0.002025 > ceiling $0.002)
+4. u2 signal: projected call $0.021 crosses 80% of the session cap $0.025
+   one-shot : second projection warns=never fired=true
+5. rail    : spend=$0.000044 cap=$0.025 remaining=$0.024956 events=1
+CAPS-DEMO-OK
+
+# HUD P0 engineering layer — caps loop evidence — 2026-09-28
+
+Above: live demo output (exit 0). The demo drives the REAL client + mock gateway:
+  1. U-1  rail: metered call feeds spend/cap/remaining readings (nano-USD exact)
+  2. U-3  server-side: gateway refuses an over-ceiling call with HTTP 402
+          per_call_ceiling_exceeded BEFORE generating (INV-5 — caps at the gateway)
+  3. U-3  client seam: advisory pre-flight projection stops the same call
+          locally (PerCallCeilingExceededError), no network touched
+  4. U-2  runaway-guard signal: first projection crossing 80% of the session
+          cap warns exactly once (D-d policy — cheaper-model escape — stays open)
+  5. rail render data: spend/cap/remaining/events
+
+New surface (@latch/provider-gateway):
+  src/caps.ts — SessionCapLedger (record/railReading/projectCall/warningFired),
+                estimateCallCostUsd, PerCallCeilingExceededError
+  client.ts   — HTTP 402 maps to GatewayCapError{code, retryable}
+                (per_call_ceiling_exceeded -> retryable=true; session_cap_exceeded -> false)
+  scripts/latch-mock-gateway.mts — LATCH_MOCK_SESSION_CAP_USD /
+                LATCH_MOCK_PER_CALL_CEILING_USD; 402 pre-generation refusals;
+                x-latch-session-spend/remaining-usd headers; status page cap lines
+Gates: test:product 37/37 (7 new caps tests) · pkg typecheck clean · lint 0 errors · brand-lint clean
+Open founder decisions honored: D-c (cap scope default = session, configurable), D-d (no auto-downgrade).

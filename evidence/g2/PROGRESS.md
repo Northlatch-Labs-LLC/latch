@@ -15,6 +15,13 @@ Battle-test readiness (2026-09-28): `latch` installed on the founder's PATH
 verified live (`evidence/g2/l3-gateway-reality.txt`); real-model runs need the
 founder's unified key — env-only switch.
 
+HUD P0 engineering layer (2026-09-28): session caps + rail data + runaway-guard
+signal + gateway 402 cap contract landed in @latch/provider-gateway and the
+mock gateway (`evidence/g2/hud-p0-caps-demo.txt`, 7 new tests, 37/37 green).
+TUI rendering of the rail is the next slice (needs the upstream TUI extension
+point); open founder parameters D-c (cap scope) and D-d (auto-downgrade) are
+config knobs, not assumptions.
+
 Parallel team front: Synapse English localization filed as
 Northlatch-Labs-LLC/synapse#3 (fork Issues enabled first; an initial
 misfile to the upstream repo was closed + scrubbed to neutral text within
