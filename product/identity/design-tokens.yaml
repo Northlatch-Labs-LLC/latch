@@ -17,9 +17,11 @@ palette:
   grid_line: "rgba(10,10,10,0.08)" # hairline technical grid on bone
 
 type:
-  display: "massive clipped sans, tight tracking, sentence case, can sit under the centerpiece"
-  body: "regular sans, generous leading"
-  micro: "monospace, uppercase, letter-spaced index labels (00.1, +18K NETWORK)"
+  display: "Archivo (variable woff2, OFL) — massive clipped sans, tight tracking, sentence case, can sit under the centerpiece"
+  display_alt: "Space Grotesk (OFL) — second hero direction, retro-futurist register"
+  body: "Inter (variable woff2, OFL) — regular sans, generous leading"
+  micro: "JetBrains Mono (variable woff2, OFL) with tnum+zero — uppercase, letter-spaced index labels (00.1, +18K); ALL billed numbers"
+  source: accepted designer delivery 2026-09-27 (folder ~/Desktop/northlatch-agent: prototype/, boards/, tui/); faces are open-license, embedded not linked
 
 layout:
   hairline_technical_grid: true    # engineering-schematic framing modules

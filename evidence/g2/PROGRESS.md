@@ -16,3 +16,18 @@ misfile to the upstream repo was closed + scrubbed to neutral text within
 two minutes — delete needs write access we lack there).
 
 State key: ⚪ queued · 🔵 in progress · 🟢 done+gated · 🔴 blocked.
+
+## Design acceptance (2026-09-27, founder-confirmed)
+
+The external designer's Revision-1 delivery was audited against its seven
+binary acceptance checks and ACCEPTED by the founder: embedded OFL type
+system (Archivo / Inter / JetBrains Mono + Space Grotesk alt), 12 drawn HUD
+states, 8×6 component-state matrix (42 literal + 6 declared substitutions),
+3 flows with failure paths, a clickable keyboard-operable prototype with the
+runaway guard firing, 14-glyph icon grammar, two hero directions, grid math,
+TUI style board. One residual waived-or-pending: full-length ANSI session
+captures (current ones are 14-line openings). Source of record for the type
+system is now this repo's product/identity/design-tokens.yaml; assets and
+boards live in ~/Desktop/northlatch-agent/ (fonts are OFL — repo-embeddable).
+The HUD implementation slice (P0: U-1 predictive rail, U-2 runaway guard,
+U-3 per-call ceiling with the gateway) implements against this system.
