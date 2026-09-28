@@ -1,0 +1,32 @@
+# G2 slice 3 (local-install increment) — scripts/install.sh — 2026-09-28
+
+## What the installer does (POSIX sh, no npm — INV-11)
+- installs SEA binary -> $LATCH_INSTALL_HOME/bin/latch-harness (0755)
+- copies launcher + doctor + product/identity/brand.yaml preserving the
+  repo-relative layout (brand.mjs resolves the manifest, INV-3)
+- writes $PREFIX/latch and $PREFIX/latch-doctor commands (PATH-checked)
+- --uninstall removes commands + product tree, keeps user config/sessions
+
+## Sandbox install proof (PREFIX/LATCH_INSTALL_HOME redirected)
+    $ LATCH_INSTALL_HOME=/tmp/latch-inst-test PREFIX=/tmp/latch-inst-test/bin scripts/install.sh
+    latch: installed
+    $ LATCH_GATEWAY_URL=http://127.0.0.1:8787 LATCH_API_KEY=latch-key-pro \
+        /tmp/latch-inst-test/bin/latch -p "Say exactly: LATCH INSTALLED OK"
+    mock latch-small reply #3: LATCH BOOT OK     EXIT=0
+    $ ... /tmp/latch-inst-test/bin/latch-doctor
+    PASS config / key / reachability / auth / catalog / provider(skip: SEA bundles it)
+    all checks passed                            DOCTOR_EXIT=0
+
+## Founder-machine install (real, 2026-09-28)
+    $ scripts/install.sh
+    harness : /Users/admin/.latch/bin/latch-harness
+    command : /Users/admin/.local/bin/latch  (doctor: /Users/admin/.local/bin/latch-doctor)
+    $ latch --help    (clean env)
+    latch 0.16.9
+    Usage: latch [command] [options]
+
+## Battle-test runbook (also printed by the installer)
+- production gateway: export LATCH_GATEWAY_URL=https://gateway.xlaunch.work
+  LATCH_API_KEY=<unified key>   (gateway verified LIVE 2026-09-28: 401 without key)
+- local demo: LATCH_GATEWAY_URL=http://127.0.0.1:8787 LATCH_API_KEY=latch-key-pro
+  (mock gateway: pnpm exec tsx scripts/latch-mock-gateway.mts)

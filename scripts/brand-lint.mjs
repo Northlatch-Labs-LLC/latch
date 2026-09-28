@@ -121,11 +121,69 @@ for (const hit of informationalHits) {
   for (const term of TERMS) byTerm[term] += hit.counts[term] ?? 0;
 }
 
+// --- identity mirror --------------------------------------------------------
+// brand.yaml `binary_name` is the single source of record (INV-3). The CLI
+// command constant and the SEA artifact name must mirror it, so an upstream
+// sync that reverts either fails lint instead of shipping a misbranded binary.
+const PROCESS_NAME_FILE =
+  'apps/zcode-cli/packages/cli/src/process-name.ts';
+const SEA_TARGETS_FILE =
+  'apps/zcode-cli/packages/cli/scripts/sea-targets.mjs';
+const binaryName = readFileSync(path.join(repoRoot, BRAND_FILE), 'utf8').match(
+  /^binary_name:\s*(\S+)/m,
+)?.[1];
+const mirrorChecks = [];
+if (binaryName) {
+  const processNameSource = readFileSync(
+    path.join(repoRoot, PROCESS_NAME_FILE),
+    'utf8',
+  );
+  const commandName = processNameSource.match(
+    /CLI_COMMAND_NAME\s*=\s*"([^"]+)"/,
+  )?.[1];
+  mirrorChecks.push({
+    file: PROCESS_NAME_FILE,
+    field: 'CLI_COMMAND_NAME',
+    expected: binaryName,
+    actual: commandName ?? null,
+    ok: commandName === binaryName,
+  });
+  const seaTargetsSource = readFileSync(
+    path.join(repoRoot, SEA_TARGETS_FILE),
+    'utf8',
+  );
+  const artifactPrefix = seaTargetsSource.match(
+    /return `(\w+)-\$\{outputPlatform\}-\$\{arch\}/,
+  )?.[1];
+  mirrorChecks.push({
+    file: SEA_TARGETS_FILE,
+    field: 'outputBinaryName prefix',
+    expected: binaryName,
+    actual: artifactPrefix ?? null,
+    ok: artifactPrefix === binaryName,
+  });
+} else {
+  mirrorChecks.push({
+    file: BRAND_FILE,
+    field: 'binary_name',
+    expected: 'a value',
+    actual: null,
+    ok: false,
+  });
+}
+const mirrorFailures = mirrorChecks.filter((c) => !c.ok);
+
 // --- evidence ---------------------------------------------------------------
 const report = {
   tool: 'scripts/brand-lint.mjs',
   generatedAt: new Date().toISOString(),
   terms: TERMS,
+  identityMirror: {
+    note: 'brand.yaml binary_name must be mirrored by the CLI command constant and the SEA artifact name; a mismatch fails the lint (INV-3 single source)',
+    binaryName: binaryName ?? null,
+    checks: mirrorChecks,
+    clean: mirrorFailures.length === 0,
+  },
   strict: {
     scope: 'git-tracked files under product/ excluding product/identity/brand.yaml',
     filesScanned: strictResults.length,
@@ -152,14 +210,22 @@ const report = {
     note: 'untracked files under product/ are outside the git-tracked strict scope; listed here so they cannot hide',
     files: productUntracked,
   },
-  exitCode: strictViolations.length === 0 ? 0 : 1,
+  exitCode:
+    strictViolations.length === 0 && mirrorFailures.length === 0 ? 0 : 1,
 };
 
 mkdirSync(path.dirname(EVIDENCE_PATH), { recursive: true });
 writeFileSync(EVIDENCE_PATH, `${JSON.stringify(report, null, 2)}\n`);
 
 // --- report -----------------------------------------------------------------
-if (strictViolations.length === 0) {
+if (mirrorFailures.length > 0) {
+  console.error('brand-lint: identity mirror failures — brand.yaml binary_name is not mirrored by:');
+  for (const f of mirrorFailures) {
+    console.error(`  ${f.file} (${f.field}): expected ${JSON.stringify(f.expected)}, got ${JSON.stringify(f.actual)}`);
+  }
+  console.error('brand-lint: fix the constant(s) or update brand.yaml — the manifest is the single source (INV-3)');
+}
+if (strictViolations.length === 0 && mirrorFailures.length === 0) {
   console.log(
     `brand-lint: strict scope clean (${strictResults.length} tracked file(s) under ${STRICT_PREFIX}, excluding ${BRAND_FILE})`,
   );

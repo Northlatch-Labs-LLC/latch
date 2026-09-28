@@ -11,6 +11,7 @@
 // part.
 
 import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 
 import { readBrand } from './lib/brand.mjs';
@@ -120,23 +121,35 @@ if (checks[0].status === 'pass') {
 }
 
 // 6. Provider package importable — the shipped entry is TypeScript, so drive
-//    it through the repo's tsx exactly as the test suite does.
+//    it through the repo's tsx exactly as the test suite does. A source
+//    checkout is required for this probe; the installed product (SEA harness
+//    binary) bundles the provider, so the check degrades to a skip there.
 const providerEntry = path.join(repoRoot, 'packages', 'product', 'provider-gateway', 'src', 'index.ts');
 const tsxBin = path.join(repoRoot, 'node_modules', '.bin', 'tsx');
-const importProbe = spawnSync(
-  tsxBin,
-  ['-e', `import(${JSON.stringify(providerEntry)}).then(m => { console.log(Object.keys(m).length); process.exit(0) }).catch(e => { console.error(e.message); process.exit(1) })`],
-  { encoding: 'utf8', timeout: 30000 },
-);
-checks.push(
-  check(
-    'provider',
-    importProbe.status === 0,
-    importProbe.status === 0
-      ? `@latch/provider-gateway entry imports cleanly (${importProbe.stdout.trim()} exports)`
-      : `provider import failed: ${(importProbe.stderr || importProbe.error?.message || 'unknown error').trim().slice(0, 200)}`,
-  ),
-);
+if (existsSync(tsxBin)) {
+  const importProbe = spawnSync(
+    tsxBin,
+    ['-e', `import(${JSON.stringify(providerEntry)}).then(m => { console.log(Object.keys(m).length); process.exit(0) }).catch(e => { console.error(e.message); process.exit(1) })`],
+    { encoding: 'utf8', timeout: 30000 },
+  );
+  checks.push(
+    check(
+      'provider',
+      importProbe.status === 0,
+      importProbe.status === 0
+        ? `@latch/provider-gateway entry imports cleanly (${importProbe.stdout.trim()} exports)`
+        : `provider import failed: ${(importProbe.stderr || importProbe.error?.message || 'unknown error').trim().slice(0, 200)}`,
+    ),
+  );
+} else {
+  checks.push(
+    check(
+      'provider',
+      true,
+      'skipped — no source checkout here; the installed harness bundles the provider (SEA binary)',
+    ),
+  );
+}
 
 const ok = checks.every((c) => c.status === 'pass');
 

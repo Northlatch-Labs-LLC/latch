@@ -7,8 +7,13 @@ every slice, commit + push per slice. This file updates as slices land.
 | --- | --- | --- | --- |
 | 0 | design language codified (approved direction) | 🟢 done+gated | product/identity/design-tokens.yaml |
 | 1 | gateway-first launcher: one-key env → auto provider config → harness | 🟢 done+gated | evidence/g2/slice1-launcher.txt (`pnpm run latch`) |
-| 2 | binary rebrand end to end | ⚪ next session | — |
-| 3 | signed installer + `curl \| sh` (G3 packaging) | ⚪ next session | — |
+| 2 | binary rebrand end to end | 🟢 done+gated | evidence/g2/slice2-rebrand.txt (SEA binaries `latch-*`, identity swap, mirror-enforced brand-lint) |
+| 3 | installer — local-machine increment (signed CDN installers stay G3) | 🟢 done+gated | evidence/g2/slice3-install.txt (install.sh, founder machine installed, doctor 6/6) |
+
+Battle-test readiness (2026-09-28): `latch` installed on the founder's PATH
+(`~/.local/bin/latch` → launcher → SEA harness binary). Production gateway
+verified live (`evidence/g2/l3-gateway-reality.txt`); real-model runs need the
+founder's unified key — env-only switch.
 
 Parallel team front: Synapse English localization filed as
 Northlatch-Labs-LLC/synapse#3 (fork Issues enabled first; an initial

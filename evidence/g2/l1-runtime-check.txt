@@ -1,0 +1,14 @@
+# L1 — harness runtime current & headless-capable — 2026-09-28
+
+Mock gateway: pnpm exec tsx scripts/latch-mock-gateway.mts (port 8787)
+Catalog probe: GET /v1/models -> {"latch-small","latch-large"(pro)} exit ok
+
+Headless round-trip through the product launcher:
+  $ LATCH_HOME=/tmp/latch-l1-home LATCH_GATEWAY_URL=http://127.0.0.1:8787 \
+      LATCH_API_KEY=latch-key-pro pnpm run latch -p "Reply with exactly: LATCH L1 RUNTIME OK"
+  mock latch-small reply #1: LATCH BOOT OK
+  EXIT=0
+
+Launcher -> live catalog -> generated provider config (0600, /tmp/latch-l1-home/v2)
+-> harness exec (dist/runtime/zcode/bin/zcode.mjs) -> gateway chat-completions
+-> reply rendered -> clean exit. Runtime current as of 2026-09-28.

@@ -1,0 +1,34 @@
+# G2 slice 2 — binary rebrand end to end — 2026-09-28
+
+## SEA build (node 24.14.0 — provenance-covered by third-party/runtime/sources.json)
+    [sea] building darwin-arm64 -> dist/latch-darwin-arm64
+    [sea] building darwin-x64   -> dist/latch-darwin-x64
+    [sea] building linux-x64    -> dist/latch-linux-x64
+    [sea] building linux-arm64  -> dist/latch-linux-arm64
+    [sea] building win-x64      -> dist/latch-windows-x64.exe
+    SEA_BUILD_EXIT=0
+
+## Identity swap (declared extension point, brand.yaml is source of record)
+- apps/zcode-cli/packages/cli/src/process-name.ts: CLI_COMMAND_NAME="latch",
+  CLI_PROCESS_NAME="latch-cli" (mirrors brand.yaml binary_name; brand-lint
+  enforces the mirror, so an upstream sync that reverts it fails lint)
+- i18n en-US + zh-CN user-visible copy: "latch <version>", "latch [command]",
+  "Starting Latch... Ctrl+C to exit", "Latch Protocol" (4 strings total)
+- scripts/sea-targets.mjs outputBinaryName -> latch-<platform>-<arch>
+- scripts/brand-lint.mjs: NEW identityMirror check (CLI_COMMAND_NAME +
+  SEA artifact prefix must equal brand.yaml binary_name; mismatch exits 1)
+- scripts/latch.mjs: standalone-binary exec (SEA) alongside the runtime .mjs
+  — product seam supports both harness shapes
+- brand-lint: EXIT=0, strict scope clean (5 product files), identityMirror.clean=true
+
+## Proof — installed command, clean env, branded help
+    $ latch --help        (via ~/.local/bin/latch -> installed launcher -> SEA binary)
+    latch 0.16.9
+    Usage:
+      latch [command] [options]
+    With no command, latch opens the full-screen TUI.
+
+## Proof — product loop through the standalone binary
+    $ LATCH_BIN=.../dist/latch-darwin-x64 pnpm run latch -p "Say exactly: LATCH SEA BINARY OK"
+    mock latch-small reply #2: LATCH BOOT OK   (launcher -> catalog -> 0600 config -> SEA exec -> gateway)
+    EXIT=0

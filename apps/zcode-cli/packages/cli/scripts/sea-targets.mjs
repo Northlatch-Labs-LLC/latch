@@ -49,7 +49,9 @@ export const targetParts = (target) => {
 export const outputBinaryName = (target) => {
   const { arch, outputPlatform, releasePlatform } = targetParts(target);
   const extension = releasePlatform === "win" ? ".exe" : "";
-  return `zcode-${outputPlatform}-${arch}${extension}`;
+  // Product binary name (T-A1): brand.yaml `binary_name` is the source of
+  // record; brand-lint mirrors it into the CLI command constant.
+  return `latch-${outputPlatform}-${arch}${extension}`;
 };
 
 export const nodeReleaseArtifact = (target, nodeVersion) => {

@@ -102,7 +102,12 @@ if (!bin) {
   process.exit(1);
 }
 
-const child = spawn(process.execPath, [bin, ...process.argv.slice(2)], {
+// Standalone harness binaries (the SEA build, LATCH_BIN=…) exec directly;
+// the runtime bundle is a .mjs and needs the host node.
+const standalone = !/\.(mjs|cjs|js)$/.test(bin);
+const [command, binArgs] = standalone ? [bin, []] : [process.execPath, [bin]];
+
+const child = spawn(command, [...binArgs, ...process.argv.slice(2)], {
   stdio: 'inherit',
   env: {
     ...process.env,

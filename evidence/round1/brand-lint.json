@@ -1,11 +1,32 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-27T23:02:11.993Z",
+  "generatedAt": "2026-09-28T15:50:41.769Z",
   "terms": [
     "ZCode",
     "Z.ai",
     "GLM"
   ],
+  "identityMirror": {
+    "note": "brand.yaml binary_name must be mirrored by the CLI command constant and the SEA artifact name; a mismatch fails the lint (INV-3 single source)",
+    "binaryName": "latch",
+    "checks": [
+      {
+        "file": "apps/zcode-cli/packages/cli/src/process-name.ts",
+        "field": "CLI_COMMAND_NAME",
+        "expected": "latch",
+        "actual": "latch",
+        "ok": true
+      },
+      {
+        "file": "apps/zcode-cli/packages/cli/scripts/sea-targets.mjs",
+        "field": "outputBinaryName prefix",
+        "expected": "latch",
+        "actual": "latch",
+        "ok": true
+      }
+    ],
+    "clean": true
+  },
   "strict": {
     "scope": "git-tracked files under product/ excluding product/identity/brand.yaml",
     "filesScanned": 5,
@@ -23,13 +44,13 @@
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7095,
-    "filesWithOccurrences": 2992,
-    "totalOccurrences": 30124,
+    "filesScanned": 7098,
+    "filesWithOccurrences": 2993,
+    "totalOccurrences": 30131,
     "byTerm": {
-      "ZCode": 28991,
-      "Z.ai": 257,
-      "GLM": 876
+      "ZCode": 28994,
+      "Z.ai": 259,
+      "GLM": 878
     },
     "rootReadme": {
       "file": "README.md",
@@ -962,6 +983,15 @@
         "file": "DESIGN.md",
         "counts": {
           "ZCode": 3
+        },
+        "total": 3
+      },
+      {
+        "file": "LATCH-DESIGN-BRIEF.md",
+        "counts": {
+          "ZCode": 1,
+          "Z.ai": 1,
+          "GLM": 1
         },
         "total": 3
       },
@@ -3834,9 +3864,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/scripts/sea-targets.mjs",
         "counts": {
-          "ZCode": 2
+          "ZCode": 1
         },
-        "total": 2
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/cli/scripts/sea-tui-assets.mjs",
@@ -4148,13 +4178,6 @@
           "ZCode": 12
         },
         "total": 12
-      },
-      {
-        "file": "apps/zcode-cli/packages/cli/src/process-name.ts",
-        "counts": {
-          "ZCode": 2
-        },
-        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/prompt-command.ts",
@@ -6976,18 +6999,18 @@
       {
         "file": "apps/zcode-cli/packages/i18n/src/locales/en-US.ts",
         "counts": {
-          "ZCode": 7,
+          "ZCode": 2,
           "Z.ai": 7
         },
-        "total": 14
+        "total": 9
       },
       {
         "file": "apps/zcode-cli/packages/i18n/src/locales/zh-CN.ts",
         "counts": {
-          "ZCode": 7,
+          "ZCode": 2,
           "Z.ai": 7
         },
-        "total": 14
+        "total": 9
       },
       {
         "file": "apps/zcode-cli/packages/i18n/src/types.ts",
@@ -7661,11 +7684,11 @@
       {
         "file": "evidence/round1/brand-lint.json",
         "counts": {
-          "ZCode": 4220,
-          "Z.ai": 72,
-          "GLM": 109
+          "ZCode": 4221,
+          "Z.ai": 73,
+          "GLM": 110
         },
-        "total": 4401
+        "total": 4404
       },
       {
         "file": "evidence/round1/dependency-audit.json",
@@ -20918,11 +20941,11 @@
       {
         "file": "scripts/brand-lint.mjs",
         "counts": {
-          "ZCode": 2,
+          "ZCode": 4,
           "Z.ai": 2,
           "GLM": 2
         },
-        "total": 6
+        "total": 8
       },
       {
         "file": "scripts/build-desktop-agent-bytecode.mjs",
@@ -21014,6 +21037,13 @@
           "ZCode": 4
         },
         "total": 4
+      },
+      {
+        "file": "scripts/latch.mjs",
+        "counts": {
+          "ZCode": 12
+        },
+        "total": 12
       },
       {
         "file": "scripts/native-search-tools-config.mjs",

@@ -1,0 +1,12 @@
+# L3 — gateway reality check — 2026-09-28
+
+    https://gateway.xlaunch.work/v1/models -> 401   (LIVE; auth-required contract)
+    https://billing.xlaunch.work           -> 404   (host up; API at paths)
+    https://gridframes.app                 -> 200   (platform live)
+
+The production gateway is reachable and enforces the Bearer-key contract the
+launcher/doctor implement. No unified key exists on this workstation (env
+checked, ~/.latch config contains only mock-run artifacts), so live-model
+verification stays behind the founder's key — one-line switch, no code change
+(G1 residual carried honestly). Battle testing TODAY runs the mock gateway;
+production is env-only.
