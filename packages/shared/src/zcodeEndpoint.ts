@@ -1,10 +1,13 @@
 import type { ZCodeEnv } from "./env.js";
 
-export const DEFAULT_ZCODE_ENDPOINT_ORIGIN = "https://zcode.z.ai";
-export const DEFAULT_BIGMODEL_API_ORIGIN = "https://bigmodel.cn";
-export const DEFAULT_ZAI_OAUTH_ORIGIN = "https://chat.z.ai";
-export const DEFAULT_ZAI_BUSINESS_BASE_URL = "https://api.z.ai";
-export const DEFAULT_ZAI_OAUTH_CLIENT_ID = "client_P8X5CMWmlaRO9gyO-KSqtg";
+// Northlatch (Latch) product origins: vendor defaults retired 2026-09-29 (FP-0).
+// Unset env resolves to the Latch product home so un-migrated flows fail safe
+// against OUR origin (404) instead of phoning the upstream vendor.
+export const DEFAULT_ZCODE_ENDPOINT_ORIGIN = "https://latch.gridframes.app";
+export const DEFAULT_BIGMODEL_API_ORIGIN = "https://latch.gridframes.app";
+export const DEFAULT_ZAI_OAUTH_ORIGIN = "https://latch.gridframes.app";
+export const DEFAULT_ZAI_BUSINESS_BASE_URL = "https://latch.gridframes.app";
+export const DEFAULT_ZAI_OAUTH_CLIENT_ID = "";
 
 // 构建仅注入公开链接；Node 调用方仍可显式传 env，避免读取另一进程的配置。
 declare const __ZCODE_ENDPOINT_ENV__: Record<string, string | undefined> | undefined;

@@ -136,7 +136,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     loginDescription: "Sign in to check whether you can view this shared conversation.",
     login: "Sign in",
     loginWith: {
-      zai: "Connect to Z.ai",
+      zai: "Connect to Latch",
       bigmodel: "Connect to BigModel",
     },
     loginRegion: { zai: "Global", bigmodel: "CN" },
@@ -163,7 +163,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     switchToDarkTheme: "Switch to dark theme",
     switchToLightTheme: "Switch to light theme",
     continueHelp: "If ZCode did not open, download the app or try opening it again.",
-    downloadZCode: "Download ZCode",
+    downloadZCode: "Download Latch",
     artifactCountOne: "{count} artifact",
     artifactCountOther: "{count} artifacts",
     retryOpen: "Try again",

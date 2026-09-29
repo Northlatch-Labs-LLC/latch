@@ -1,7 +1,7 @@
 import { ZCODE_VERSION, type ZCodeEnv } from "@zcode/shared";
 
 declare const __ZCODE_CDN_BASE_URL__: string | undefined;
-const DEFAULT_CDN_BASE_URL = "https://cdn-zcode.z.ai";
+const DEFAULT_CDN_BASE_URL = "";
 
 export interface ResolveRemoteCdnOptions {
   env?: ZCodeEnv;
@@ -26,7 +26,10 @@ export function resolveRemoteCdnBaseUrls(options: ResolveRemoteCdnOptions = {}):
     process.env.ZCODE_CDN_BASE_URL?.trim() ||
     (typeof __ZCODE_CDN_BASE_URL__ === "undefined" ? "" : __ZCODE_CDN_BASE_URL__) ||
     DEFAULT_CDN_BASE_URL;
+  // No configured CDN (Northlatch default): attempt zero download sources
+  // instead of falling back to the retired upstream vendor CDN.
+  if (!baseUrl) return [];
   return [
-    `${normalizeBaseUrl(baseUrl)}/zcode/electron/releases/${options.version ?? ZCODE_VERSION}`,
+    `${normalizeBaseUrl(baseUrl)}/latch/electron/releases/${options.version ?? ZCODE_VERSION}`,
   ];
 }

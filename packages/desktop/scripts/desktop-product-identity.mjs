@@ -7,19 +7,19 @@ export const ZCODE_PREVIEW_IDENTITY_ENV = "ZCODE_PREVIEW_IDENTITY";
 
 const PRODUCTION_IDENTITY = Object.freeze({
   flavor: "production",
-  appId: "dev.zcode.app",
-  productName: "ZCode",
-  linuxExecutableName: "zcode",
-  linuxPackageName: "zcode",
+  appId: "com.northlatch.latch",
+  productName: "Latch",
+  linuxExecutableName: "latch",
+  linuxPackageName: "latch",
   cuaHelperInstallVariant: null,
 });
 
 const PREVIEW_IDENTITY = Object.freeze({
   flavor: "preview",
-  appId: "dev.zcode.app.preview",
-  productName: "ZCode Preview",
-  linuxExecutableName: "zcode-preview",
-  linuxPackageName: "zcode-preview",
+  appId: "com.northlatch.latch.preview",
+  productName: "Latch Preview",
+  linuxExecutableName: "latch-preview",
+  linuxPackageName: "latch-preview",
   cuaHelperInstallVariant: "preview",
 });
 

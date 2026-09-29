@@ -54,8 +54,8 @@ export interface OfficialPluginDefinition {
   version: string;
 }
 
-const ZAI_AUTHOR = { name: "Z.ai", url: "https://z.ai" } as const;
-const OFFICIAL_PLUGIN_ASSETS_BASE_URL = "https://cdn-zcode.z.ai/zcode/official-plugin/assets";
+const ZAI_AUTHOR = { name: "Northlatch", url: "https://latch.gridframes.app" } as const;
+const OFFICIAL_PLUGIN_ASSETS_BASE_URL = "";
 
 const OFFICIAL_NODE_REPL_HOST_REQUIRED_SEED_PATHS = ["dist/mcp/server.js"] as const;
 

@@ -67,7 +67,7 @@ const isBootstrapWithRemote = process.env.ZCODE_BOOTSTRAP_WITH_REMOTE === "1";
  * 不同版本目录因此互相驱逐持久化产物，谁被驱逐谁就必须回源下载。
  * 平时都是 `[skip] already exists`，所以这条网络路径长期没被真正走过。
  */
-export const DEFAULT_NODE_DIST_BASE = "https://cdn.npmmirror.com/binaries/node";
+export const DEFAULT_NODE_DIST_BASE = "https://nodejs.org/dist";
 
 export function nodeDistBase(env = process.env) {
   const mirror = env.ZCODE_NODE_DIST_MIRROR?.trim();

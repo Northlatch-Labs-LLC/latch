@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-28T22:12:05.170Z",
+  "generatedAt": "2026-09-29T04:46:22.516Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -45,12 +45,12 @@
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
     "filesScanned": 7107,
-    "filesWithOccurrences": 2996,
-    "totalOccurrences": 30117,
+    "filesWithOccurrences": 2995,
+    "totalOccurrences": 30073,
     "byTerm": {
-      "ZCode": 28980,
-      "Z.ai": 259,
-      "GLM": 878
+      "ZCode": 28952,
+      "Z.ai": 244,
+      "GLM": 877
     },
     "rootReadme": {
       "file": "README.md",
@@ -1090,10 +1090,10 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/auth/coding-plan-api-key.ts",
         "counts": {
-          "ZCode": 6,
+          "ZCode": 5,
           "Z.ai": 2
         },
-        "total": 8
+        "total": 7
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/auth/credential-cipher.ts",
@@ -2488,10 +2488,9 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/official-plugin-definitions.ts",
         "counts": {
-          "ZCode": 41,
-          "Z.ai": 3
+          "ZCode": 39
         },
-        "total": 44
+        "total": 39
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/official-plugin-runtime.ts",
@@ -2959,10 +2958,9 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/model-config.ts",
         "counts": {
-          "ZCode": 13,
-          "GLM": 1
+          "ZCode": 11
         },
-        "total": 14
+        "total": 11
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/model-factory.ts",
@@ -6444,13 +6442,6 @@
         "total": 1
       },
       {
-        "file": "apps/zcode-cli/packages/core/src/tool/handlers/webfetch-constants.ts",
-        "counts": {
-          "ZCode": 2
-        },
-        "total": 2
-      },
-      {
         "file": "apps/zcode-cli/packages/core/src/tool/handlers/webfetch-errors.ts",
         "counts": {
           "ZCode": 1
@@ -7805,11 +7796,10 @@
       {
         "file": "packages/desktop/electron-builder.config.js",
         "counts": {
-          "ZCode": 31,
-          "Z.ai": 3,
+          "ZCode": 27,
           "GLM": 5
         },
-        "total": 39
+        "total": 32
       },
       {
         "file": "packages/desktop/native/macos-window-bounds/main.swift",
@@ -7870,9 +7860,9 @@
       {
         "file": "packages/desktop/scripts/desktop-product-identity.mjs",
         "counts": {
-          "ZCode": 31
+          "ZCode": 23
         },
-        "total": 31
+        "total": 23
       },
       {
         "file": "packages/desktop/scripts/dev.mjs",
@@ -9107,10 +9097,9 @@
       {
         "file": "packages/desktop/src/main/remoteCdn.ts",
         "counts": {
-          "ZCode": 11,
-          "Z.ai": 1
+          "ZCode": 9
         },
-        "total": 12
+        "total": 9
       },
       {
         "file": "packages/desktop/src/main/rendererActionTraceBroker.ts",
@@ -12497,10 +12486,9 @@
       {
         "file": "packages/shared/src/plugin-marketplaces.ts",
         "counts": {
-          "ZCode": 22,
-          "Z.ai": 1
+          "ZCode": 18
         },
-        "total": 23
+        "total": 18
       },
       {
         "file": "packages/shared/src/pluginStoreOrdering.ts",
@@ -12975,10 +12963,9 @@
       {
         "file": "packages/shared/src/zcodeEndpoint.ts",
         "counts": {
-          "ZCode": 79,
-          "Z.ai": 3
+          "ZCode": 78
         },
-        "total": 82
+        "total": 78
       },
       {
         "file": "packages/shared/src/zcodePersistedMessageMerge.ts",
@@ -16429,10 +16416,9 @@
       {
         "file": "packages/ui/src/lib/productDocs.ts",
         "counts": {
-          "ZCode": 2,
-          "Z.ai": 1
+          "ZCode": 1
         },
-        "total": 3
+        "total": 1
       },
       {
         "file": "packages/ui/src/lib/promptHistoryStorage.ts",
@@ -20588,9 +20574,9 @@
         "file": "packages/web/src/auth/webAuthLocale.ts",
         "counts": {
           "ZCode": 2,
-          "Z.ai": 4
+          "Z.ai": 2
         },
-        "total": 6
+        "total": 4
       },
       {
         "file": "packages/web/src/auth/webAuthService.ts",
@@ -20638,10 +20624,10 @@
       {
         "file": "packages/web/src/share/ConversationShareLandingPage.tsx",
         "counts": {
-          "ZCode": 36,
-          "Z.ai": 6
+          "ZCode": 35,
+          "Z.ai": 5
         },
-        "total": 42
+        "total": 40
       },
       {
         "file": "packages/web/src/share/conversationSharePreviewClient.ts",
