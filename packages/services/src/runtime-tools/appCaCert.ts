@@ -60,7 +60,7 @@ function generateSelfSignedCa(): { certPem: string; keyPem: string } {
   cert.validity.notAfter = notAfter;
 
   const attrs = [
-    { name: "commonName", value: "ZCode Network CA" },
+    { name: "commonName", value: "Latch Network CA" },
     { name: "organizationName", value: "ZCode" },
   ];
   cert.setSubject(attrs);

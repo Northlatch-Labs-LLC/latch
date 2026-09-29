@@ -631,7 +631,7 @@ function V4ComposerModelControlsImpl({
         label:
           access.label ||
           (contextCodingPlanUsageProviderId === BUILTIN_MODEL_PROVIDER_IDS.zaiIndividualCodingPlan
-            ? "Z.ai - Coding Plan"
+            ? "Latch - Coding Plan"
             : "BigModel - Coding Plan"),
       },
     ];

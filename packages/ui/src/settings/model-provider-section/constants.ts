@@ -78,14 +78,14 @@ export const CODING_PLAN_PROVIDER_SPECS: CodingPlanProviderSpec[] = [
   {
     id: BUILTIN_MODEL_PROVIDER_IDS.zaiStartPlan,
     oauthProviderId: ZAI_PROVIDER_ID,
-    label: "Z.ai - Coding Plan",
+    label: "Latch - Coding Plan",
     providerName: "Z.ai",
     purchaseUrl: "https://z.ai/manage-apikey/subscription",
   },
   {
     id: BUILTIN_MODEL_PROVIDER_IDS.zaiIndividualCodingPlan,
     oauthProviderId: ZAI_PROVIDER_ID,
-    label: "Z.ai - Coding Plan",
+    label: "Latch - Coding Plan",
     providerName: "Z.ai",
     purchaseUrl: "https://z.ai/manage-apikey/subscription",
   },
@@ -118,7 +118,7 @@ export function resolveModelProviderDisplayName(
     provider.providerId === BUILTIN_MODEL_PROVIDER_IDS.zaiIndividualCodingPlan ||
     provider.providerId === BUILTIN_MODEL_PROVIDER_IDS.zaiTeamCodingPlan
   ) {
-    return "Z.ai - Coding Plan";
+    return "Latch - Coding Plan";
   }
 
   if (provider.providerId === BUILTIN_MODEL_PROVIDER_IDS.zaiStartPlan) {

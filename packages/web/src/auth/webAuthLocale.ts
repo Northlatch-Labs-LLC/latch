@@ -18,9 +18,9 @@ interface WebAuthPageCopy {
 
 const WEB_AUTH_COPY = {
   "zh-CN": {
-    brand: "ZCode",
+    brand: "Latch",
     loginTitle: "登录后继续使用 Web 远程控制",
-    loginDescription: "使用与桌面端一致的 Z.AI 账号身份访问当前远控入口。",
+    loginDescription: "使用与桌面端一致的 Latch 账号身份访问当前远控入口。",
     loginAction: "用 Latch 登录",
     callbackTitle: "正在完成登录",
     callbackDescription: "请稍候，正在校验账号身份。",
@@ -33,9 +33,9 @@ const WEB_AUTH_COPY = {
     logoutAction: "断开连接",
   },
   "en-US": {
-    brand: "ZCode",
+    brand: "Latch",
     loginTitle: "Sign In To Continue",
-    loginDescription: "Use the same Z.AI account identity as desktop for Web remote control.",
+    loginDescription: "Use the same Latch account identity as desktop for Web remote control.",
     loginAction: "Sign in with Latch",
     callbackTitle: "Finishing Sign-In",
     callbackDescription: "Verifying your account identity.",

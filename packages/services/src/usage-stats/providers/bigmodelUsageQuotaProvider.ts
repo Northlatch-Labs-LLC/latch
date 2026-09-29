@@ -1580,7 +1580,7 @@ function resolveAccountProviderQuotaUrl(providerId: string, env: NodeJS.ProcessE
 function resolveAccountProviderLabel(providerId: string): string {
   return providerId === BUILTIN_MODEL_PROVIDER_IDS.zaiIndividualCodingPlan ||
     providerId === BUILTIN_MODEL_PROVIDER_IDS.zaiStartPlan
-    ? "Z.ai - Coding Plan"
+    ? "Latch - Coding Plan"
     : "BigModel - Coding Plan";
 }
 

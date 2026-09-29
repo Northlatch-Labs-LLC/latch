@@ -19,7 +19,7 @@ const messages = {
     bindBotMissing: "绑定失败：bot 不存在。",
     bindSuccess: "绑定成功。发送 **/帮助** 查看可用命令。",
     weixinActivatedWelcome: "微信 Bot 已激活。发送 **/帮助** 查看命令，或直接描述你要做的事。",
-    helpTitle: "ZCode 机器人命令：",
+    helpTitle: "Latch 机器人命令：",
     helpHelp: "**/帮助** — 查看这份说明",
     helpBind: "**/bind <code>** — 绑定当前聊天",
     helpStatus: "**/状态** — 查看工作区、模型和任务状态",
@@ -115,7 +115,7 @@ const messages = {
     remoteReconnectStarting: "当前远端项目 {workspacePath} 未连接，正在为你重连...",
     remoteReconnectFailed: "当前远端项目 {workspacePath} 重连失败：{message}\n上一条请求没有执行。",
     remoteReconnectUnavailable:
-      "当前远端项目 {workspacePath} 未连接，但机器人无法访问远端重连服务。请先在 ZCode 打开该远端项目后重试。",
+      "当前远端项目 {workspacePath} 未连接，但机器人无法访问远端重连服务。请先在 Latch 打开该远端项目后重试。",
     remoteReconnectLocal: "当前 workspace 是本地项目，不需要重连。发送 **/项目** 可切换远端项目。",
     remoteReconnectAlreadyConnected: "当前远端项目 {workspacePath} 已连接。",
     replySelectTitle: "当前第三方回复颗粒度 {mode}\n选择第三方回复颗粒度",
@@ -127,17 +127,17 @@ const messages = {
     privateChatOnly: "Bots do not support group chats yet. Please use a private chat.",
     bindPrivateOnly: "Bots can only bind in a private chat.",
     userNotBound:
-      "This bot is not bound. Generate a bind code in the zcode UI, then send **/bind <code>**.",
+      "This bot is not bound. Generate a bind code in the Latch UI, then send **/bind <code>**.",
     commandNotAllowed: "This command is disabled for the current bot.",
     noWorkspaceAllowed: "No workspace is available. Allow a workspace in Bots settings first.",
     workspaceOutOfScope:
       "The workspace in this chat is no longer authorized. Please select **/workspace** again.",
-    bindCodeInvalid: "The bind code is invalid or expired. Generate a new one in the zcode UI.",
+    bindCodeInvalid: "The bind code is invalid or expired. Generate a new one in the Latch UI.",
     bindBotMissing: "Bind failed: bot does not exist.",
     bindSuccess: "Bound successfully. Send **/help** to see available commands.",
     weixinActivatedWelcome:
       "Weixin bot is active. Send **/help** to see commands, or describe what you want to do.",
-    helpTitle: "ZCode bot commands:",
+    helpTitle: "Latch bot commands:",
     helpHelp: "**/help** — Show this guide",
     helpBind: "**/bind <code>** — Bind this chat",
     helpStatus: "**/status** — Show workspace, model, and task status",
@@ -184,11 +184,11 @@ const messages = {
     taskMissing: "Task not found.",
     taskChanged: "Switched to task: {title}",
     noActiveTask: "There is no active task.",
-    permissionExpired: "This permission request has expired. Please handle it in the zcode UI.",
+    permissionExpired: "This permission request has expired. Please handle it in the Latch UI.",
     permissionHandled: "Permission request has already been handled.",
     permissionDenied: "Permission request denied.",
     permissionSubmitted: "Permission response submitted.",
-    elicitationExpired: "This question request has expired. Please handle it in the zcode UI.",
+    elicitationExpired: "This question request has expired. Please handle it in the Latch UI.",
     elicitationHandled: "Question request has already been handled.",
     elicitationSubmitted: "Question response submitted.",
     elicitationCancelled: "Question request cancelled.",
@@ -238,7 +238,7 @@ const messages = {
     remoteReconnectFailed:
       "Remote workspace {workspacePath} reconnect failed: {message}\nThe previous request was not executed.",
     remoteReconnectUnavailable:
-      "The remote workspace {workspacePath} is not connected, but the bot cannot access the remote reconnect service. Open this remote project in ZCode and try again.",
+      "The remote workspace {workspacePath} is not connected, but the bot cannot access the remote reconnect service. Open this remote project in Latch and try again.",
     remoteReconnectLocal:
       "The current workspace is local and does not need reconnecting. Send **/workspace** to switch to a remote project.",
     remoteReconnectAlreadyConnected: "The remote workspace {workspacePath} is connected.",
