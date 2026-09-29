@@ -7,29 +7,32 @@ import {
 import type { ModelSelectionView } from "@zcode/services";
 import { encodeCustomModelValue } from "@/lib/zcodeCustomModelValue.js";
 
-export type ApiKeyProviderChoice = "zai" | "bigmodel";
+export type ApiKeyProviderChoice = "xlaunch-gateway" | "zai" | "bigmodel";
 
-export function resolveLoginApiKeyDefaultProvider(locale: Locale): ApiKeyProviderChoice {
-  return locale === "zh-CN" ? "bigmodel" : "zai";
+export function resolveLoginApiKeyDefaultProvider(_locale: Locale): ApiKeyProviderChoice {
+  // Latch: the mandatory provider is the Xlaunch Gateway. Z.ai/BigModel keys
+  // remain available as custom choices.
+  return "xlaunch-gateway";
 }
 
 export function resolveLoginApiKeyTemplateId(
   choice: ApiKeyProviderChoice,
-): "zai-api" | "bigmodel-api" {
+): "xlaunch-gateway" | "zai-api" | "bigmodel-api" {
   return choice === "zai"
     ? BUILTIN_PROVIDER_TEMPLATE_IDS.zai
-    : BUILTIN_PROVIDER_TEMPLATE_IDS.bigmodel;
+    : choice === "bigmodel"
+      ? BUILTIN_PROVIDER_TEMPLATE_IDS.bigmodel
+      : "xlaunch-gateway";
 }
 
 export function resolveLoginApiKeyProviderLabel(choice: ApiKeyProviderChoice): string {
-  // Welcome Screen API Key 错误提示需要使用 BigModel 品牌固定写法。
-  return choice === "zai" ? "Z.ai" : "BigModel";
+  return choice === "zai" ? "Z.ai" : choice === "bigmodel" ? "BigModel" : "Xlaunch Gateway";
 }
 
 function resolveLoginApiKeyProviderFamilyDomain(
   choice: ApiKeyProviderChoice,
 ): ProviderFamilyDomain {
-  return choice;
+  return choice === "xlaunch-gateway" ? "zai" : choice;
 }
 
 export function buildLoginApiKeySkipSettings(

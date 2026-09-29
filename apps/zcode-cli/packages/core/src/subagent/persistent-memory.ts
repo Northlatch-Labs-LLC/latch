@@ -26,8 +26,8 @@ function resolvePersistentAgentMemoryRoot(input: {
   }
   const workspace = resolve(input.workspaceRoot);
   return input.scope === "project"
-    ? join(workspace, ".zcode", "agent-memory", agentKey)
-    : join(workspace, ".zcode", "agent-memory-local", agentKey);
+    ? join(workspace, ".latch", "agent-memory", agentKey)
+    : join(workspace, ".latch", "agent-memory-local", agentKey);
 }
 
 function isPersistentAgentMemoryEnabled(
