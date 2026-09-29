@@ -35,16 +35,29 @@ export function ProviderTemplatePicker({
   const { dismissFeedback, showFeedback } = useProviderDetailFeedback();
   const customLabel = intl.formatMessage({ id: "settings.modelProvider.newProviderName" });
   const zhipuIds = ["bigmodel-api", "zai-api", "bigmodel-standard-api", "zai-standard-api"];
+  // Xlaunch Gateway is the mandatory provider: pinned as the first group.
+  // Z.ai/BigModel templates are demoted to the custom group (tail).
+  const gatewayIds = ["xlaunch-gateway"];
+  const inList = (ids: readonly string[]) => (template: { templateId: string }) =>
+    ids.includes(template.templateId);
   const groups = [
     {
-      id: "zhipu",
-      templates: zhipuIds.flatMap((id) =>
+      id: "gateway",
+      templates: gatewayIds.flatMap((id) =>
         templates.filter((template) => template.templateId === id),
       ),
     },
     {
       id: "other",
-      templates: templates.filter((template) => !zhipuIds.includes(template.templateId)),
+      templates: templates.filter(
+        (template) => !zhipuIds.includes(template.templateId) && !gatewayIds.includes(template.templateId),
+      ),
+    },
+    {
+      id: "zhipu",
+      templates: zhipuIds.flatMap((id) =>
+        templates.filter((template) => template.templateId === id),
+      ),
     },
   ] as const;
   const createWithFeedback = async (create: () => Promise<void>) => {
