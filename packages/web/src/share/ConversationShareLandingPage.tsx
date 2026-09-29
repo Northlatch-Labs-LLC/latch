@@ -87,8 +87,8 @@ interface Copy {
   artifactCountOther: string;
 }
 
-// 站点首页本身就是下载入口，没有 /download 这个 path（单独的下载链接会 404）。
-const ZCODE_DOWNLOAD_URL = "https://zcode.z.ai";
+// Latch 站点首页本身就是下载入口，没有 /download 这个 path（单独的下载链接会 404）。
+const ZCODE_DOWNLOAD_URL = "https://latch.gridframes.app";
 
 const COPY: Record<ConversationShareLandingLocale, Copy> = {
   "zh-CN": {
@@ -99,7 +99,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     loginDescription: "请登录后确认你是否有权限查看这个分享。",
     login: "登录",
     loginWith: {
-      zai: "连接 Z.ai 继续使用",
+      zai: "连接 Latch 继续使用",
       bigmodel: "连接 BigModel 继续使用",
     },
     loginRegion: { zai: "全球", bigmodel: "中国" },
@@ -410,7 +410,7 @@ export function ConversationShareLandingPage({
                   className="shrink-0 text-ui-lg font-semibold text-foreground"
                   aria-label="Latch"
                 >
-                  ZCode
+                  Latch
                 </div>
                 <h1
                   ref={titleRef}

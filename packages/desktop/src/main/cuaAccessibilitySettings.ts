@@ -188,17 +188,17 @@ async function verifyHelperPermissionIdentityUnchanged(
   const fingerprint = captureCuaHelperBundleFingerprint(identity.appPath);
   await options.verifyHelperInstalled?.(identity.appPath);
   if (!cuaHelperBundleFingerprintUnchanged(identity.appPath, fingerprint)) {
-    throw new Error(`ZCode Computer Use changed while its ${phase} signature was being verified`);
+    throw new Error(`Latch Computer Use changed while its ${phase} signature was being verified`);
   }
   const currentIdentity = await (
     options.resolveHelperIdentity ?? resolveHelperPermissionSubjectIdentity
   )(identity.appPath);
   if (!sameHelperPermissionIdentity(identity, currentIdentity)) {
-    throw new Error(`ZCode Computer Use permission identity changed during ${phase} verification`);
+    throw new Error(`Latch Computer Use permission identity changed during ${phase} verification`);
   }
   if (!cuaHelperBundleFingerprintUnchanged(identity.appPath, fingerprint)) {
     throw new Error(
-      `ZCode Computer Use changed while its ${phase} permission identity was being resolved`,
+      `Latch Computer Use changed while its ${phase} permission identity was being resolved`,
     );
   }
   return fingerprint;
@@ -528,7 +528,7 @@ export async function openCuaPermissionOnboarding(
     // 根本不会进到这个 catch；只有真正校验失败才会到这里。
     return {
       success: false,
-      error: `ZCode Computer Use is unavailable (install/verification failed): ${messageOf(error)}`,
+      error: `Latch Computer Use is unavailable (install/verification failed): ${messageOf(error)}`,
     };
   }
 
@@ -541,7 +541,7 @@ export async function openCuaPermissionOnboarding(
     return {
       success: false,
       returnedFromSettings: false,
-      error: `ZCode Computer Use permission identity verification failed: ${messageOf(error)}`,
+      error: `Latch Computer Use permission identity verification failed: ${messageOf(error)}`,
     };
   }
   const verifiedOptions: OpenCuaAccessibilitySettingsOptions = {

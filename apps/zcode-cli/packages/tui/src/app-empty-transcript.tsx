@@ -8,16 +8,16 @@ const h = React.createElement as (
   ...children: React.ReactNode[]
 ) => React.ReactElement;
 
-const ZCODE_LOGO_LINES = [
-  "███████╗ ██████╗ ██████╗ ██████╗ ███████╗",
-  "   ███╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝",
-  "  ███╔╝ ██║     ██║   ██║██║  ██║█████╗  ",
-  " ███╔╝  ██║     ██║   ██║██║  ██║██╔══╝  ",
-  "███████╗╚██████╗╚██████╔╝██████╔╝███████╗",
-  "╚══════╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝",
+const LATCH_LOGO_LINES = [
+  "██╗      █████╗ ████████╗ ██████╗██╗  ██╗",
+  "██║     ██╔══██╗╚══██╔══╝██╔════╝██║  ██║",
+  "██║     ███████║   ██║   ██║     ███████║",
+  "██║     ██╔══██║   ██║   ██║     ██╔══██║",
+  "███████╗██║  ██║   ██║    ╚██████╗██║  ██║",
+  "╚══════╝╚═╝  ╚═╝   ╚═╝     ╚═════╝╚═╝  ╚═╝",
 ] as const;
 
-const EMPTY_TRANSCRIPT_LOGO_MIN_HEIGHT = ZCODE_LOGO_LINES.length;
+const EMPTY_TRANSCRIPT_LOGO_MIN_HEIGHT = LATCH_LOGO_LINES.length;
 
 export function EmptyTranscriptLogo({
   animated = false,
@@ -48,7 +48,7 @@ function renderLogoContent(input: { animated: boolean; frameMs?: number }): Reac
         width: "100%",
       },
     },
-    ...ZCODE_LOGO_LINES.map((line, index) =>
+    ...LATCH_LOGO_LINES.map((line, index) =>
       renderLogoText({
         animated: input.animated,
         baseColor: palette.accent,

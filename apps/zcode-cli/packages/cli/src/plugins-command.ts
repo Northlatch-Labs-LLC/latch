@@ -204,7 +204,7 @@ async function runPluginsUpdateCommand(
   ctx.stdout.write(
     version && version === result.previousVersion
       ? `Plugin ${pluginId} is already up to date (${version}).\n`
-      : `Updated plugin ${pluginId} from ${result.previousVersion || "unknown"} to ${version || "unknown"}. Restart zcode to apply.\n`,
+      : `Updated plugin ${pluginId} from ${result.previousVersion || "unknown"} to ${version || "unknown"}. Restart latch to apply.\n`,
   );
   writeWarnings(ctx, result.diagnostics);
   return 0;

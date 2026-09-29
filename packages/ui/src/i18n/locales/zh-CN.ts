@@ -2565,7 +2565,7 @@ const zhCN: Record<string, string> = {
   "settings.modelProvider.modelSaveFailure": "{provider} / {model} 保存失败：{error}",
   "settings.modelProvider.cancel": "取消",
   "settings.modelProvider.name": "名称",
-  "settings.modelProvider.namePlaceholder": "如：智谱 GLM",
+  "settings.modelProvider.namePlaceholder": "如：GLM",
   "settings.modelProvider.addProviderTitle": "添加模型供应商",
   "settings.modelProvider.addProviderDescription": "配置一个完全自定义的 API 端点和初始模型。",
   "settings.modelProvider.addFromCatalog": "供应商目录",
@@ -3193,7 +3193,7 @@ const zhCN: Record<string, string> = {
   "settings.modelProvider.newProviderName": "新供应商",
   "settings.modelProvider.modelsPlaceholder": "每行一个模型名称",
   "settings.modelProvider.modelsCount": "{count} 个模型",
-  "settings.modelProvider.presetTitle": "智谱",
+  "settings.modelProvider.presetTitle": "供应商",
   "settings.modelProvider.presetDescription":
     "内置 Z.ai 与 BigModel 供应商，支持通过 OAuth 辅助完成配置。",
   "settings.modelProvider.presetEmpty": "尚未同步，请先完成 OAuth 登录。",

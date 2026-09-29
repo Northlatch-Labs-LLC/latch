@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 31,
+  "revision": 32,
   "config": {
     "providerConfigRules": {
       "templateRules": [
@@ -777,7 +777,8 @@
               "type": "builtin",
               "key": "zai"
             }
-          }
+          },
+          "enabled": false
         },
         {
           "providerId": "account:zai-team-coding-plan",
@@ -801,7 +802,8 @@
               "type": "builtin",
               "key": "zai"
             }
-          }
+          },
+          "enabled": false
         },
         {
           "providerId": "account:zai-start-plan",
@@ -826,7 +828,8 @@
               "type": "builtin",
               "key": "start-plan"
             }
-          }
+          },
+          "enabled": false
         },
         {
           "providerId": "account:bigmodel-individual-coding-plan",
@@ -850,7 +853,8 @@
               "type": "builtin",
               "key": "bigmodel"
             }
-          }
+          },
+          "enabled": false
         },
         {
           "providerId": "account:bigmodel-team-coding-plan",
@@ -874,7 +878,8 @@
               "type": "builtin",
               "key": "bigmodel"
             }
-          }
+          },
+          "enabled": false
         },
         {
           "providerId": "account:bigmodel-start-plan",
@@ -899,7 +904,8 @@
               "type": "builtin",
               "key": "start-plan"
             }
-          }
+          },
+          "enabled": false
         },
         {
           "providerId": "account:zai-offpeak-idle-plan",
@@ -924,7 +930,8 @@
               "type": "builtin",
               "key": "zai"
             }
-          }
+          },
+          "enabled": false
         },
         {
           "providerId": "account:bigmodel-offpeak-idle-plan",
@@ -949,7 +956,8 @@
               "type": "builtin",
               "key": "bigmodel"
             }
-          }
+          },
+          "enabled": false
         }
       ]
     },

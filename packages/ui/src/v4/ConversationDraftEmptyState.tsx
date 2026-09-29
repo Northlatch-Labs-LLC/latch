@@ -5,7 +5,7 @@
  * 手机远控复用同一组件，但继续保留 20px 紧凑标题；桌面草稿首页才按标题自身宽度适配。
  */
 import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
-import darkEmptyStateLogoUrl from "@/assets/Z.svg";
+import darkEmptyStateLogoUrl from "@/assets/latch-mark.svg";
 import { cn } from "@/components/lib/utils.js";
 import { useZCodeIntl } from "@/i18n/IntlProvider.js";
 import { useIsOfficeMode } from "@/hooks/useInterfaceMode.js";
@@ -230,7 +230,11 @@ function ZCodeEmptyStateLogo({ className }: { className?: string }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M398.97 0.5L147.576 319.5H1.03027L37.5996 273.081L120.167 169.603L120.171 169.598L215.342 47.5605L215.343 47.5615L252.424 0.5H398.97ZM264.544 273.271H372.527L336.082 319.498H189.886L202.642 303.307C217.584 284.34 240.398 273.271 264.544 273.271ZM209.164 0.5L202.786 8.58887C183.782 32.6885 154.782 46.752 124.091 46.752H25.9805L62.4268 0.5H209.164Z"
+          d="M38.55 15h65.78v194.35c0 16.445 13.455 29.9 29.9 29.9h167.44v65.78H104.33c-36.3285 0-65.78-29.4509-65.78-65.78V15Z"
+          stroke="currentColor"
+        />
+        <path
+          d="M170.11 15h131.56c33.0395 0 59.8 26.7605 59.8 59.8v89.7c0 33.0395-26.7605 59.8-59.8 59.8h-65.78V158.52h59.8c6.578 0 11.96-5.382 11.96-11.96V80.78c0-6.578-5.382-11.96-11.96-11.96h-125.58V15Z"
           stroke="currentColor"
         />
       </svg>

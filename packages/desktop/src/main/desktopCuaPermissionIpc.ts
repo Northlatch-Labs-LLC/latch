@@ -196,7 +196,7 @@ function waitForCuaApplicationReturn({
     observationTimer = setTimeout(
       () =>
         finish(
-          new Error(`System Settings did not return to ZCode within ${Math.max(1, timeoutMs)}ms`),
+          new Error(`System Settings did not return to Latch within ${Math.max(1, timeoutMs)}ms`),
         ),
       Math.max(1, timeoutMs),
     );

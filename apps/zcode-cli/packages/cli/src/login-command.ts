@@ -144,7 +144,7 @@ function writeAuthorizeUrl(
   }
 
   target.write(
-    `Opening browser for ${providerId === "bigmodel" ? "BigModel" : "Z.AI"} authorization.\nFallback URL:\n${authorizeUrl}\n`,
+    `Opening browser for ${providerId === "bigmodel" ? "BigModel" : "Xlaunch Gateway"} authorization.\nFallback URL:\n${authorizeUrl}\n`,
   );
 }
 
