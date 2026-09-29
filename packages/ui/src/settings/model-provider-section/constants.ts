@@ -80,14 +80,14 @@ export const CODING_PLAN_PROVIDER_SPECS: CodingPlanProviderSpec[] = [
     oauthProviderId: ZAI_PROVIDER_ID,
     label: "Latch - Coding Plan",
     providerName: "Z.ai",
-    purchaseUrl: "https://z.ai/manage-apikey/subscription",
+    purchaseUrl: "https://gateway.xlaunch.work/usage", // Latch subscription: managed on the Xlaunch Gateway estate
   },
   {
     id: BUILTIN_MODEL_PROVIDER_IDS.zaiIndividualCodingPlan,
     oauthProviderId: ZAI_PROVIDER_ID,
     label: "Latch - Coding Plan",
     providerName: "Z.ai",
-    purchaseUrl: "https://z.ai/manage-apikey/subscription",
+    purchaseUrl: "https://gateway.xlaunch.work/usage", // Latch subscription: managed on the Xlaunch Gateway estate
   },
   {
     id: BUILTIN_MODEL_PROVIDER_IDS.bigmodelIndividualCodingPlan,

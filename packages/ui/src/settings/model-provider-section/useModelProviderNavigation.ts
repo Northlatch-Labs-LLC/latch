@@ -178,48 +178,75 @@ export function useModelProviderNavigation({
   );
 
   const navigationGroups = useMemo<ModelProviderNavGroup[]>(() => {
+    // Latch provider presentation: the mandatory Xlaunch Gateway is the
+    // embedded provider; Z.ai/BigModel account logins present as custom
+    // choices (their OAuth machinery is unchanged, only the group moved).
+    const gatewayProvider = customProviders.find((provider) =>
+      String(provider.config?.api?.baseUrl ?? "").includes("gateway.xlaunch.work"),
+    );
+    const otherCustomProviders = customProviders.filter((provider) => provider !== gatewayProvider);
+    const zaiPresetItems = [
+      ...presetProviders.map(({ id, displayName, provider }) => {
+        const statusProvider = resolvePresetFamilyStatusProvider({
+          presetId: id,
+          provider,
+          connectionModeItems: connectionModeCodingPlanItems,
+          connectionSelections,
+          modelProviders,
+        });
+        return {
+          key: createPresetProviderNodeKey(id),
+          type: "preset" as const,
+          presetId: id,
+          label: displayName,
+          logo: modelProviders.find(
+            (candidate) =>
+              candidate.providerId ===
+              resolveModelProviderFamilySpecByProviderId(id)?.individualCodingPlanProviderId,
+          )?.config.logo,
+          provider,
+          displayName,
+          statusProvider,
+          statusActive: statusProvider?.executable === true,
+        };
+      }),
+      ...codingPlanItems.filter((item) => isStartPlanModelProviderId(item.presetId)),
+    ];
+    const gatewayItem = gatewayProvider
+      ? [
+          {
+            key: createCustomProviderNodeKey(gatewayProvider.providerId),
+            type: "custom" as const,
+            label: "Xlaunch Gateway",
+            provider: gatewayProvider,
+            statusActive: gatewayProvider.executable === true,
+          },
+        ]
+      : [];
     const groups: ModelProviderNavGroup[] = [
       {
         id: "preset",
         title: intl.formatMessage({ id: "settings.modelProvider.presetTitle" }),
-        items: [
-          ...presetProviders.map(({ id, displayName, provider }) => {
-            const statusProvider = resolvePresetFamilyStatusProvider({
-              presetId: id,
-              provider,
-              connectionModeItems: connectionModeCodingPlanItems,
-              connectionSelections,
-              modelProviders,
-            });
-            return {
-              key: createPresetProviderNodeKey(id),
-              type: "preset" as const,
-              presetId: id,
-              label: displayName,
-              logo: modelProviders.find(
-                (candidate) =>
-                  candidate.providerId ===
-                  resolveModelProviderFamilySpecByProviderId(id)?.individualCodingPlanProviderId,
-              )?.config.logo,
-              provider,
-              displayName,
-              statusProvider,
-              statusActive: statusProvider?.executable === true,
-            };
-          }),
-          ...codingPlanItems.filter((item) => isStartPlanModelProviderId(item.presetId)),
-        ],
+        items: gatewayProvider
+          ? gatewayItem
+          : [
+              ...gatewayItem,
+              ...zaiPresetItems,
+            ],
       },
       {
         id: "custom",
         title: intl.formatMessage({ id: "settings.modelProvider.customTitle" }),
-        items: customProviders.map((provider) => ({
-          key: createCustomProviderNodeKey(provider.providerId),
-          type: "custom" as const,
-          label: getProviderFormLabel(provider),
-          provider,
-          statusActive: provider.executable === true,
-        })),
+        items: [
+          ...otherCustomProviders.map((provider) => ({
+            key: createCustomProviderNodeKey(provider.providerId),
+            type: "custom" as const,
+            label: getProviderFormLabel(provider),
+            provider,
+            statusActive: provider.executable === true,
+          })),
+          ...(gatewayProvider ? zaiPresetItems : []),
+        ],
       },
     ];
 
