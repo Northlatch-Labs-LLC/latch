@@ -15,6 +15,7 @@ import xAiLogo from "@/assets/provider-icons/model-provider-xai.png";
 import xiaomiMimoLogo from "@/assets/provider-icons/model-provider-xiaomi-mimo.png";
 import startPlanLogo from "@/assets/provider-icons/model-provider-start-plan.png";
 import zaiLogo from "@/assets/provider-icons/model-provider-zai-app.png";
+import latchLogo from "@/assets/latch-mark.svg";
 import openrouterLight from "@/assets/provider-icons/model-provider-openrouter-light.svg";
 import openrouterDark from "@/assets/provider-icons/model-provider-openrouter-dark.svg";
 import opencodeLight from "@/assets/provider-icons/model-provider-opencode-light.svg";
@@ -29,6 +30,9 @@ interface BuiltinProviderLogoAsset {
 
 // 这里只负责把 Config 中的资源 key 解析为打包素材；禁止加入 Provider ID、名称或排序逻辑。
 const BUILTIN_PROVIDER_LOGO_ASSETS: Readonly<Record<string, BuiltinProviderLogoAsset>> = {
+  // Xlaunch Gateway 是 Latch 内置网关，使用产品自有 Latch mark；
+  // zai/bigmodel 是保留的自定义 Provider，继续沿用各自的品牌标。
+  latch: { light: latchLogo },
   // 用户指定 Dock 应用图标；同名旧 SVG 带灰色描边，不能当作同一素材复用。
   zai: { light: zaiLogo },
   bigmodel: { light: bigModelLogo },

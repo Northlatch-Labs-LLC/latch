@@ -130,7 +130,7 @@ function normalizeBackendAvatarUrl(avatar: string | undefined): string | undefin
     return dataUrl;
   }
 
-  // ZAI 后端现在稳定返回可展示 URL 或 base64，客户端继续拼 chat.z.ai 前缀会改坏服务端语义。
+  // ZAI 后端现在稳定返回可展示 URL 或 base64，客户端继续拼 vendor 授权域前缀会改坏服务端语义。
   // 这里只保留原值，避免把后端返回的 avatar 二次加工成错误地址。
   return trimmed;
 }
@@ -285,6 +285,11 @@ export class ZaiProviderAdapter implements OAuthProviderAdapter {
   }
 
   buildAuthorizeUrl(context: OAuthProviderContext): string {
+    // 未配置 ZAI_OAUTH_CLIENT_ID 时 ZAI provider 视为未配置：拒绝构造授权 URL，
+    // 避免拼出空 client_id 的授权跳转；上游登录入口会把该错误提示给用户。
+    if (!this.config.appId) {
+      throw new Error("ZAI OAuth is not configured (missing ZAI_OAUTH_CLIENT_ID)");
+    }
     const query = new URLSearchParams({
       redirect_uri: context.redirectUri,
       response_type: "code",

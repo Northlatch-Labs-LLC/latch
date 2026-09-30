@@ -1,12 +1,12 @@
 name: Upstream sync
 
-# Weekly merge of upstream (zai-org/ZCode) main into this fork's main.
+# Manual-only merge of upstream (zai-org/ZCode) main into this fork's main.
+# The weekly cron trigger was removed by decision: divergence from upstream is
+# deliberate, and every sync would resurrect swept branding. See
+# product/identity/DECISIONS.md item (d) before running this workflow.
 # Opens a PR for review; on merge conflict the job fails so a human resolves it.
 
 on:
-  schedule:
-    # Every Monday 06:00 UTC.
-    - cron: "0 6 * * 1"
   workflow_dispatch:
 
 permissions:

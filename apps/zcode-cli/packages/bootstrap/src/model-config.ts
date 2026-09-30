@@ -55,7 +55,7 @@ function buildCliZCodeSourceHeaders(
   return {
     "HTTP-Referer": resolveRuntimeZCodeEndpointOrigin(env),
     "User-Agent": `Latch/${appVersion ?? "unknown"}`,
-    ...(appVersion ? { "X-ZCode-App-Version": appVersion } : {}),
+    ...(appVersion ? { "X-Latch-App-Version": appVersion } : {}),
     "X-Title": `Latch@${sourceTitle}`,
     "X-Release-Channel": resolveRuntimeZCodeEnv(env),
     "X-Client-Language": locale ?? "unknown",

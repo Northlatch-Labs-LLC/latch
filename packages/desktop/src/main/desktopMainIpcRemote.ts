@@ -1,6 +1,5 @@
 /* eslint-disable max-lines -- 远程连接、OAuth 回调、遥测和通知 IPC 共用窗口级上下文，集中注册避免跨文件状态漂移。 */
 import { app, BrowserWindow, ipcMain, shell } from "electron";
-import armsRum from "@arms/rum-electron";
 import {
   armsCustomEventPayloadSchema,
   buildRemoteWorkspaceConnectResultTelemetry,
@@ -75,8 +74,9 @@ function isCodingPlanPaypalNavigationUrl(url: string): boolean {
     const parsed = new URL(url);
     if (parsed.protocol !== "https:") return false;
     if (isPaypalHostname(parsed.hostname)) return true;
+    // 中转放行跟随网关解析结果（默认 Northlatch 基础域），不再硬编码上游厂商域名。
     return (
-      ["https://api.z.ai", resolveZaiBusinessBaseUrl()].includes(parsed.origin) &&
+      parsed.origin === resolveZaiBusinessBaseUrl() &&
       parsed.pathname.startsWith("/api/pay/paypal/")
     );
   } catch {
@@ -151,8 +151,6 @@ export function registerRemoteIpcHandlers(options: {
     syncRendererContext(payload: { rendererId: number; context: unknown }): void;
     onOAuthCallbackHandled(payload: { rendererId: number }): void;
   };
-  /** OAuth 回调处理完成后的额外副作用（如刷新 ARMS user.id）；不影响既有 runtime 流程 */
-  onOAuthCallbackHandledSideEffect?: () => void;
   appTelemetryCore: {
     reportEvent(payload: unknown): Promise<void>;
   };
@@ -216,8 +214,8 @@ export function registerRemoteIpcHandlers(options: {
   configureRemoteUsageArmsTelemetry({
     armsCustomContext: options.armsCustomContext,
     getRemoteConnectionStats: options.getRemoteConnectionStats,
-    sendCustom: (payload) =>
-      armsRum.sendCustom(payload as Parameters<typeof armsRum.sendCustom>[0]),
+    // ARMS RUM SDK 已移除：远程用量事件只进 E2E 捕获环，不再外发。
+    sendCustom: () => {},
     e2eController: finalArmsCustomEventE2E,
     logger: options.logger,
   });
@@ -356,10 +354,8 @@ export function registerRemoteIpcHandlers(options: {
           rendererId: event.sender.id,
         },
         e2eController: finalArmsCustomEventE2E,
-        // FinalArmsCustomEventPayload 是 SDK RumCustomEvent 的收窄子集；SDK 额外要求
-        // BaseObject 索引签名，但这里不会动态追加未声明字段。
-        sendCustom: (payload) =>
-          armsRum.sendCustom(payload as Parameters<typeof armsRum.sendCustom>[0]),
+        // ARMS RUM SDK 已移除：renderer 自定义事件经 schema 校验后只进 E2E 捕获环。
+        sendCustom: () => {},
       });
     } catch (error) {
       options.logger.warn(
@@ -371,7 +367,6 @@ export function registerRemoteIpcHandlers(options: {
 
   ipcMain.on(PlatformChannels.OAuthCallbackHandled, (event) => {
     options.appTelemetryRuntime.onOAuthCallbackHandled({ rendererId: event.sender.id });
-    options.onOAuthCallbackHandledSideEffect?.();
   });
 
   ipcMain.on(PlatformChannels.ShowTaskNotification, (event, payload: unknown) => {

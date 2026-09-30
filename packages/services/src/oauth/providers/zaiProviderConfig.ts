@@ -12,19 +12,16 @@ import {
   readEnv,
 } from "./configUtils.js";
 
-const ZAI_OAUTH_PROVIDER_CONFIG: Omit<OAuthProviderRuntimeConfig, "appSecret"> = {
+// 静态默认值只保留 provider 元数据；所有 OAuth 地址与 appId 都在运行期按 env 构建，
+// 未配置时回落到 Latch 端点（fail-safe），绝不写死 vendor 域名或已退役的 client id。
+const ZAI_OAUTH_PROVIDER_CONFIG: Pick<
+  OAuthProviderRuntimeConfig,
+  "id" | "displayName" | "enabled" | "order"
+> = {
   id: ZAI_PROVIDER_ID,
   displayName: "Z.ai",
   enabled: true,
   order: 1,
-  // ZAI 当前 OAuth 授权入口使用 /api/oauth 前缀，继续走 /auth/oauth 会打开旧入口。
-  authorizeUrl: "https://chat.z.ai/api/oauth/authorize",
-  tokenUrl: "https://zcode.z.ai/api/v1/oauth/token",
-  userinfoUrl: "https://chat.z.ai/api/oauth/userinfo",
-  businessLoginUrl: "https://api.z.ai/api/auth/z/login",
-  // 生产 client_id 不是 secret，但保留 fallback 可以避免未配置 env 的旧构建直接无法登录。
-  appId: "client_P8X5CMWmlaRO9gyO-KSqtg",
-  redirectUri: "zcode://oauth/callback",
 };
 
 export function createZaiProviderRuntimeConfig(env: NodeJS.ProcessEnv): OAuthProviderRuntimeConfig {
@@ -42,6 +39,7 @@ export function createZaiProviderRuntimeConfig(env: NodeJS.ProcessEnv): OAuthPro
       buildRuntimeZaiBusinessUrl(env, "/api/auth/z/login"),
     appId:
       // client_id 是公开 OAuth app 标识，按环境覆盖，避免测试/生产 OAuth 应用混用。
+      // 未配置时保持为空：ZAI provider 视为未配置，适配器不得构造授权跳转（见 ZaiProviderAdapter）。
       resolveZaiOAuthClientId(env),
     redirectUri: buildDesktopOAuthRedirectUriFromEnv(env),
   };

@@ -1,4 +1,3 @@
-import armsRum from "@arms/rum-electron";
 import {
   bytesToKb,
   createMemorySampleWriteGate,
@@ -130,7 +129,7 @@ function stringifyProperties(
 
 function reportResourceCustom(
   name: string,
-  /** ARMS custom 的 value 字段：控制台默认展示的主指标数值 */
+  /** 原 ARMS custom 的 value 字段；SDK 移除后仅用于 E2E 捕获环记录 */
   metricValue: number,
   properties: Record<string, string | number | boolean | undefined>,
 ): void {
@@ -146,18 +145,14 @@ function reportResourceCustom(
     properties: stringifyProperties(properties),
   };
 
-  // E2E 在 sendCustom 之前捕获，读到的就是真实上报内容。
+  // E2E 在原 sendCustom 之前捕获，读到的就是真实上报内容。
   const e2eController = getSharedFinalArmsCustomEventE2EController();
   e2eController?.record(payload);
   if (e2eController?.shouldSuppress(name)) {
     return;
   }
 
-  try {
-    armsRum.sendCustom(payload);
-  } catch (error) {
-    console.warn("[resource] sendCustom failed:", name, error);
-  }
+  // ARMS RUM SDK 已移除：资源事件只进 E2E 捕获环，不再外发。
 }
 
 export function resolveResourceUsageScene(): ResourceUsageScene {
@@ -420,13 +415,6 @@ export function configureDesktopResourceTelemetry(context: ResourceGlobalContext
   processResourceSystemWindow.clear();
   globalContext = context;
   desktopHardware = resolveDesktopHardware(context.platform);
-
-  armsRum.setConfig("properties", {
-    device_mid: context.deviceMid,
-    platform: normalizeOsCategory(context.platform),
-    app_version: context.appVersion,
-    arms_env: context.armsEnv,
-  });
 }
 
 export function registerDesktopResourceTelemetry(

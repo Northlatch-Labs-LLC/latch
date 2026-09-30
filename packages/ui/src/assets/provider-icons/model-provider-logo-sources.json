@@ -30,6 +30,14 @@
       "normalization": "Byte-for-byte copy of the user-provided 128x128 RGBA PNG on 2026-09-17. Shared by both Start Plans in light and dark themes."
     },
     {
+      "brand": "Latch",
+      "file": "latch-mark.svg",
+      "providerIds": ["xlaunch-gateway"],
+      "sourceUrl": "repository-existing:packages/ui/src/assets/latch-mark.svg",
+      "sourceOwner": "Northlatch Labs",
+      "normalization": "Product's own Latch mark (bold L with shackle). Lives at packages/ui/src/assets/latch-mark.svg, outside the provider-icons directory. Reused unchanged for the Xlaunch Gateway builtin provider tile in light and dark themes."
+    },
+    {
       "brand": "Z.AI",
       "file": "model-provider-zai-app.png",
       "providerIds": [
@@ -38,9 +46,9 @@
         "account:zai-team-coding-plan",
         "account:zai-offpeak-idle-plan"
       ],
-      "sourceUrl": "repository:packages/desktop/build/icons/128x128.png",
+      "sourceUrl": "upstream:packages/desktop/build/icons/128x128.png (upstream ZCode app icon as committed before the Latch icon re-rasterization)",
       "sourceOwner": "Z.AI",
-      "normalization": "Byte-for-byte copy of the existing 128x128 Latch application PNG. No extra Dock padding, redraw, inversion or added outline."
+      "normalization": "Byte-for-byte copy of the upstream ZCode application icon (128x128), used as the Z.ai provider tile for the retained custom Z.ai providers. It is not the Latch application icon: no extra Dock padding, redraw, inversion or added outline."
     },
     {
       "brand": "BigModel",

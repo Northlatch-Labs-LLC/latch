@@ -1,10 +1,8 @@
-/* eslint-disable max-lines -- 网络指标采集/聚合/ARMS 上报 */
-import armsRum from "@arms/rum-electron";
+/* eslint-disable max-lines -- 网络指标采集/聚合 */
 import { mapZCodeEnvToArmsRumEnv } from "@zcode/shared";
 import type { NetworkObservation } from "@zcode/rpc";
 import {
   flushInterfaceNetworkStats,
-  ingestArmsApiEvent,
   recordNetworkObservation,
   resetNetworkTelemetryAggregator,
   type InterfaceNetworkStats,
@@ -29,30 +27,6 @@ interface NetworkGlobalContext {
 let globalContext: NetworkGlobalContext | null = null;
 let reportTimer: ReturnType<typeof setInterval> | null = null;
 
-function normalizeOsCategory(platform: NodeJS.Platform): string {
-  switch (platform) {
-    case "darwin":
-      return "macos";
-    case "win32":
-      return "windows";
-    default:
-      return "linux";
-  }
-}
-
-function stringifyProperties(
-  properties: Record<string, string | number | boolean | undefined>,
-): Record<string, string> {
-  const result: Record<string, string> = {};
-  for (const [key, value] of Object.entries(properties)) {
-    if (value === undefined) {
-      continue;
-    }
-    result[key] = String(value);
-  }
-  return result;
-}
-
 function reportNetworkCustom(
   name: string,
   metricValue: number,
@@ -62,25 +36,11 @@ function reportNetworkCustom(
     return;
   }
 
-  const payload = stringifyProperties({
-    platform: normalizeOsCategory(globalContext.platform),
-    app_version: globalContext.appVersion,
-    arms_env: globalContext.armsEnv,
-    device_mid: globalContext.deviceMid,
-    ...properties,
-  });
-
-  try {
-    armsRum.sendCustom({
-      name,
-      type: "custom",
-      group: "network",
-      value: metricValue,
-      properties: payload,
-    });
-  } catch (error) {
-    console.warn("[network] sendCustom failed:", name, error);
-  }
+  // ARMS RUM SDK 已移除：聚合窗口仍按周期排空（保持 aggregator 状态与日志节奏），
+  // 指标不再外发。保留 name/metricValue/properties 形参以维持调用点与日志语义不变。
+  void name;
+  void metricValue;
+  void properties;
 }
 
 function reportInterfaceStats(stats: InterfaceNetworkStats): void {
@@ -122,17 +82,6 @@ function flushNetworkReports(logger: NetworkLogger): void {
   logger.info(`[network] perf_network flushed interfaces=${stats.length}`);
 }
 
-export function ingestArmsApiEventsFromBatch(
-  events: Array<Record<string, unknown>> | undefined,
-): void {
-  if (!events?.length) {
-    return;
-  }
-  for (const event of events) {
-    ingestArmsApiEvent(event);
-  }
-}
-
 export function ingestHostNetworkObservations(observations: NetworkObservation[]): void {
   for (const observation of observations) {
     recordNetworkObservation(observation);
@@ -140,13 +89,8 @@ export function ingestHostNetworkObservations(observations: NetworkObservation[]
 }
 
 export function configureDesktopNetworkTelemetry(context: NetworkGlobalContext): void {
+  // ARMS RUM SDK 已移除：仅保留 context 记录，供采集链路判定启用状态。
   globalContext = context;
-  armsRum.setConfig("properties", {
-    device_mid: context.deviceMid,
-    platform: normalizeOsCategory(context.platform),
-    app_version: context.appVersion,
-    arms_env: context.armsEnv,
-  });
 }
 
 export function registerDesktopNetworkTelemetry(logger: NetworkLogger): void {

@@ -46,7 +46,7 @@ export function buildZCodeSourceHeadersFromContext(
     ...ZCODE_SOURCE_HEADERS,
     "HTTP-Referer": endpointOrigin,
     "User-Agent": `Latch/${appVersion ?? "unknown"}`,
-    ...(appVersion ? { "X-ZCode-App-Version": appVersion } : {}),
+    ...(appVersion ? { "X-Latch-App-Version": appVersion } : {}),
     "X-Title": `Latch@${sourceTitle}`,
     ...(platform && arch ? { "X-Platform": `${platform}-${arch}` } : {}),
     ...(releaseChannel ? { "X-Release-Channel": releaseChannel } : {}),

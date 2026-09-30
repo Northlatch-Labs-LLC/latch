@@ -1,10 +1,13 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-29T04:46:22.516Z",
+  "generatedAt": "2026-09-30T09:52:30.110Z",
   "terms": [
     "ZCode",
     "Z.ai",
-    "GLM"
+    "GLM",
+    "bigmodel",
+    "zhipu",
+    "client_P8X5CMWmlaRO9gyO-KSqtg"
   ],
   "identityMirror": {
     "note": "brand.yaml binary_name must be mirrored by the CLI command constant and the SEA artifact name; a mismatch fails the lint (INV-3 single source)",
@@ -28,7 +31,7 @@
     "clean": true
   },
   "strict": {
-    "scope": "git-tracked files under product/ excluding product/identity/brand.yaml",
+    "scope": "git-tracked files under product/ excluding product/identity/brand.yaml and product/identity/DECISIONS.md",
     "filesScanned": 5,
     "violations": [],
     "clean": true
@@ -42,22 +45,32 @@
     },
     "total": 1
   },
+  "decisionsFile": {
+    "file": "product/identity/DECISIONS.md",
+    "note": "written product decisions (product/identity/DECISIONS.md); must name the vendor terms it governs, so exempt like brand.yaml",
+    "status": "not-tracked",
+    "counts": {},
+    "total": 0
+  },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7107,
-    "filesWithOccurrences": 2995,
-    "totalOccurrences": 30073,
+    "filesScanned": 7109,
+    "filesWithOccurrences": 2988,
+    "totalOccurrences": 31108,
     "byTerm": {
-      "ZCode": 28952,
-      "Z.ai": 244,
-      "GLM": 877
+      "ZCode": 28003,
+      "Z.ai": 196,
+      "GLM": 876,
+      "bigmodel": 1864,
+      "zhipu": 162,
+      "client_P8X5CMWmlaRO9gyO-KSqtg": 7
     },
     "rootReadme": {
       "file": "README.md",
       "counts": {
-        "ZCode": 69
+        "ZCode": 5
       },
-      "total": 69
+      "total": 5
     },
     "occurrences": [
       {
@@ -890,10 +903,11 @@
       {
         "file": ".env.example",
         "counts": {
-          "ZCode": 12,
-          "Z.ai": 6
+          "ZCode": 8,
+          "Z.ai": 2,
+          "bigmodel": 1
         },
-        "total": 18
+        "total": 11
       },
       {
         "file": ".github/workflows/ci.yml",
@@ -1019,23 +1033,30 @@
       {
         "file": "README.en.md",
         "counts": {
-          "ZCode": 66
+          "ZCode": 5
         },
-        "total": 66
+        "total": 5
       },
       {
         "file": "README.md",
         "counts": {
-          "ZCode": 69
+          "ZCode": 5
         },
-        "total": 69
+        "total": 5
       },
       {
         "file": "THIRD-PARTY-NOTICES.md",
         "counts": {
-          "ZCode": 6
+          "ZCode": 5
         },
-        "total": 6
+        "total": 5
+      },
+      {
+        "file": "apps/zcode-cli/.env.template",
+        "counts": {
+          "bigmodel": 1
+        },
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/AGENTS.md",
@@ -1075,25 +1096,27 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/auth/bigmodel-oauth.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 26
         },
-        "total": 3
+        "total": 29
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/auth/cli-oauth.ts",
         "counts": {
-          "ZCode": 4,
-          "Z.ai": 1
+          "ZCode": 9,
+          "bigmodel": 1
         },
-        "total": 5
+        "total": 10
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/auth/coding-plan-api-key.ts",
         "counts": {
           "ZCode": 5,
-          "Z.ai": 2
+          "Z.ai": 2,
+          "bigmodel": 4
         },
-        "total": 7
+        "total": 11
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/auth/credential-cipher.ts",
@@ -1103,11 +1126,19 @@
         "total": 9
       },
       {
+        "file": "apps/zcode-cli/packages/adapters/src/auth/index.ts",
+        "counts": {
+          "bigmodel": 1
+        },
+        "total": 1
+      },
+      {
         "file": "apps/zcode-cli/packages/adapters/src/auth/shared-credentials.ts",
         "counts": {
-          "ZCode": 38
+          "ZCode": 37,
+          "bigmodel": 6
         },
-        "total": 38
+        "total": 43
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/browser/descriptor.ts",
@@ -1168,9 +1199,9 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/commands/roots.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 12
         },
-        "total": 13
+        "total": 12
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/config/config-factory.ts",
@@ -1210,16 +1241,17 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/config/project-config.adapter.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 3
         },
-        "total": 4
+        "total": 3
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/config/schema.ts",
         "counts": {
-          "ZCode": 15
+          "ZCode": 15,
+          "bigmodel": 1
         },
-        "total": 15
+        "total": 16
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/context/git-snapshot.ts",
@@ -1231,16 +1263,16 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/context/index.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 2
         },
-        "total": 3
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/device/cli-device-mid.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 4
         },
-        "total": 5
+        "total": 4
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/exec/bash-file-output.ts",
@@ -1308,9 +1340,9 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/exec/execution-utils.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 2
         },
-        "total": 3
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/exec/node-execution-adapter-base.ts",
@@ -1455,9 +1487,9 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/logging/index.ts",
         "counts": {
-          "ZCode": 12
+          "ZCode": 11
         },
-        "total": 12
+        "total": 11
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/logging/retention.ts",
@@ -1490,9 +1522,10 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/mcp/index.ts",
         "counts": {
-          "ZCode": 29
+          "ZCode": 29,
+          "bigmodel": 2
         },
-        "total": 29
+        "total": 31
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/mcp/network.ts",
@@ -1609,16 +1642,18 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/failure-classifier.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 4
         },
-        "total": 1
+        "total": 5
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/failure-provider-business-codes.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 1
         },
-        "total": 1
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/media-transform-policy.ts",
@@ -1630,9 +1665,10 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/model-execution.ts",
         "counts": {
-          "ZCode": 8
+          "ZCode": 8,
+          "zhipu": 1
         },
-        "total": 8
+        "total": 9
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/model-option-map-fetch.ts",
@@ -1652,31 +1688,35 @@
         "file": "apps/zcode-cli/packages/adapters/src/model/official-coding-plan-gateway.ts",
         "counts": {
           "ZCode": 10,
-          "Z.ai": 3
+          "Z.ai": 3,
+          "bigmodel": 2
         },
-        "total": 13
+        "total": 15
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/offpeak-retry.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 1
         },
-        "total": 1
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/provider-finish-business-error.ts",
         "counts": {
           "ZCode": 1,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 10
         },
-        "total": 2
+        "total": 12
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/reasoning-history-normalization.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 3
         },
-        "total": 2
+        "total": 5
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/request-admission.ts",
@@ -1709,9 +1749,9 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/runner-debug.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 12
         },
-        "total": 13
+        "total": 12
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/runner-diagnostics.ts",
@@ -1786,9 +1826,10 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/runner.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "zhipu": 6
         },
-        "total": 3
+        "total": 9
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/model/stream-idle-timeout.ts",
@@ -1975,9 +2016,9 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/skills/roots.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 12
         },
-        "total": 13
+        "total": 12
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/skills/scan.ts",
@@ -2036,25 +2077,27 @@
         "total": 4
       },
       {
+        "file": "apps/zcode-cli/packages/adapters/src/storage/session-store/migrations/0020-provider-model-selection.ts",
+        "counts": {
+          "bigmodel": 6
+        },
+        "total": 6
+      },
+      {
         "file": "apps/zcode-cli/packages/adapters/src/storage/session-store/migrations/0021-official-glm-selection.ts",
         "counts": {
-          "GLM": 67
+          "GLM": 67,
+          "bigmodel": 3
         },
-        "total": 67
+        "total": 70
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/storage/session-store/migrations/0022-backfilled-session-reasoning.ts",
         "counts": {
-          "GLM": 22
+          "GLM": 22,
+          "bigmodel": 9
         },
-        "total": 22
-      },
-      {
-        "file": "apps/zcode-cli/packages/adapters/src/storage/session-store/paths.ts",
-        "counts": {
-          "ZCode": 1
-        },
-        "total": 1
+        "total": 31
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/storage/session-store/repositories/debug.ts",
@@ -2192,16 +2235,16 @@
       {
         "file": "apps/zcode-cli/packages/adapters/src/storage/workspace-hook-trust-store.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 2
         },
-        "total": 4
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/adapters/src/workflow/index.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 2
         },
-        "total": 3
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/package.json",
@@ -2453,9 +2496,10 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/legacy-cli-personal-provider-config-importer.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 4,
+          "bigmodel": 2
         },
-        "total": 4
+        "total": 6
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/locale-selection.ts",
@@ -2530,9 +2574,10 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/process-provider-registry-runtime.ts",
         "counts": {
-          "ZCode": 36
+          "ZCode": 36,
+          "zhipu": 1
         },
-        "total": 36
+        "total": 37
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/prompt-input.ts",
@@ -2544,9 +2589,10 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/provider-registry-model-runtime.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 4,
+          "zhipu": 1
         },
-        "total": 4
+        "total": 5
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/provider-registry-selection.ts",
@@ -2607,16 +2653,16 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/script-workflow-tool-port.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 1
         },
-        "total": 3
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/script-workflow-utils.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 1
         },
-        "total": 3
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/session-facade.ts",
@@ -2635,9 +2681,10 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/standalone-account-provider-runtime.ts",
         "counts": {
-          "ZCode": 18
+          "ZCode": 18,
+          "zhipu": 5
         },
-        "total": 18
+        "total": 23
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/startup-marks.ts",
@@ -2839,9 +2886,9 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/workspace-hook-review-mutation.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 4
         },
-        "total": 5
+        "total": 4
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/app/workspace-hook-review-request.ts",
@@ -2895,16 +2942,17 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/auth-login.ts",
         "counts": {
-          "ZCode": 56
+          "ZCode": 56,
+          "bigmodel": 12
         },
-        "total": 56
+        "total": 68
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/builtin-prompt-command.ts",
         "counts": {
-          "ZCode": 9
+          "ZCode": 8
         },
-        "total": 9
+        "total": 8
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/builtin-workflow-command.ts",
@@ -2958,9 +3006,9 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/model-config.ts",
         "counts": {
-          "ZCode": 11
+          "ZCode": 10
         },
-        "total": 11
+        "total": 10
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/model-factory.ts",
@@ -2979,9 +3027,9 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/plugins.ts",
         "counts": {
-          "ZCode": 124
+          "ZCode": 123
         },
-        "total": 124
+        "total": 123
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/process-resource-sampler.ts",
@@ -3028,9 +3076,9 @@
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/subagents.ts",
         "counts": {
-          "ZCode": 12
+          "ZCode": 11
         },
-        "total": 12
+        "total": 11
       },
       {
         "file": "apps/zcode-cli/packages/bootstrap/src/telemetry-bootstrap.ts",
@@ -3799,9 +3847,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/package.json",
         "counts": {
-          "ZCode": 17
+          "ZCode": 18
         },
-        "total": 17
+        "total": 18
       },
       {
         "file": "apps/zcode-cli/packages/cli/scripts/build-sea.mjs",
@@ -3890,16 +3938,17 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/cli-types.ts",
         "counts": {
-          "ZCode": 59
+          "ZCode": 59,
+          "bigmodel": 5
         },
-        "total": 59
+        "total": 64
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/clipboard-image.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 4
         },
-        "total": 5
+        "total": 4
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/clipboard-text.ts",
@@ -3919,9 +3968,9 @@
         "file": "apps/zcode-cli/packages/cli/src/command-center/create.ts",
         "counts": {
           "ZCode": 1,
-          "Z.ai": 2
+          "bigmodel": 7
         },
-        "total": 3
+        "total": 8
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/command-center/effort-options.ts",
@@ -4010,17 +4059,18 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/command-center/history.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 1
         },
-        "total": 1
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/command-center/login-flow.ts",
         "counts": {
-          "ZCode": 5,
-          "Z.ai": 2
+          "ZCode": 6,
+          "bigmodel": 22
         },
-        "total": 7
+        "total": 28
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/command-center/metadata.ts",
@@ -4053,9 +4103,10 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/command-center/types.ts",
         "counts": {
-          "ZCode": 8
+          "ZCode": 8,
+          "bigmodel": 9
         },
-        "total": 8
+        "total": 17
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/commands-command.ts",
@@ -4123,10 +4174,10 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/login-command.ts",
         "counts": {
-          "ZCode": 6,
-          "Z.ai": 1
+          "ZCode": 7,
+          "bigmodel": 7
         },
-        "total": 7
+        "total": 14
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/main.ts",
@@ -4152,16 +4203,16 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/plugins-command-shared.ts",
         "counts": {
-          "ZCode": 20
+          "ZCode": 19
         },
-        "total": 20
+        "total": 19
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/plugins-command.ts",
         "counts": {
-          "ZCode": 8
+          "ZCode": 7
         },
-        "total": 8
+        "total": 7
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/plugins-marketplace-command.ts",
@@ -4173,9 +4224,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/process-errors.ts",
         "counts": {
-          "ZCode": 12
+          "ZCode": 11
         },
-        "total": 12
+        "total": 11
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/prompt-command.ts",
@@ -4201,9 +4252,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/provider-runtime-env.ts",
         "counts": {
-          "ZCode": 47
+          "ZCode": 44
         },
-        "total": 47
+        "total": 44
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/resume.ts",
@@ -4243,9 +4294,9 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/sea-runtime-tools.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 4
         },
-        "total": 5
+        "total": 4
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/shutdown.ts",
@@ -4264,9 +4315,10 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/tui-auth.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 4,
+          "bigmodel": 5
         },
-        "total": 4
+        "total": 9
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/tui-command-data.ts",
@@ -4313,9 +4365,10 @@
       {
         "file": "apps/zcode-cli/packages/cli/src/tui-prompt-handler.ts",
         "counts": {
-          "ZCode": 11
+          "ZCode": 11,
+          "bigmodel": 3
         },
-        "total": 11
+        "total": 14
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/tui-runtime-loader.ts",
@@ -4963,13 +5016,6 @@
         "total": 1
       },
       {
-        "file": "apps/zcode-cli/packages/core/src/memory/memory-file-path.ts",
-        "counts": {
-          "ZCode": 1
-        },
-        "total": 1
-      },
-      {
         "file": "apps/zcode-cli/packages/core/src/memory/recall/manifest.ts",
         "counts": {
           "ZCode": 1
@@ -5203,9 +5249,9 @@
       {
         "file": "apps/zcode-cli/packages/core/src/runtime/helpers/plan-file-continuity.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 1
         },
-        "total": 2
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/core/src/runtime/helpers/project-memory-agent.ts",
@@ -5489,11 +5535,25 @@
         "total": 1
       },
       {
+        "file": "apps/zcode-cli/packages/core/src/runtime/methods/streaming-recovery.ts",
+        "counts": {
+          "bigmodel": 1
+        },
+        "total": 1
+      },
+      {
         "file": "apps/zcode-cli/packages/core/src/runtime/methods/subagent.ts",
         "counts": {
           "ZCode": 3
         },
         "total": 3
+      },
+      {
+        "file": "apps/zcode-cli/packages/core/src/runtime/methods/target-completion-verification.ts",
+        "counts": {
+          "bigmodel": 1
+        },
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/core/src/runtime/methods/timeline-persistence.ts",
@@ -5687,9 +5747,9 @@
       {
         "file": "apps/zcode-cli/packages/core/src/subagent/persistent-memory.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 1
         },
-        "total": 3
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/core/src/subagent/profile-model-selection.ts",
@@ -6262,9 +6322,10 @@
       {
         "file": "apps/zcode-cli/packages/core/src/tool/handlers/off-peak.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 1
         },
-        "total": 1
+        "total": 2
       },
       {
         "file": "apps/zcode-cli/packages/core/src/tool/handlers/plan-mode-prompts.ts",
@@ -6507,9 +6568,10 @@
       {
         "file": "apps/zcode-cli/packages/core/src/tool/handlers/websearch.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 2
         },
-        "total": 1
+        "total": 3
       },
       {
         "file": "apps/zcode-cli/packages/core/src/tool/handlers/workflow-analysis-display.ts",
@@ -6871,9 +6933,9 @@
       {
         "file": "apps/zcode-cli/packages/dynamic-workflow-runtime/src/child-entry-file.ts",
         "counts": {
-          "ZCode": 8
+          "ZCode": 7
         },
-        "total": 8
+        "total": 7
       },
       {
         "file": "apps/zcode-cli/packages/dynamic-workflow-runtime/src/child-source.ts",
@@ -6991,7 +7053,7 @@
         "file": "apps/zcode-cli/packages/i18n/src/locales/en-US.ts",
         "counts": {
           "ZCode": 2,
-          "Z.ai": 7
+          "bigmodel": 7
         },
         "total": 9
       },
@@ -6999,16 +7061,17 @@
         "file": "apps/zcode-cli/packages/i18n/src/locales/zh-CN.ts",
         "counts": {
           "ZCode": 2,
-          "Z.ai": 7
+          "bigmodel": 7
         },
         "total": 9
       },
       {
         "file": "apps/zcode-cli/packages/i18n/src/types.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 2
         },
-        "total": 3
+        "total": 5
       },
       {
         "file": "apps/zcode-cli/packages/node-repl-host/.zcode-plugin/plugin.json",
@@ -7105,9 +7168,10 @@
       {
         "file": "apps/zcode-cli/packages/node-repl-host/src/result.ts",
         "counts": {
-          "ZCode": 14
+          "ZCode": 14,
+          "bigmodel": 1
         },
-        "total": 14
+        "total": 15
       },
       {
         "file": "apps/zcode-cli/packages/node-repl-host/src/runtime-bridge.ts",
@@ -7175,9 +7239,9 @@
       {
         "file": "apps/zcode-cli/packages/telemetry/src/bootstrap.ts",
         "counts": {
-          "ZCode": 21
+          "ZCode": 20
         },
-        "total": 21
+        "total": 20
       },
       {
         "file": "apps/zcode-cli/packages/telemetry/src/compatibility-adapters.ts",
@@ -7245,9 +7309,9 @@
       {
         "file": "apps/zcode-cli/packages/tui/src/app-empty-transcript.tsx",
         "counts": {
-          "ZCode": 4
+          "ZCode": 1
         },
-        "total": 4
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/tui/src/app-event-data.ts",
@@ -7399,9 +7463,9 @@
       {
         "file": "apps/zcode-cli/packages/tui/src/app-sidebar.tsx",
         "counts": {
-          "ZCode": 2
+          "ZCode": 1
         },
-        "total": 2
+        "total": 1
       },
       {
         "file": "apps/zcode-cli/packages/tui/src/app-startup.tsx",
@@ -7448,9 +7512,10 @@
       {
         "file": "apps/zcode-cli/packages/tui/src/app-submit.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 1
         },
-        "total": 2
+        "total": 3
       },
       {
         "file": "apps/zcode-cli/packages/tui/src/app-thought-components.tsx",
@@ -7661,9 +7726,23 @@
         "counts": {
           "ZCode": 11,
           "Z.ai": 17,
-          "GLM": 224
+          "GLM": 224,
+          "bigmodel": 74,
+          "zhipu": 10
         },
-        "total": 252
+        "total": 336
+      },
+      {
+        "file": "evidence/fp0/edit-pass-1.md",
+        "counts": {
+          "ZCode": 15,
+          "Z.ai": 9,
+          "GLM": 1,
+          "bigmodel": 3,
+          "zhipu": 1,
+          "client_P8X5CMWmlaRO9gyO-KSqtg": 1
+        },
+        "total": 30
       },
       {
         "file": "evidence/g1/harness-e2e.txt",
@@ -7689,11 +7768,14 @@
       {
         "file": "evidence/round1/brand-lint.json",
         "counts": {
-          "ZCode": 4224,
-          "Z.ai": 73,
-          "GLM": 110
+          "ZCode": 4204,
+          "Z.ai": 60,
+          "GLM": 110,
+          "bigmodel": 180,
+          "zhipu": 38,
+          "client_P8X5CMWmlaRO9gyO-KSqtg": 5
         },
-        "total": 4407
+        "total": 4597
       },
       {
         "file": "evidence/round1/dependency-audit.json",
@@ -7782,9 +7864,9 @@
       {
         "file": "packages/desktop/build/installer.nsh",
         "counts": {
-          "ZCode": 234
+          "ZCode": 230
         },
-        "total": 234
+        "total": 230
       },
       {
         "file": "packages/desktop/dev-app-update.yml",
@@ -7796,10 +7878,10 @@
       {
         "file": "packages/desktop/electron-builder.config.js",
         "counts": {
-          "ZCode": 27,
+          "ZCode": 26,
           "GLM": 5
         },
-        "total": 32
+        "total": 31
       },
       {
         "file": "packages/desktop/native/macos-window-bounds/main.swift",
@@ -7825,9 +7907,9 @@
       {
         "file": "packages/desktop/package.json",
         "counts": {
-          "ZCode": 14
+          "ZCode": 13
         },
-        "total": 14
+        "total": 13
       },
       {
         "file": "packages/desktop/scripts/build-macos-window-bounds.mjs",
@@ -7968,9 +8050,9 @@
       {
         "file": "packages/desktop/src/host/browserControlMainBridge.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 3
         },
-        "total": 4
+        "total": 3
       },
       {
         "file": "packages/desktop/src/host/browserRecordingArtifactMaterializer.ts",
@@ -8136,10 +8218,10 @@
       {
         "file": "packages/desktop/src/host/index.ts",
         "counts": {
-          "ZCode": 163,
+          "ZCode": 157,
           "GLM": 1
         },
-        "total": 164
+        "total": 158
       },
       {
         "file": "packages/desktop/src/host/legacyRemoteWorkspaceRpcContract.ts",
@@ -8186,9 +8268,10 @@
       {
         "file": "packages/desktop/src/host/remoteWorkspaceServiceCollection.ts",
         "counts": {
-          "ZCode": 39
+          "ZCode": 39,
+          "bigmodel": 4
         },
-        "total": 39
+        "total": 43
       },
       {
         "file": "packages/desktop/src/host/rpcLogLevel.ts",
@@ -8263,16 +8346,9 @@
       {
         "file": "packages/desktop/src/main/about.ts",
         "counts": {
-          "ZCode": 14
+          "ZCode": 9
         },
-        "total": 14
-      },
-      {
-        "file": "packages/desktop/src/main/appARMSBootstrap.ts",
-        "counts": {
-          "ZCode": 16
-        },
-        "total": 16
+        "total": 9
       },
       {
         "file": "packages/desktop/src/main/appTelemetryRuntime.ts",
@@ -8287,13 +8363,6 @@
           "ZCode": 1
         },
         "total": 1
-      },
-      {
-        "file": "packages/desktop/src/main/armsEventRedaction.ts",
-        "counts": {
-          "ZCode": 2
-        },
-        "total": 2
       },
       {
         "file": "packages/desktop/src/main/autoUpdater.ts",
@@ -8482,9 +8551,9 @@
       {
         "file": "packages/desktop/src/main/cuaAccessibilitySettings.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 4
         },
-        "total": 13
+        "total": 4
       },
       {
         "file": "packages/desktop/src/main/cuaOsSupport.ts",
@@ -8522,13 +8591,6 @@
         "total": 1
       },
       {
-        "file": "packages/desktop/src/main/databaseStartupTelemetry.ts",
-        "counts": {
-          "ZCode": 3
-        },
-        "total": 3
-      },
-      {
         "file": "packages/desktop/src/main/desktopApplicationMenu.ts",
         "counts": {
           "ZCode": 32
@@ -8564,18 +8626,11 @@
         "total": 1
       },
       {
-        "file": "packages/desktop/src/main/desktopChromiumHardwareAccelerationBootstrap.ts",
-        "counts": {
-          "ZCode": 1
-        },
-        "total": 1
-      },
-      {
         "file": "packages/desktop/src/main/desktopCommandHandlers.ts",
         "counts": {
-          "ZCode": 89
+          "ZCode": 85
         },
-        "total": 89
+        "total": 85
       },
       {
         "file": "packages/desktop/src/main/desktopContextPromptRollout.ts",
@@ -8608,9 +8663,9 @@
       {
         "file": "packages/desktop/src/main/desktopCuaPermissionIpc.ts",
         "counts": {
-          "ZCode": 27
+          "ZCode": 25
         },
-        "total": 27
+        "total": 25
       },
       {
         "file": "packages/desktop/src/main/desktopCuaPipIpc.ts",
@@ -8622,9 +8677,9 @@
       {
         "file": "packages/desktop/src/main/desktopDataBaseDirBootstrap.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 1
         },
-        "total": 2
+        "total": 1
       },
       {
         "file": "packages/desktop/src/main/desktopDeepLinkUrl.ts",
@@ -8650,9 +8705,9 @@
       {
         "file": "packages/desktop/src/main/desktopFinderOpenFolderWorkflow.ts",
         "counts": {
-          "ZCode": 6
+          "ZCode": 3
         },
-        "total": 6
+        "total": 3
       },
       {
         "file": "packages/desktop/src/main/desktopHelpConfig.ts",
@@ -8665,9 +8720,10 @@
         "file": "packages/desktop/src/main/desktopHostProcess.ts",
         "counts": {
           "ZCode": 17,
-          "GLM": 5
+          "GLM": 5,
+          "bigmodel": 3
         },
-        "total": 22
+        "total": 25
       },
       {
         "file": "packages/desktop/src/main/desktopLaunchMarks.ts",
@@ -8686,9 +8742,9 @@
       {
         "file": "packages/desktop/src/main/desktopLinuxDeepLinkRegistration.ts",
         "counts": {
-          "ZCode": 14
+          "ZCode": 12
         },
-        "total": 14
+        "total": 12
       },
       {
         "file": "packages/desktop/src/main/desktopMainIpcHelpers.ts",
@@ -8707,17 +8763,9 @@
       {
         "file": "packages/desktop/src/main/desktopMainIpcRemote.ts",
         "counts": {
-          "ZCode": 4,
-          "Z.ai": 1
+          "ZCode": 4
         },
-        "total": 5
-      },
-      {
-        "file": "packages/desktop/src/main/desktopMcpTelemetry.ts",
-        "counts": {
-          "ZCode": 5
-        },
-        "total": 5
+        "total": 4
       },
       {
         "file": "packages/desktop/src/main/desktopNetworkPolicy.ts",
@@ -8743,9 +8791,9 @@
       {
         "file": "packages/desktop/src/main/desktopOAuthDeepLink.ts",
         "counts": {
-          "ZCode": 9
+          "ZCode": 5
         },
-        "total": 9
+        "total": 5
       },
       {
         "file": "packages/desktop/src/main/desktopPrintToPdf.ts",
@@ -8785,10 +8833,10 @@
       {
         "file": "packages/desktop/src/main/desktopRuntimeEnv.ts",
         "counts": {
-          "ZCode": 96,
+          "ZCode": 92,
           "GLM": 10
         },
-        "total": 106
+        "total": 102
       },
       {
         "file": "packages/desktop/src/main/desktopSaveFile.ts",
@@ -8796,13 +8844,6 @@
           "ZCode": 3
         },
         "total": 3
-      },
-      {
-        "file": "packages/desktop/src/main/desktopStabilityTelemetry.ts",
-        "counts": {
-          "ZCode": 8
-        },
-        "total": 8
       },
       {
         "file": "packages/desktop/src/main/desktopTray.ts",
@@ -8821,10 +8862,9 @@
       {
         "file": "packages/desktop/src/main/desktopWindowChrome.ts",
         "counts": {
-          "ZCode": 10,
-          "Z.ai": 2
+          "ZCode": 10
         },
-        "total": 12
+        "total": 10
       },
       {
         "file": "packages/desktop/src/main/desktopWindowChromeState.ts",
@@ -8850,9 +8890,9 @@
       {
         "file": "packages/desktop/src/main/desktopWindowsOpenFolderContextMenu.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 3
         },
-        "total": 5
+        "total": 3
       },
       {
         "file": "packages/desktop/src/main/desktopWslTargetResolver.ts",
@@ -8860,13 +8900,6 @@
           "ZCode": 2
         },
         "total": 2
-      },
-      {
-        "file": "packages/desktop/src/main/desktopZCodeDataSizeTelemetry.ts",
-        "counts": {
-          "ZCode": 82
-        },
-        "total": 82
       },
       {
         "file": "packages/desktop/src/main/e2eCoverage.ts",
@@ -8892,32 +8925,32 @@
       {
         "file": "packages/desktop/src/main/exportLogs.ts",
         "counts": {
-          "ZCode": 35,
+          "ZCode": 29,
           "GLM": 1
         },
-        "total": 36
+        "total": 30
       },
       {
         "file": "packages/desktop/src/main/forceUpdateGuard.ts",
         "counts": {
-          "ZCode": 15
+          "ZCode": 13
         },
-        "total": 15
+        "total": 13
       },
       {
         "file": "packages/desktop/src/main/forceUpdatePrompt.ts",
         "counts": {
-          "ZCode": 9
+          "ZCode": 1
         },
-        "total": 9
+        "total": 1
       },
       {
         "file": "packages/desktop/src/main/index.ts",
         "counts": {
-          "ZCode": 83,
+          "ZCode": 57,
           "GLM": 4
         },
-        "total": 87
+        "total": 61
       },
       {
         "file": "packages/desktop/src/main/localMediaPreviewProtocol.ts",
@@ -8971,23 +9004,23 @@
       {
         "file": "packages/desktop/src/main/mcpUserDirectory/index.ts",
         "counts": {
-          "ZCode": 21
+          "ZCode": 19
         },
-        "total": 21
+        "total": 19
       },
       {
         "file": "packages/desktop/src/main/mcpUserDirectory/legacy.ts",
         "counts": {
-          "ZCode": 8
+          "ZCode": 6
         },
-        "total": 8
+        "total": 6
       },
       {
         "file": "packages/desktop/src/main/mcpUserDirectory/types.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 3
         },
-        "total": 4
+        "total": 3
       },
       {
         "file": "packages/desktop/src/main/mcpUserDirectory/utils.ts",
@@ -9209,16 +9242,16 @@
       {
         "file": "packages/desktop/src/main/windowsCuaOperationIndicator.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 1
         },
-        "total": 2
+        "total": 1
       },
       {
         "file": "packages/desktop/src/main/windowsCuaOperationIndicatorContent.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 1
         },
-        "total": 3
+        "total": 1
       },
       {
         "file": "packages/desktop/src/main/windowsInstallResourceLocks.ts",
@@ -9227,34 +9260,6 @@
           "GLM": 1
         },
         "total": 2
-      },
-      {
-        "file": "packages/desktop/src/main/zcodeDataSizeScanner.ts",
-        "counts": {
-          "ZCode": 14
-        },
-        "total": 14
-      },
-      {
-        "file": "packages/desktop/src/main/zcodeDataSizeTelemetryState.ts",
-        "counts": {
-          "ZCode": 9
-        },
-        "total": 9
-      },
-      {
-        "file": "packages/desktop/src/main/zcodeDataSizeWorker.ts",
-        "counts": {
-          "ZCode": 6
-        },
-        "total": 6
-      },
-      {
-        "file": "packages/desktop/src/main/zcodeDataSizeWorkerClient.ts",
-        "counts": {
-          "ZCode": 13
-        },
-        "total": 13
       },
       {
         "file": "packages/desktop/src/preload/browserVideoRecorder.ts",
@@ -9266,9 +9271,10 @@
       {
         "file": "packages/desktop/src/preload/codingPlanWebview.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 13,
+          "bigmodel": 2
         },
-        "total": 13
+        "total": 15
       },
       {
         "file": "packages/desktop/src/preload/cuaPermissionPanel.ts",
@@ -9315,9 +9321,9 @@
       {
         "file": "packages/desktop/src/renderer/cua-permission-panel.html",
         "counts": {
-          "ZCode": 3
+          "ZCode": 1
         },
-        "total": 3
+        "total": 1
       },
       {
         "file": "packages/desktop/src/renderer/cuaPermissionPanel.ts",
@@ -9329,16 +9335,16 @@
       {
         "file": "packages/desktop/src/renderer/cuaPermissionPanelMessages.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 1
         },
-        "total": 3
+        "total": 1
       },
       {
         "file": "packages/desktop/src/renderer/index.html",
         "counts": {
-          "ZCode": 6
+          "ZCode": 5
         },
-        "total": 6
+        "total": 5
       },
       {
         "file": "packages/desktop/src/renderer/src/databaseStartupAdmission.ts",
@@ -9432,39 +9438,11 @@
         "total": 1
       },
       {
-        "file": "packages/desktop/src/shared/armsRumBridgeForward.ts",
-        "counts": {
-          "ZCode": 6
-        },
-        "total": 6
-      },
-      {
-        "file": "packages/desktop/src/shared/armsRumShared.d.ts",
-        "counts": {
-          "ZCode": 4
-        },
-        "total": 4
-      },
-      {
-        "file": "packages/desktop/src/shared/armsRumShared.js",
-        "counts": {
-          "ZCode": 7
-        },
-        "total": 7
-      },
-      {
-        "file": "packages/desktop/src/shared/armsRumShared.ts",
-        "counts": {
-          "ZCode": 9
-        },
-        "total": 9
-      },
-      {
         "file": "packages/desktop/tsup.config.ts",
         "counts": {
-          "ZCode": 68
+          "ZCode": 66
         },
-        "total": 68
+        "total": 66
       },
       {
         "file": "packages/desktop/vite.config.ts",
@@ -9496,6 +9474,13 @@
       },
       {
         "file": "packages/model-option-map/package.json",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "packages/product/provider-gateway/src/plan-gate.ts",
         "counts": {
           "ZCode": 1
         },
@@ -9635,6 +9620,13 @@
         "total": 3
       },
       {
+        "file": "packages/provider/src/account-provider-resolution.ts",
+        "counts": {
+          "zhipu": 7
+        },
+        "total": 7
+      },
+      {
         "file": "packages/provider/src/account-provider-service.ts",
         "counts": {
           "ZCode": 7
@@ -9651,9 +9643,10 @@
       {
         "file": "packages/provider/src/config-service.ts",
         "counts": {
-          "ZCode": 58
+          "ZCode": 58,
+          "zhipu": 2
         },
-        "total": 58
+        "total": 60
       },
       {
         "file": "packages/provider/src/config/manual-model-config.ts",
@@ -9670,11 +9663,20 @@
         "total": 3
       },
       {
+        "file": "packages/provider/src/config/provider-config.ts",
+        "counts": {
+          "zhipu": 26
+        },
+        "total": 26
+      },
+      {
         "file": "packages/provider/src/config/provider-data-schema.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 2,
+          "zhipu": 10
         },
-        "total": 1
+        "total": 13
       },
       {
         "file": "packages/provider/src/config/rule-data-schema.ts",
@@ -9686,9 +9688,10 @@
       {
         "file": "packages/provider/src/config/schema.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 4,
+          "zhipu": 5
         },
-        "total": 4
+        "total": 9
       },
       {
         "file": "packages/provider/src/effective-model-selection.ts",
@@ -9721,16 +9724,20 @@
       {
         "file": "packages/provider/src/resolver.ts",
         "counts": {
-          "ZCode": 10
+          "ZCode": 10,
+          "Z.ai": 1,
+          "bigmodel": 2,
+          "zhipu": 9
         },
-        "total": 10
+        "total": 22
       },
       {
         "file": "packages/provider/src/sources.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 13,
+          "zhipu": 3
         },
-        "total": 13
+        "total": 16
       },
       {
         "file": "packages/rpc/package.json",
@@ -10077,16 +10084,18 @@
       {
         "file": "packages/services/src/bigmodel/codingPlanEntitlement.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 5
         },
-        "total": 1
+        "total": 6
       },
       {
         "file": "packages/services/src/bigmodel/teamPlanApiKey.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 64
         },
-        "total": 2
+        "total": 66
       },
       {
         "file": "packages/services/src/bots/botConfigHelpers.ts",
@@ -10162,9 +10171,9 @@
       {
         "file": "packages/services/src/bots/messages.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 5
         },
-        "total": 13
+        "total": 5
       },
       {
         "file": "packages/services/src/bots/modelSelectionHelpers.ts",
@@ -10310,10 +10319,11 @@
       {
         "file": "packages/services/src/coding-plan-subscription/bigmodelCodingPlanSubscriptionProvider.ts",
         "counts": {
-          "ZCode": 53,
-          "Z.ai": 5
+          "ZCode": 49,
+          "Z.ai": 5,
+          "bigmodel": 77
         },
-        "total": 58
+        "total": 131
       },
       {
         "file": "packages/services/src/coding-plan-subscription/codingPlanSubscription.ts",
@@ -10325,17 +10335,19 @@
       {
         "file": "packages/services/src/coding-plan-subscription/codingPlanSubscriptionService.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 43
         },
-        "total": 2
+        "total": 45
       },
       {
         "file": "packages/services/src/coding-plan-subscription/zaiCodingPlanSubscriptionProvider.ts",
         "counts": {
           "ZCode": 2,
-          "Z.ai": 2
+          "Z.ai": 2,
+          "bigmodel": 14
         },
-        "total": 4
+        "total": 18
       },
       {
         "file": "packages/services/src/collection.ts",
@@ -10361,9 +10373,9 @@
       {
         "file": "packages/services/src/commands/commandsService.ts",
         "counts": {
-          "ZCode": 38
+          "ZCode": 35
         },
-        "total": 38
+        "total": 35
       },
       {
         "file": "packages/services/src/conversation-share/conversationShare.ts",
@@ -10382,9 +10394,9 @@
       {
         "file": "packages/services/src/conversation-share/conversationShareHttpClient.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 1
         },
-        "total": 4
+        "total": 1
       },
       {
         "file": "packages/services/src/conversation-share/conversationShareIntegrity.ts",
@@ -10442,13 +10454,6 @@
           "ZCode": 3
         },
         "total": 3
-      },
-      {
-        "file": "packages/services/src/cua-permission-broker/cuaAgentAdmissionGate.ts",
-        "counts": {
-          "ZCode": 2
-        },
-        "total": 2
       },
       {
         "file": "packages/services/src/cua-permission-broker/cuaHelperInstaller.ts",
@@ -10509,9 +10514,9 @@
       {
         "file": "packages/services/src/device/deviceMid.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 2
         },
-        "total": 4
+        "total": 2
       },
       {
         "file": "packages/services/src/feedback/feedback.ts",
@@ -10537,9 +10542,9 @@
       {
         "file": "packages/services/src/feedback/feedbackLogArchive.ts",
         "counts": {
-          "ZCode": 7
+          "ZCode": 6
         },
-        "total": 7
+        "total": 6
       },
       {
         "file": "packages/services/src/feedback/feedbackService.ts",
@@ -10663,9 +10668,9 @@
       {
         "file": "packages/services/src/git/repo/gitCheckpointHelpers.ts",
         "counts": {
-          "ZCode": 6
+          "ZCode": 4
         },
-        "total": 6
+        "total": 4
       },
       {
         "file": "packages/services/src/git/repo/gitCheckpointRepo.ts",
@@ -10712,9 +10717,9 @@
       {
         "file": "packages/services/src/hooks/hooksService.ts",
         "counts": {
-          "ZCode": 28
+          "ZCode": 24
         },
-        "total": 28
+        "total": 24
       },
       {
         "file": "packages/services/src/hooks/workspaceHookConfigMutation.ts",
@@ -10754,9 +10759,9 @@
       {
         "file": "packages/services/src/mcp-sync/mcpSyncService.ts",
         "counts": {
-          "ZCode": 31
+          "ZCode": 29
         },
-        "total": 31
+        "total": 29
       },
       {
         "file": "packages/services/src/media-preview/mediaPreview.ts",
@@ -10789,31 +10794,36 @@
       {
         "file": "packages/services/src/model-provider/accountProviderApiClient.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 1
         },
-        "total": 1
+        "total": 2
       },
       {
         "file": "packages/services/src/model-provider/accountProviderApiKeyResolver.ts",
         "counts": {
           "ZCode": 4,
-          "Z.ai": 2
+          "Z.ai": 2,
+          "bigmodel": 4
         },
-        "total": 6
+        "total": 10
       },
       {
         "file": "packages/services/src/model-provider/accountProviderApiTypes.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 2
         },
-        "total": 3
+        "total": 5
       },
       {
         "file": "packages/services/src/model-provider/accountProviderConnectionResolver.ts",
         "counts": {
-          "ZCode": 7
+          "ZCode": 7,
+          "bigmodel": 3,
+          "zhipu": 6
         },
-        "total": 7
+        "total": 16
       },
       {
         "file": "packages/services/src/model-provider/accountProviderCredentialService.ts",
@@ -10832,17 +10842,19 @@
       {
         "file": "packages/services/src/model-provider/accountProviderRequestAuthService.ts",
         "counts": {
-          "ZCode": 19
+          "ZCode": 19,
+          "bigmodel": 2
         },
-        "total": 19
+        "total": 21
       },
       {
         "file": "packages/services/src/model-provider/accountProviderTeamPlanRequestKey.ts",
         "counts": {
           "ZCode": 11,
-          "Z.ai": 2
+          "Z.ai": 2,
+          "bigmodel": 16
         },
-        "total": 13
+        "total": 29
       },
       {
         "file": "packages/services/src/model-provider/accountRequestAuthService.ts",
@@ -10854,17 +10866,19 @@
       {
         "file": "packages/services/src/model-provider/bigmodelStartPlanZcodeJwt.ts",
         "counts": {
-          "ZCode": 10
+          "ZCode": 10,
+          "bigmodel": 7
         },
-        "total": 10
+        "total": 17
       },
       {
         "file": "packages/services/src/model-provider/codingPlanProviderAvailability.ts",
         "counts": {
           "ZCode": 20,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 41
         },
-        "total": 21
+        "total": 62
       },
       {
         "file": "packages/services/src/model-provider/legacyModelProviderSerialized.ts",
@@ -10876,24 +10890,27 @@
       {
         "file": "packages/services/src/model-provider/legacyPersonalProviderConfigImporter.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 2
         },
-        "total": 3
+        "total": 5
       },
       {
         "file": "packages/services/src/model-provider/legacyTeamOrganizationResolver.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 3
         },
-        "total": 3
+        "total": 6
       },
       {
         "file": "packages/services/src/model-provider/legacyZCodeConfigProviderReader.ts",
         "counts": {
           "ZCode": 106,
-          "GLM": 4
+          "GLM": 4,
+          "bigmodel": 20
         },
-        "total": 110
+        "total": 130
       },
       {
         "file": "packages/services/src/model-provider/offPeakModelSelectionView.ts",
@@ -10926,9 +10943,10 @@
       {
         "file": "packages/services/src/model-provider/providerProvisioningSource.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 4,
+          "bigmodel": 3
         },
-        "total": 4
+        "total": 7
       },
       {
         "file": "packages/services/src/model-provider/providerProvisioningTarget.ts",
@@ -10969,10 +10987,12 @@
       {
         "file": "packages/services/src/node.ts",
         "counts": {
-          "ZCode": 260,
-          "Z.ai": 1
+          "ZCode": 242,
+          "Z.ai": 1,
+          "bigmodel": 8,
+          "zhipu": 1
         },
-        "total": 261
+        "total": 252
       },
       {
         "file": "packages/services/src/oauth/callbackAttribution.ts",
@@ -10992,47 +11012,53 @@
       {
         "file": "packages/services/src/oauth/oauthProfileSchema.ts",
         "counts": {
-          "ZCode": 9
+          "ZCode": 9,
+          "bigmodel": 22
         },
-        "total": 9
+        "total": 31
       },
       {
         "file": "packages/services/src/oauth/oauthProviderLogout.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 3
         },
-        "total": 1
+        "total": 4
       },
       {
         "file": "packages/services/src/oauth/oauthService.ts",
         "counts": {
           "ZCode": 25,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 43
         },
-        "total": 26
+        "total": 69
       },
       {
         "file": "packages/services/src/oauth/oauthUnauthorizedRequest.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 8
         },
-        "total": 3
+        "total": 11
       },
       {
         "file": "packages/services/src/oauth/providers/bigmodelProviderAdapter.ts",
         "counts": {
           "ZCode": 26,
-          "Z.ai": 2
+          "Z.ai": 2,
+          "bigmodel": 42
         },
-        "total": 28
+        "total": 70
       },
       {
         "file": "packages/services/src/oauth/providers/bigmodelProviderConfig.ts",
         "counts": {
           "ZCode": 8,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 27
         },
-        "total": 9
+        "total": 36
       },
       {
         "file": "packages/services/src/oauth/providers/configUtils.ts",
@@ -11044,9 +11070,10 @@
       {
         "file": "packages/services/src/oauth/providers/index.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 5
         },
-        "total": 1
+        "total": 6
       },
       {
         "file": "packages/services/src/oauth/providers/providerAdapter.ts",
@@ -11059,39 +11086,43 @@
         "file": "packages/services/src/oauth/providers/zaiProviderAdapter.ts",
         "counts": {
           "ZCode": 5,
-          "Z.ai": 6
+          "Z.ai": 5,
+          "bigmodel": 1
         },
         "total": 11
       },
       {
         "file": "packages/services/src/oauth/providers/zaiProviderConfig.ts",
         "counts": {
-          "ZCode": 5,
-          "Z.ai": 5
+          "ZCode": 3,
+          "Z.ai": 1
         },
-        "total": 10
+        "total": 4
       },
       {
         "file": "packages/services/src/oauth/repo/oauthCredentialRepo.ts",
         "counts": {
           "ZCode": 17,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 8
         },
-        "total": 18
+        "total": 26
       },
       {
         "file": "packages/services/src/oauth/runtimeConfig.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 3
         },
-        "total": 1
+        "total": 4
       },
       {
         "file": "packages/services/src/official-mcp/officialMcpCredentials.ts",
         "counts": {
-          "ZCode": 18
+          "ZCode": 18,
+          "bigmodel": 13
         },
-        "total": 18
+        "total": 31
       },
       {
         "file": "packages/services/src/onboarding/onboardingRecord.ts",
@@ -11110,9 +11141,9 @@
       {
         "file": "packages/services/src/paths.ts",
         "counts": {
-          "ZCode": 29
+          "ZCode": 26
         },
-        "total": 29
+        "total": 26
       },
       {
         "file": "packages/services/src/plugin-sync/pluginSync.ts",
@@ -11131,9 +11162,9 @@
       {
         "file": "packages/services/src/plugin-sync/pluginSyncService.ts",
         "counts": {
-          "ZCode": 15
+          "ZCode": 13
         },
-        "total": 15
+        "total": 13
       },
       {
         "file": "packages/services/src/plugins/pluginManagement.ts",
@@ -11159,9 +11190,9 @@
       {
         "file": "packages/services/src/plugins/pluginsService.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 1
         },
-        "total": 2
+        "total": 1
       },
       {
         "file": "packages/services/src/process/processResourceSampler.ts",
@@ -11257,9 +11288,9 @@
       {
         "file": "packages/services/src/runtime-tools/appCaCert.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 3
         },
-        "total": 4
+        "total": 3
       },
       {
         "file": "packages/services/src/runtime-tools/clientPlatform.ts",
@@ -11278,10 +11309,10 @@
       {
         "file": "packages/services/src/runtime-tools/providerRuntimeResolver.ts",
         "counts": {
-          "ZCode": 14,
+          "ZCode": 12,
           "GLM": 2
         },
-        "total": 16
+        "total": 14
       },
       {
         "file": "packages/services/src/runtime-tools/runtimeCommandEnv.ts",
@@ -11399,16 +11430,18 @@
       {
         "file": "packages/services/src/session/offPeakMockGateway.ts",
         "counts": {
-          "ZCode": 22
+          "ZCode": 22,
+          "bigmodel": 4
         },
-        "total": 22
+        "total": 26
       },
       {
         "file": "packages/services/src/session/offPeakRuntimeModel.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 13,
+          "bigmodel": 14
         },
-        "total": 13
+        "total": 27
       },
       {
         "file": "packages/services/src/session/offPeakServerClient.ts",
@@ -11485,17 +11518,19 @@
       {
         "file": "packages/services/src/session/tasksDatabase/official-glm-selection-v3.ts",
         "counts": {
-          "GLM": 67
+          "GLM": 67,
+          "bigmodel": 3
         },
-        "total": 67
+        "total": 70
       },
       {
         "file": "packages/services/src/session/tasksDatabase/provider-selection-v2.ts",
         "counts": {
           "ZCode": 3,
-          "GLM": 2
+          "GLM": 2,
+          "bigmodel": 6
         },
-        "total": 5
+        "total": 11
       },
       {
         "file": "packages/services/src/session/tasksDatabase/startup.ts",
@@ -11521,9 +11556,10 @@
       {
         "file": "packages/services/src/setting/legacyAccountConnectionSettings.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 2
         },
-        "total": 1
+        "total": 3
       },
       {
         "file": "packages/services/src/setting/normalizeSettingsPatch.ts",
@@ -11549,9 +11585,9 @@
       {
         "file": "packages/services/src/setting/settingService.ts",
         "counts": {
-          "ZCode": 7
+          "ZCode": 6
         },
-        "total": 7
+        "total": 6
       },
       {
         "file": "packages/services/src/setting/settingsWriteQueue.ts",
@@ -11570,9 +11606,9 @@
       {
         "file": "packages/services/src/settings-sync/settingsSyncService.ts",
         "counts": {
-          "ZCode": 51
+          "ZCode": 42
         },
-        "total": 51
+        "total": 42
       },
       {
         "file": "packages/services/src/skill-sync/skillSync.ts",
@@ -11598,9 +11634,9 @@
       {
         "file": "packages/services/src/skill-sync/skillSyncService.ts",
         "counts": {
-          "ZCode": 22
+          "ZCode": 21
         },
-        "total": 22
+        "total": 21
       },
       {
         "file": "packages/services/src/skills/skillDiscoveryWalk.ts",
@@ -11619,10 +11655,10 @@
       {
         "file": "packages/services/src/skills/skillsService.ts",
         "counts": {
-          "ZCode": 54,
+          "ZCode": 50,
           "GLM": 2
         },
-        "total": 56
+        "total": 52
       },
       {
         "file": "packages/services/src/storage-startup.ts",
@@ -11648,9 +11684,9 @@
       {
         "file": "packages/services/src/storage/adapters/rootsResolver.ts",
         "counts": {
-          "ZCode": 7
+          "ZCode": 6
         },
-        "total": 7
+        "total": 6
       },
       {
         "file": "packages/services/src/storage/adapters/volumeProbe.ts",
@@ -11725,9 +11761,9 @@
       {
         "file": "packages/services/src/subagents/subagentStorage.ts",
         "counts": {
-          "ZCode": 6
+          "ZCode": 4
         },
-        "total": 6
+        "total": 4
       },
       {
         "file": "packages/services/src/subagents/subagents.ts",
@@ -11739,9 +11775,9 @@
       {
         "file": "packages/services/src/subagents/subagentsService.ts",
         "counts": {
-          "ZCode": 13
+          "ZCode": 12
         },
-        "total": 13
+        "total": 12
       },
       {
         "file": "packages/services/src/system/integratedTerminalShells.ts",
@@ -11774,9 +11810,9 @@
       {
         "file": "packages/services/src/telemetry/telemetryCore.ts",
         "counts": {
-          "ZCode": 20
+          "ZCode": 18
         },
-        "total": 20
+        "total": 18
       },
       {
         "file": "packages/services/src/terminal/terminal.ts",
@@ -11802,16 +11838,18 @@
       {
         "file": "packages/services/src/usage-stats/providers/bigmodelSubscriptionProvider.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 3
         },
-        "total": 1
+        "total": 4
       },
       {
         "file": "packages/services/src/usage-stats/providers/bigmodelUsageMonitorMapper.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 89
         },
-        "total": 3
+        "total": 92
       },
       {
         "file": "packages/services/src/usage-stats/providers/bigmodelUsageMonitorRange.ts",
@@ -11823,26 +11861,29 @@
       {
         "file": "packages/services/src/usage-stats/providers/bigmodelUsageQuotaMapper.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 16
         },
-        "total": 1
+        "total": 17
       },
       {
         "file": "packages/services/src/usage-stats/providers/bigmodelUsageQuotaProvider.ts",
         "counts": {
           "ZCode": 28,
-          "Z.ai": 4,
-          "GLM": 2
+          "Z.ai": 3,
+          "GLM": 2,
+          "bigmodel": 108
         },
-        "total": 34
+        "total": 141
       },
       {
         "file": "packages/services/src/usage-stats/providers/zcodeMcpQuotaProvider.ts",
         "counts": {
           "ZCode": 4,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 2
         },
-        "total": 5
+        "total": 7
       },
       {
         "file": "packages/services/src/usage-stats/usageStats.ts",
@@ -11855,9 +11896,10 @@
         "file": "packages/services/src/usage-stats/usageStatsService.ts",
         "counts": {
           "ZCode": 11,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 9
         },
-        "total": 12
+        "total": 21
       },
       {
         "file": "packages/services/src/window-controller/windowController.ts",
@@ -11893,13 +11935,6 @@
           "ZCode": 21
         },
         "total": 21
-      },
-      {
-        "file": "packages/services/src/zcode-agent/modelTrajectoryFileTail.ts",
-        "counts": {
-          "ZCode": 2
-        },
-        "total": 2
       },
       {
         "file": "packages/services/src/zcode-agent/pluginReferenceCatalogRequest.ts",
@@ -11939,9 +11974,9 @@
       {
         "file": "packages/services/src/zcode-agent/zcodeAgentErrors.ts",
         "counts": {
-          "ZCode": 8
+          "ZCode": 7
         },
-        "total": 8
+        "total": 7
       },
       {
         "file": "packages/services/src/zcode-agent/zcodeAgentPluginParams.ts",
@@ -11960,18 +11995,18 @@
       {
         "file": "packages/services/src/zcode-agent/zcodeAgentProcessManager.ts",
         "counts": {
-          "ZCode": 188,
+          "ZCode": 163,
           "GLM": 4
         },
-        "total": 192
+        "total": 167
       },
       {
         "file": "packages/services/src/zcode-agent/zcodeAgentService.ts",
         "counts": {
-          "ZCode": 711,
+          "ZCode": 680,
           "GLM": 1
         },
-        "total": 712
+        "total": 681
       },
       {
         "file": "packages/services/src/zcode-agent/zcodeAgentSpawnCwd.ts",
@@ -11997,9 +12032,9 @@
       {
         "file": "packages/services/src/zcode-agent/zcodeProtocolClient.ts",
         "counts": {
-          "ZCode": 60
+          "ZCode": 57
         },
-        "total": 60
+        "total": 57
       },
       {
         "file": "packages/services/src/zcode-agent/zcodeProtocolTransport.ts",
@@ -12025,9 +12060,9 @@
       {
         "file": "packages/services/src/zcode-agent/zcodeStdioTransport.ts",
         "counts": {
-          "ZCode": 22
+          "ZCode": 21
         },
-        "total": 22
+        "total": 21
       },
       {
         "file": "packages/services/src/zcode-agent/zcodeStorageStartupGate.ts",
@@ -12046,10 +12081,10 @@
       {
         "file": "packages/services/src/zcode-agent/zcodeTaskServiceAdapter.ts",
         "counts": {
-          "ZCode": 548,
+          "ZCode": 531,
           "GLM": 15
         },
-        "total": 563
+        "total": 546
       },
       {
         "file": "packages/services/src/zcode-agent/zcodeV4HostCommand.ts",
@@ -12204,9 +12239,10 @@
       {
         "file": "packages/shared/src/channels.ts",
         "counts": {
-          "ZCode": 165
+          "ZCode": 165,
+          "bigmodel": 1
         },
-        "total": 165
+        "total": 166
       },
       {
         "file": "packages/shared/src/coding-plan-reset.ts",
@@ -12214,6 +12250,13 @@
           "ZCode": 5
         },
         "total": 5
+      },
+      {
+        "file": "packages/shared/src/coding-plan-subscription.ts",
+        "counts": {
+          "bigmodel": 4
+        },
+        "total": 4
       },
       {
         "file": "packages/shared/src/command-types.ts",
@@ -12246,9 +12289,9 @@
       {
         "file": "packages/shared/src/desktopMenu.ts",
         "counts": {
-          "ZCode": 36
+          "ZCode": 28
         },
-        "total": 36
+        "total": 28
       },
       {
         "file": "packages/shared/src/dynamic-workflow-feature.ts",
@@ -12281,9 +12324,9 @@
       {
         "file": "packages/shared/src/feedback.ts",
         "counts": {
-          "ZCode": 7
+          "ZCode": 6
         },
-        "total": 7
+        "total": 6
       },
       {
         "file": "packages/shared/src/handshake.ts",
@@ -12338,9 +12381,10 @@
       {
         "file": "packages/shared/src/legacy-model-provider-identity.ts",
         "counts": {
-          "GLM": 4
+          "GLM": 4,
+          "bigmodel": 8
         },
-        "total": 4
+        "total": 12
       },
       {
         "file": "packages/shared/src/markdown-artifact-images.ts",
@@ -12359,9 +12403,10 @@
       {
         "file": "packages/shared/src/mcp.ts",
         "counts": {
-          "ZCode": 57
+          "ZCode": 57,
+          "bigmodel": 1
         },
-        "total": 57
+        "total": 58
       },
       {
         "file": "packages/shared/src/model-config.ts",
@@ -12374,9 +12419,17 @@
         "file": "packages/shared/src/model-provider-family.ts",
         "counts": {
           "ZCode": 3,
-          "Z.ai": 3
+          "Z.ai": 2,
+          "bigmodel": 18
         },
-        "total": 6
+        "total": 23
+      },
+      {
+        "file": "packages/shared/src/model-provider-types.ts",
+        "counts": {
+          "bigmodel": 18
+        },
+        "total": 18
       },
       {
         "file": "packages/shared/src/model-selection-key.ts",
@@ -12402,9 +12455,9 @@
       {
         "file": "packages/shared/src/node/atomicFileLock.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 2
         },
-        "total": 4
+        "total": 2
       },
       {
         "file": "packages/shared/src/node/officialPluginCache.ts",
@@ -12416,16 +12469,18 @@
       {
         "file": "packages/shared/src/oauth.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 5,
+          "bigmodel": 4
         },
-        "total": 5
+        "total": 9
       },
       {
         "file": "packages/shared/src/off-peak-types.ts",
         "counts": {
-          "ZCode": 14
+          "ZCode": 14,
+          "bigmodel": 7
         },
-        "total": 14
+        "total": 21
       },
       {
         "file": "packages/shared/src/official-glm-model-id.ts",
@@ -12437,9 +12492,10 @@
       {
         "file": "packages/shared/src/official-mcp-auth.ts",
         "counts": {
-          "ZCode": 28
+          "ZCode": 28,
+          "bigmodel": 9
         },
-        "total": 28
+        "total": 37
       },
       {
         "file": "packages/shared/src/official-mcp-tool-error.ts",
@@ -12450,13 +12506,6 @@
       },
       {
         "file": "packages/shared/src/onboardingRecord.ts",
-        "counts": {
-          "ZCode": 1
-        },
-        "total": 1
-      },
-      {
-        "file": "packages/shared/src/openrouter-attribution.ts",
         "counts": {
           "ZCode": 1
         },
@@ -12479,9 +12528,9 @@
       {
         "file": "packages/shared/src/plugin-display-name.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 4
         },
-        "total": 5
+        "total": 4
       },
       {
         "file": "packages/shared/src/plugin-marketplaces.ts",
@@ -12507,9 +12556,9 @@
       {
         "file": "packages/shared/src/process-names.ts",
         "counts": {
-          "ZCode": 21
+          "ZCode": 20
         },
-        "total": 21
+        "total": 20
       },
       {
         "file": "packages/shared/src/processResourceTelemetry.ts",
@@ -12521,16 +12570,25 @@
       {
         "file": "packages/shared/src/protocol.ts",
         "counts": {
-          "ZCode": 14
+          "ZCode": 14,
+          "bigmodel": 1
         },
-        "total": 14
+        "total": 15
+      },
+      {
+        "file": "packages/shared/src/provider-family-connection-selection.ts",
+        "counts": {
+          "bigmodel": 1
+        },
+        "total": 1
       },
       {
         "file": "packages/shared/src/provider-provisioning.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 1
         },
-        "total": 1
+        "total": 2
       },
       {
         "file": "packages/shared/src/providers.ts",
@@ -12683,12 +12741,20 @@
         "total": 8
       },
       {
+        "file": "packages/shared/src/usage-quota.ts",
+        "counts": {
+          "bigmodel": 2
+        },
+        "total": 2
+      },
+      {
         "file": "packages/shared/src/usage-stats.ts",
         "counts": {
           "ZCode": 10,
-          "Z.ai": 3
+          "Z.ai": 3,
+          "bigmodel": 5
         },
-        "total": 13
+        "total": 18
       },
       {
         "file": "packages/shared/src/validation.ts",
@@ -12700,9 +12766,10 @@
       {
         "file": "packages/shared/src/validationAppSettings.ts",
         "counts": {
-          "ZCode": 21
+          "ZCode": 21,
+          "bigmodel": 1
         },
-        "total": 21
+        "total": 22
       },
       {
         "file": "packages/shared/src/version.ts",
@@ -12714,9 +12781,9 @@
       {
         "file": "packages/shared/src/workspace-hook-config.ts",
         "counts": {
-          "ZCode": 9
+          "ZCode": 6
         },
-        "total": 9
+        "total": 6
       },
       {
         "file": "packages/shared/src/workspace-hook-mutation.ts",
@@ -12749,18 +12816,18 @@
       {
         "file": "packages/shared/src/zcode-agent-policy.ts",
         "counts": {
-          "ZCode": 20,
+          "ZCode": 19,
           "GLM": 1
         },
-        "total": 21
+        "total": 20
       },
       {
         "file": "packages/shared/src/zcode-agent-runtime.ts",
         "counts": {
-          "ZCode": 13,
+          "ZCode": 12,
           "GLM": 6
         },
-        "total": 19
+        "total": 18
       },
       {
         "file": "packages/shared/src/zcode-api-retry-status.ts",
@@ -12898,9 +12965,11 @@
       {
         "file": "packages/shared/src/zcode-protocol/index.ts",
         "counts": {
-          "ZCode": 1063
+          "ZCode": 1062,
+          "bigmodel": 4,
+          "zhipu": 4
         },
-        "total": 1063
+        "total": 1070
       },
       {
         "file": "packages/shared/src/zcode-session-task-status.ts",
@@ -12919,17 +12988,18 @@
       {
         "file": "packages/shared/src/zcode-slash-command-help.ts",
         "counts": {
-          "ZCode": 5,
-          "Z.ai": 3
+          "ZCode": 4,
+          "Z.ai": 1,
+          "bigmodel": 3
         },
         "total": 8
       },
       {
         "file": "packages/shared/src/zcode-source-headers.ts",
         "counts": {
-          "ZCode": 23
+          "ZCode": 20
         },
-        "total": 23
+        "total": 20
       },
       {
         "file": "packages/shared/src/zcode-task-mode-schema.ts",
@@ -12963,9 +13033,10 @@
       {
         "file": "packages/shared/src/zcodeEndpoint.ts",
         "counts": {
-          "ZCode": 78
+          "ZCode": 76,
+          "bigmodel": 21
         },
-        "total": 78
+        "total": 97
       },
       {
         "file": "packages/shared/src/zcodePersistedMessageMerge.ts",
@@ -13068,9 +13139,10 @@
       {
         "file": "packages/ui/src/ChatErrorBanner.tsx",
         "counts": {
-          "ZCode": 15
+          "ZCode": 15,
+          "bigmodel": 1
         },
-        "total": 15
+        "total": 16
       },
       {
         "file": "packages/ui/src/ChatMediaAttachmentPreviewDialog.tsx",
@@ -13083,9 +13155,10 @@
         "file": "packages/ui/src/CodingPlanUsageRemainingPanel.tsx",
         "counts": {
           "ZCode": 10,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 3
         },
-        "total": 11
+        "total": 14
       },
       {
         "file": "packages/ui/src/ConfirmDialog.tsx",
@@ -13118,9 +13191,9 @@
       {
         "file": "packages/ui/src/DesktopTopOverlay.tsx",
         "counts": {
-          "ZCode": 4
+          "ZCode": 3
         },
-        "total": 4
+        "total": 3
       },
       {
         "file": "packages/ui/src/DesktopWindowControls.tsx",
@@ -13336,9 +13409,9 @@
       {
         "file": "packages/ui/src/Root.tsx",
         "counts": {
-          "ZCode": 26
+          "ZCode": 27
         },
-        "total": 26
+        "total": 27
       },
       {
         "file": "packages/ui/src/SSHDialog.tsx",
@@ -13357,9 +13430,10 @@
       {
         "file": "packages/ui/src/SettingsPage.tsx",
         "counts": {
-          "ZCode": 35
+          "ZCode": 35,
+          "bigmodel": 40
         },
-        "total": 35
+        "total": 75
       },
       {
         "file": "packages/ui/src/SidePaneTerminalPane.tsx",
@@ -13910,10 +13984,11 @@
       {
         "file": "packages/ui/src/WelcomeScreen.tsx",
         "counts": {
-          "ZCode": 17,
-          "Z.ai": 1
+          "ZCode": 16,
+          "Z.ai": 1,
+          "bigmodel": 12
         },
-        "total": 18
+        "total": 29
       },
       {
         "file": "packages/ui/src/WhiteboardPane.tsx",
@@ -13921,13 +13996,6 @@
           "ZCode": 2
         },
         "total": 2
-      },
-      {
-        "file": "packages/ui/src/WindowsTopLeftLogo.tsx",
-        "counts": {
-          "ZCode": 1
-        },
-        "total": 1
       },
       {
         "file": "packages/ui/src/WorkflowPermissionBlock.tsx",
@@ -14030,16 +14098,16 @@
       {
         "file": "packages/ui/src/WorkspaceSidebar/WorkspaceSidebarCollapsedRail.tsx",
         "counts": {
-          "ZCode": 3
+          "ZCode": 2
         },
-        "total": 3
+        "total": 2
       },
       {
         "file": "packages/ui/src/WorkspaceSidebarFooter.tsx",
         "counts": {
-          "ZCode": 10
+          "ZCode": 9
         },
-        "total": 10
+        "total": 9
       },
       {
         "file": "packages/ui/src/WorkspaceSidebarFooterPlanBadgeHelpers.ts",
@@ -14053,9 +14121,10 @@
         "file": "packages/ui/src/WorkspaceSidebarFooterUsageSummary.tsx",
         "counts": {
           "ZCode": 9,
-          "Z.ai": 2
+          "Z.ai": 1,
+          "bigmodel": 54
         },
-        "total": 11
+        "total": 64
       },
       {
         "file": "packages/ui/src/WorkspaceSidebarItem.tsx",
@@ -14221,9 +14290,9 @@
       {
         "file": "packages/ui/src/app-shell/WorkspaceShellLayout.tsx",
         "counts": {
-          "ZCode": 14
+          "ZCode": 13
         },
-        "total": 14
+        "total": 13
       },
       {
         "file": "packages/ui/src/app-shell/types.ts",
@@ -14345,19 +14414,28 @@
         "total": 2
       },
       {
-        "file": "packages/ui/src/assets/provider-icons/model-provider-logo-sources.json",
-        "counts": {
-          "ZCode": 1,
-          "Z.ai": 2
-        },
-        "total": 3
-      },
-      {
-        "file": "packages/ui/src/botsUi.ts",
+        "file": "packages/ui/src/assets/latch-mark.svg",
         "counts": {
           "ZCode": 2
         },
         "total": 2
+      },
+      {
+        "file": "packages/ui/src/assets/provider-icons/model-provider-logo-sources.json",
+        "counts": {
+          "ZCode": 2,
+          "Z.ai": 4,
+          "bigmodel": 10
+        },
+        "total": 16
+      },
+      {
+        "file": "packages/ui/src/botsUi.ts",
+        "counts": {
+          "ZCode": 2,
+          "bigmodel": 1
+        },
+        "total": 3
       },
       {
         "file": "packages/ui/src/browser-use/BrowserUseSidePaneContent.tsx",
@@ -15219,9 +15297,9 @@
       {
         "file": "packages/ui/src/feedback/feedbackSubmitDescription.ts",
         "counts": {
-          "ZCode": 6
+          "ZCode": 5
         },
-        "total": 6
+        "total": 5
       },
       {
         "file": "packages/ui/src/feedback/feedbackSubmitModelContext.ts",
@@ -15233,9 +15311,9 @@
       {
         "file": "packages/ui/src/feedback/feedbackSubmitSubmission.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 4
         },
-        "total": 5
+        "total": 4
       },
       {
         "file": "packages/ui/src/git-action-menu/currentSessionFileScope.ts",
@@ -15366,16 +15444,18 @@
       {
         "file": "packages/ui/src/hooks/useCodingPlanEntryPlanList.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 3
         },
-        "total": 3
+        "total": 6
       },
       {
         "file": "packages/ui/src/hooks/useCodingPlanQuotaResetUi.ts",
         "counts": {
-          "ZCode": 17
+          "ZCode": 17,
+          "bigmodel": 1
         },
-        "total": 17
+        "total": 18
       },
       {
         "file": "packages/ui/src/hooks/useCommands.ts",
@@ -15383,6 +15463,13 @@
           "ZCode": 2
         },
         "total": 2
+      },
+      {
+        "file": "packages/ui/src/hooks/useCredentials.ts",
+        "counts": {
+          "bigmodel": 3
+        },
+        "total": 3
       },
       {
         "file": "packages/ui/src/hooks/useCuaComposerEntry.ts",
@@ -15506,9 +15593,10 @@
       {
         "file": "packages/ui/src/hooks/useOAuth.ts",
         "counts": {
-          "ZCode": 6
+          "ZCode": 6,
+          "bigmodel": 2
         },
-        "total": 6
+        "total": 8
       },
       {
         "file": "packages/ui/src/hooks/useOffPeakEligibility.ts",
@@ -15527,9 +15615,10 @@
       {
         "file": "packages/ui/src/hooks/usePlanIdentitySnapshot.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "zhipu": 1
         },
-        "total": 2
+        "total": 3
       },
       {
         "file": "packages/ui/src/hooks/usePlatform.tsx",
@@ -15718,17 +15807,19 @@
         "file": "packages/ui/src/hooks/useUsageEntitlement.ts",
         "counts": {
           "ZCode": 6,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 1
         },
-        "total": 7
+        "total": 8
       },
       {
         "file": "packages/ui/src/hooks/useUsageStats.ts",
         "counts": {
           "ZCode": 7,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 1
         },
-        "total": 8
+        "total": 9
       },
       {
         "file": "packages/ui/src/hooks/useWorkflowRunArtifactBytes.ts",
@@ -15845,9 +15936,9 @@
       {
         "file": "packages/ui/src/hooks/workspacePrepareRpc.ts",
         "counts": {
-          "ZCode": 19
+          "ZCode": 18
         },
-        "total": 19
+        "total": 18
       },
       {
         "file": "packages/ui/src/hooks/workspaceTaskListDisplayGroups.ts",
@@ -15894,20 +15985,24 @@
       {
         "file": "packages/ui/src/i18n/locales/en-US.ts",
         "counts": {
-          "ZCode": 141,
-          "Z.ai": 11,
-          "GLM": 12
+          "ZCode": 41,
+          "Z.ai": 10,
+          "GLM": 12,
+          "bigmodel": 35,
+          "zhipu": 1
         },
-        "total": 164
+        "total": 99
       },
       {
         "file": "packages/ui/src/i18n/locales/zh-CN.ts",
         "counts": {
-          "ZCode": 137,
-          "Z.ai": 11,
-          "GLM": 13
+          "ZCode": 41,
+          "Z.ai": 10,
+          "GLM": 13,
+          "bigmodel": 34,
+          "zhipu": 1
         },
-        "total": 161
+        "total": 99
       },
       {
         "file": "packages/ui/src/index.ts",
@@ -15919,17 +16014,19 @@
       {
         "file": "packages/ui/src/lib/accountProviderAccess.ts",
         "counts": {
-          "ZCode": 7
+          "ZCode": 7,
+          "zhipu": 2
         },
-        "total": 7
+        "total": 9
       },
       {
         "file": "packages/ui/src/lib/appTelemetry.ts",
         "counts": {
           "ZCode": 1,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 6
         },
-        "total": 2
+        "total": 8
       },
       {
         "file": "packages/ui/src/lib/archivedTaskDeletion.ts",
@@ -15990,9 +16087,9 @@
       {
         "file": "packages/ui/src/lib/builtinSkillI18n.ts",
         "counts": {
-          "ZCode": 11
+          "ZCode": 5
         },
-        "total": 11
+        "total": 5
       },
       {
         "file": "packages/ui/src/lib/chatAttachments.ts",
@@ -16012,16 +16109,18 @@
         "file": "packages/ui/src/lib/chatErrorAttribution.ts",
         "counts": {
           "ZCode": 6,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 1
         },
-        "total": 7
+        "total": 8
       },
       {
         "file": "packages/ui/src/lib/chatErrorAttributionEvidence.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 2
         },
-        "total": 1
+        "total": 3
       },
       {
         "file": "packages/ui/src/lib/chatErrorBannerTelemetry.ts",
@@ -16068,16 +16167,19 @@
       {
         "file": "packages/ui/src/lib/codingPlanFunnelTelemetry.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 11,
+          "zhipu": 1
         },
-        "total": 2
+        "total": 14
       },
       {
         "file": "packages/ui/src/lib/codingPlanOwnedEntryPlans.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 2
         },
-        "total": 1
+        "total": 3
       },
       {
         "file": "packages/ui/src/lib/codingPlanProvider.ts",
@@ -16089,9 +16191,10 @@
       {
         "file": "packages/ui/src/lib/codingPlanQuotaPresentation.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 3
         },
-        "total": 1
+        "total": 4
       },
       {
         "file": "packages/ui/src/lib/codingPlanQuotaResetCoordinator.ts",
@@ -16111,9 +16214,10 @@
         "file": "packages/ui/src/lib/codingPlanUsageSources.ts",
         "counts": {
           "ZCode": 12,
-          "Z.ai": 1
+          "bigmodel": 9,
+          "zhipu": 1
         },
-        "total": 13
+        "total": 22
       },
       {
         "file": "packages/ui/src/lib/composerRecent.ts",
@@ -16323,9 +16427,10 @@
       {
         "file": "packages/ui/src/lib/modelProviderFamilyConnectionSelection.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 1
         },
-        "total": 2
+        "total": 3
       },
       {
         "file": "packages/ui/src/lib/modelSelectionGroups.ts",
@@ -16346,16 +16451,18 @@
         "file": "packages/ui/src/lib/modelVisionBadge.ts",
         "counts": {
           "ZCode": 1,
-          "GLM": 5
+          "GLM": 5,
+          "zhipu": 2
         },
-        "total": 6
+        "total": 8
       },
       {
         "file": "packages/ui/src/lib/oauthProviderIcon.tsx",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 5
         },
-        "total": 2
+        "total": 7
       },
       {
         "file": "packages/ui/src/lib/offPeakTelemetry.ts",
@@ -16509,9 +16616,10 @@
       {
         "file": "packages/ui/src/lib/providerTelemetryIdentity.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 9
         },
-        "total": 1
+        "total": 10
       },
       {
         "file": "packages/ui/src/lib/quickPickConversationNavigation.ts",
@@ -16621,9 +16729,10 @@
       {
         "file": "packages/ui/src/lib/sidebarCodingPlanUpgrade.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 2
         },
-        "total": 1
+        "total": 3
       },
       {
         "file": "packages/ui/src/lib/sidebarPurposeSectionPreferences.ts",
@@ -16642,9 +16751,10 @@
       {
         "file": "packages/ui/src/lib/sidebarUsageCodingPlanProviderPreference.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 4
         },
-        "total": 2
+        "total": 6
       },
       {
         "file": "packages/ui/src/lib/skillSourceFilter.ts",
@@ -16664,9 +16774,10 @@
       {
         "file": "packages/ui/src/lib/startPlanEntitlementOptions.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "zhipu": 1
         },
-        "total": 2
+        "total": 3
       },
       {
         "file": "packages/ui/src/lib/startPlanRecommendation.ts",
@@ -17100,10 +17211,10 @@
       {
         "file": "packages/ui/src/lib/zcodeUiError.ts",
         "counts": {
-          "ZCode": 31,
+          "ZCode": 30,
           "GLM": 1
         },
-        "total": 32
+        "total": 31
       },
       {
         "file": "packages/ui/src/logger.ts",
@@ -17116,16 +17227,18 @@
         "file": "packages/ui/src/login/LoginApiKeyForm.helpers.ts",
         "counts": {
           "ZCode": 3,
-          "Z.ai": 1
+          "Z.ai": 2,
+          "bigmodel": 7
         },
-        "total": 4
+        "total": 12
       },
       {
         "file": "packages/ui/src/login/LoginApiKeyForm.tsx",
         "counts": {
-          "ZCode": 6
+          "ZCode": 6,
+          "bigmodel": 5
         },
-        "total": 6
+        "total": 11
       },
       {
         "file": "packages/ui/src/mentions/MentionPlugin.tsx",
@@ -17228,9 +17341,9 @@
       {
         "file": "packages/ui/src/onboarding/OnboardingWelcomeView.tsx",
         "counts": {
-          "ZCode": 6
+          "ZCode": 5
         },
-        "total": 6
+        "total": 5
       },
       {
         "file": "packages/ui/src/onboarding/useOnboardingAgentsFileMigration.ts",
@@ -17445,9 +17558,10 @@
       {
         "file": "packages/ui/src/root/accountConnectionLossSuggestion.ts",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "zhipu": 1
         },
-        "total": 2
+        "total": 3
       },
       {
         "file": "packages/ui/src/root/accountConnectionRefreshObserver.ts",
@@ -17480,9 +17594,10 @@
       {
         "file": "packages/ui/src/root/oauthProviderFamilySelectionRefresh.ts",
         "counts": {
-          "ZCode": 12
+          "ZCode": 12,
+          "zhipu": 1
         },
-        "total": 12
+        "total": 13
       },
       {
         "file": "packages/ui/src/root/oauthTeamPricing.ts",
@@ -17578,9 +17693,10 @@
       {
         "file": "packages/ui/src/root/useRootOAuthEffects.ts",
         "counts": {
-          "ZCode": 11
+          "ZCode": 11,
+          "bigmodel": 1
         },
-        "total": 11
+        "total": 12
       },
       {
         "file": "packages/ui/src/root/useRootPlatformEffects.ts",
@@ -17606,9 +17722,10 @@
       {
         "file": "packages/ui/src/root/useRootWorkspaceActions.ts",
         "counts": {
-          "ZCode": 10
+          "ZCode": 10,
+          "bigmodel": 1
         },
-        "total": 10
+        "total": 11
       },
       {
         "file": "packages/ui/src/root/zcodeJwtInvalidRestartMarker.ts",
@@ -17656,9 +17773,10 @@
       {
         "file": "packages/ui/src/settings/AutomationsSection.tsx",
         "counts": {
-          "ZCode": 52
+          "ZCode": 52,
+          "bigmodel": 2
         },
-        "total": 52
+        "total": 54
       },
       {
         "file": "packages/ui/src/settings/BrowserSettingsSection.tsx",
@@ -17670,9 +17788,10 @@
       {
         "file": "packages/ui/src/settings/CodingPlanEmbeddedWebviewDialog.tsx",
         "counts": {
-          "ZCode": 23
+          "ZCode": 23,
+          "bigmodel": 3
         },
-        "total": 23
+        "total": 26
       },
       {
         "file": "packages/ui/src/settings/CodingPlanEntryButton.tsx",
@@ -17712,9 +17831,9 @@
       {
         "file": "packages/ui/src/settings/ComputerUseSection.tsx",
         "counts": {
-          "ZCode": 19
+          "ZCode": 17
         },
-        "total": 19
+        "total": 17
       },
       {
         "file": "packages/ui/src/settings/DataBaseDirControl.tsx",
@@ -17818,9 +17937,11 @@
         "file": "packages/ui/src/settings/ModelProviderSection.tsx",
         "counts": {
           "ZCode": 8,
-          "Z.ai": 2
+          "Z.ai": 2,
+          "bigmodel": 38,
+          "zhipu": 1
         },
-        "total": 10
+        "total": 49
       },
       {
         "file": "packages/ui/src/settings/OffPeakEditActionsMenu.tsx",
@@ -18140,9 +18261,9 @@
       {
         "file": "packages/ui/src/settings/cuaPermissionRestartVerify.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 1
         },
-        "total": 4
+        "total": 1
       },
       {
         "file": "packages/ui/src/settings/mcpSettingsShared.ts",
@@ -18168,9 +18289,10 @@
       {
         "file": "packages/ui/src/settings/model-provider-section/BigModelRegistrationHint.tsx",
         "counts": {
-          "ZCode": 2
+          "ZCode": 2,
+          "bigmodel": 6
         },
-        "total": 2
+        "total": 8
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/CodingPlanStatusActions.tsx",
@@ -18190,16 +18312,19 @@
         "file": "packages/ui/src/settings/model-provider-section/Detail.tsx",
         "counts": {
           "ZCode": 8,
-          "Z.ai": 2
+          "Z.ai": 2,
+          "bigmodel": 11,
+          "zhipu": 2
         },
-        "total": 10
+        "total": 23
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/InlineEditableProviderCard.tsx",
         "counts": {
-          "ZCode": 4
+          "ZCode": 4,
+          "zhipu": 1
         },
-        "total": 4
+        "total": 5
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/ModelConfigHelp.tsx",
@@ -18267,9 +18392,10 @@
       {
         "file": "packages/ui/src/settings/model-provider-section/ProviderLogo.tsx",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 5
         },
-        "total": 3
+        "total": 8
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/ProviderModelDraftState.ts",
@@ -18323,9 +18449,12 @@
       {
         "file": "packages/ui/src/settings/model-provider-section/ProviderTemplatePicker.tsx",
         "counts": {
-          "ZCode": 5
+          "ZCode": 5,
+          "Z.ai": 1,
+          "bigmodel": 3,
+          "zhipu": 4
         },
-        "total": 5
+        "total": 13
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/SectionLayout.tsx",
@@ -18367,24 +18496,27 @@
         "file": "packages/ui/src/settings/model-provider-section/StatusCards.tsx",
         "counts": {
           "ZCode": 15,
-          "GLM": 1
+          "GLM": 1,
+          "bigmodel": 10
         },
-        "total": 16
+        "total": 26
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/codingPlanEmbeddedWebview.ts",
         "counts": {
-          "ZCode": 46
+          "ZCode": 46,
+          "bigmodel": 14
         },
-        "total": 46
+        "total": 60
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/codingPlanPricingCards.ts",
         "counts": {
           "ZCode": 1,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 4
         },
-        "total": 2
+        "total": 6
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/codingPlanProductPresentation.ts",
@@ -18404,14 +18536,23 @@
         "file": "packages/ui/src/settings/model-provider-section/constants.ts",
         "counts": {
           "ZCode": 4,
-          "Z.ai": 8
+          "Z.ai": 3,
+          "bigmodel": 24
         },
-        "total": 12
+        "total": 31
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/enterpriseCodingPlanProducts.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 5
+        },
+        "total": 6
+      },
+      {
+        "file": "packages/ui/src/settings/model-provider-section/modelProviderActions.ts",
+        "counts": {
+          "bigmodel": 1
         },
         "total": 1
       },
@@ -18426,9 +18567,10 @@
         "file": "packages/ui/src/settings/model-provider-section/providerFamilyConnectionVisibility.ts",
         "counts": {
           "ZCode": 5,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 17
         },
-        "total": 6
+        "total": 23
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/quotaModelDisplayName.ts",
@@ -18440,24 +18582,28 @@
       {
         "file": "packages/ui/src/settings/model-provider-section/useCodingPlanEntitlements.ts",
         "counts": {
-          "ZCode": 7
+          "ZCode": 7,
+          "bigmodel": 31,
+          "zhipu": 2
         },
-        "total": 7
+        "total": 40
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/useCodingPlanProducts.ts",
         "counts": {
           "ZCode": 1,
-          "Z.ai": 6
+          "Z.ai": 6,
+          "bigmodel": 3
         },
-        "total": 7
+        "total": 10
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/useEnterpriseCodingPlanProducts.ts",
         "counts": {
-          "ZCode": 1
+          "ZCode": 1,
+          "bigmodel": 8
         },
-        "total": 1
+        "total": 9
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/useModelConfigResolution.ts",
@@ -18469,9 +18615,11 @@
       {
         "file": "packages/ui/src/settings/model-provider-section/useModelProviderNavigation.ts",
         "counts": {
-          "ZCode": 4
+          "ZCode": 4,
+          "Z.ai": 1,
+          "bigmodel": 3
         },
-        "total": 4
+        "total": 8
       },
       {
         "file": "packages/ui/src/settings/model-provider-section/useProviderModelDraft.ts",
@@ -18763,9 +18911,10 @@
       {
         "file": "packages/ui/src/settings/usage-stats/CodingPlanUsagePanel.tsx",
         "counts": {
-          "ZCode": 19
+          "ZCode": 19,
+          "bigmodel": 10
         },
-        "total": 19
+        "total": 29
       },
       {
         "file": "packages/ui/src/settings/usage-stats/UsageChartLoadBoundary.tsx",
@@ -18812,9 +18961,10 @@
       {
         "file": "packages/ui/src/settings/usage-stats/usageStatsUiParts.tsx",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "bigmodel": 1
         },
-        "total": 3
+        "total": 4
       },
       {
         "file": "packages/ui/src/settings/useAutomationTemplates.ts",
@@ -19356,9 +19506,9 @@
       {
         "file": "packages/ui/src/v4/ConversationShareReadonlyTimeline.tsx",
         "counts": {
-          "ZCode": 19
+          "ZCode": 17
         },
-        "total": 19
+        "total": 17
       },
       {
         "file": "packages/ui/src/v4/ConversationShareSelectionDock.tsx",
@@ -19475,9 +19625,10 @@
       {
         "file": "packages/ui/src/v4/SessionPane.tsx",
         "counts": {
-          "ZCode": 53
+          "ZCode": 53,
+          "bigmodel": 2
         },
-        "total": 53
+        "total": 55
       },
       {
         "file": "packages/ui/src/v4/SessionSubscriptionErrorPanel.tsx",
@@ -19686,9 +19837,10 @@
         "file": "packages/ui/src/v4/composer/V4ComposerToolbar.tsx",
         "counts": {
           "ZCode": 22,
-          "Z.ai": 1
+          "bigmodel": 29,
+          "zhipu": 1
         },
-        "total": 23
+        "total": 52
       },
       {
         "file": "packages/ui/src/v4/composer/WebElementContextAttachmentChip.tsx",
@@ -19750,9 +19902,10 @@
         "file": "packages/ui/src/v4/composer/modelTriggerDisplay.ts",
         "counts": {
           "ZCode": 1,
-          "Z.ai": 1
+          "Z.ai": 1,
+          "bigmodel": 4
         },
-        "total": 2
+        "total": 6
       },
       {
         "file": "packages/ui/src/v4/composer/newTaskDraft.ts",
@@ -19855,9 +20008,9 @@
       {
         "file": "packages/ui/src/v4/conversationProjectionStore.ts",
         "counts": {
-          "ZCode": 9
+          "ZCode": 4
         },
-        "total": 9
+        "total": 4
       },
       {
         "file": "packages/ui/src/v4/conversationRowContext.ts",
@@ -19939,10 +20092,9 @@
       {
         "file": "packages/ui/src/v4/featureSuggestedPrompts.ts",
         "counts": {
-          "ZCode": 67,
-          "Z.ai": 1
+          "ZCode": 63
         },
-        "total": 68
+        "total": 63
       },
       {
         "file": "packages/ui/src/v4/interactionAutoResolutionCommand.ts",
@@ -20039,9 +20191,10 @@
         "file": "packages/ui/src/v4/sessionQuotaBannerState.ts",
         "counts": {
           "ZCode": 1,
-          "GLM": 5
+          "GLM": 5,
+          "bigmodel": 2
         },
-        "total": 6
+        "total": 8
       },
       {
         "file": "packages/ui/src/v4/sessionsIndexRegistry.ts",
@@ -20215,9 +20368,10 @@
         "file": "packages/ui/src/v4/useV4SessionQuotaBanner.ts",
         "counts": {
           "ZCode": 4,
-          "GLM": 4
+          "GLM": 4,
+          "bigmodel": 2
         },
-        "total": 8
+        "total": 10
       },
       {
         "file": "packages/ui/src/v4/useWorkspaceSessionsIndexItems.ts",
@@ -20538,16 +20692,16 @@
       {
         "file": "packages/web/index.html",
         "counts": {
-          "ZCode": 31
+          "ZCode": 30
         },
-        "total": 31
+        "total": 30
       },
       {
         "file": "packages/web/package.json",
         "counts": {
-          "ZCode": 4
+          "ZCode": 5
         },
-        "total": 4
+        "total": 5
       },
       {
         "file": "packages/web/src/auth/WebCallbackPage.tsx",
@@ -20559,9 +20713,10 @@
       {
         "file": "packages/web/src/auth/browserOAuthCredentialRepo.ts",
         "counts": {
-          "ZCode": 18
+          "ZCode": 18,
+          "bigmodel": 15
         },
-        "total": 18
+        "total": 33
       },
       {
         "file": "packages/web/src/auth/oauthStateCodec.ts",
@@ -20571,34 +20726,31 @@
         "total": 3
       },
       {
-        "file": "packages/web/src/auth/webAuthLocale.ts",
-        "counts": {
-          "ZCode": 2,
-          "Z.ai": 2
-        },
-        "total": 4
-      },
-      {
         "file": "packages/web/src/auth/webAuthService.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 3,
+          "Z.ai": 2,
+          "bigmodel": 2
         },
-        "total": 3
+        "total": 7
       },
       {
         "file": "packages/web/src/auth/webZaiOAuthConfig.ts",
         "counts": {
           "ZCode": 14,
-          "Z.ai": 1
+          "Z.ai": 3,
+          "bigmodel": 16
         },
-        "total": 15
+        "total": 33
       },
       {
         "file": "packages/web/src/auth/zaiWebOAuthProvider.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 5,
+          "Z.ai": 1,
+          "bigmodel": 11
         },
-        "total": 5
+        "total": 17
       },
       {
         "file": "packages/web/src/communityUrl.ts",
@@ -20617,31 +20769,31 @@
       {
         "file": "packages/web/src/main.tsx",
         "counts": {
-          "ZCode": 18
+          "ZCode": 13
         },
-        "total": 18
+        "total": 13
       },
       {
         "file": "packages/web/src/share/ConversationShareLandingPage.tsx",
         "counts": {
-          "ZCode": 35,
-          "Z.ai": 5
+          "ZCode": 21,
+          "bigmodel": 8
         },
-        "total": 40
+        "total": 29
       },
       {
         "file": "packages/web/src/share/conversationSharePreviewClient.ts",
         "counts": {
-          "ZCode": 3
+          "ZCode": 2
         },
-        "total": 3
+        "total": 2
       },
       {
         "file": "packages/web/src/share/mockConversationSharePreviewClient.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 3
         },
-        "total": 5
+        "total": 3
       },
       {
         "file": "packages/web/vite.config.ts",
@@ -20660,9 +20812,9 @@
       {
         "file": "packages/zcode-cua/broker-helper-constants.js",
         "counts": {
-          "ZCode": 5
+          "ZCode": 3
         },
-        "total": 5
+        "total": 3
       },
       {
         "file": "packages/zcode-cua/broker-server.d.ts",
@@ -20765,9 +20917,10 @@
       {
         "file": "packages/zcode-server-cli/src/platform/serviceManager.ts",
         "counts": {
-          "ZCode": 5
+          "ZCode": 5,
+          "zhipu": 2
         },
-        "total": 5
+        "total": 7
       },
       {
         "file": "packages/zcode-server-cli/src/runtime/agentWiring.ts",
@@ -20910,19 +21063,12 @@
         "total": 2
       },
       {
-        "file": "patches/@arms__rum-electron@0.0.3.patch",
-        "counts": {
-          "ZCode": 55
-        },
-        "total": 55
-      },
-      {
         "file": "pnpm-lock.yaml",
         "counts": {
-          "ZCode": 117,
-          "GLM": 4
+          "ZCode": 119,
+          "GLM": 3
         },
-        "total": 121
+        "total": 122
       },
       {
         "file": "pnpm-workspace.yaml",
@@ -20941,9 +21087,12 @@
       {
         "file": "scripts/brand-lint.mjs",
         "counts": {
-          "ZCode": 4,
-          "Z.ai": 2,
-          "GLM": 2
+          "ZCode": 3,
+          "Z.ai": 1,
+          "GLM": 1,
+          "bigmodel": 1,
+          "zhipu": 1,
+          "client_P8X5CMWmlaRO9gyO-KSqtg": 1
         },
         "total": 8
       },
@@ -21269,11 +21418,39 @@
       "public/logo/icons/icon.icns",
       "public/logo/icons/icon.ico"
     ],
-    "unreadable": []
+    "unreadable": [
+      "fp0-batch2.cjs",
+      "packages/desktop/src/main/appARMSBootstrap.ts",
+      "packages/desktop/src/main/armsBrowserPerfLoadNudge.ts",
+      "packages/desktop/src/main/armsEventRedaction.ts",
+      "packages/desktop/src/main/armsUserIdentity.ts",
+      "packages/desktop/src/main/databaseStartupTelemetry.ts",
+      "packages/desktop/src/main/desktopMcpTelemetry.ts",
+      "packages/desktop/src/main/desktopStabilityTelemetry.ts",
+      "packages/desktop/src/main/desktopZCodeDataSizeTelemetry.ts",
+      "packages/desktop/src/main/longTaskAttributionSummary.ts",
+      "packages/desktop/src/main/startupTelemetryDelivery.ts",
+      "packages/desktop/src/main/zcodeDataSizeScanner.ts",
+      "packages/desktop/src/main/zcodeDataSizeTelemetryState.ts",
+      "packages/desktop/src/main/zcodeDataSizeWorker.ts",
+      "packages/desktop/src/main/zcodeDataSizeWorkerClient.ts",
+      "packages/desktop/src/shared/armsRumBridgeForward.ts",
+      "packages/desktop/src/shared/armsRumShared.d.ts",
+      "packages/desktop/src/shared/armsRumShared.d.ts.map",
+      "packages/desktop/src/shared/armsRumShared.js",
+      "packages/desktop/src/shared/armsRumShared.js.map",
+      "packages/desktop/src/shared/armsRumShared.ts",
+      "patches/@arms__rum-electron@0.0.3.patch",
+      "third-party/upstream/2c976d327b293bd74c257cd53e9b4ecef97a06b1651baa3b24327c97192cb3de.txt",
+      "third-party/upstream/328eb7864c20ab77607b26ee1913b65a9b880f6300eea9e667b890da896a2f40.txt",
+      "third-party/upstream/38b6f63a0aa422b5c329e75f1aeecd2b02e83caab1747644c00810870d77bacb.txt"
+    ]
   },
   "untrackedUnderProduct": {
     "note": "untracked files under product/ are outside the git-tracked strict scope; listed here so they cannot hide",
-    "files": []
+    "files": [
+      "product/identity/DECISIONS.md"
+    ]
   },
   "exitCode": 0
 }

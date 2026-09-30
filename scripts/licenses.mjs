@@ -88,8 +88,20 @@ for (const r of installed.values()) r.bucket = classify(r.license);
 // ---------- 构建工具许可标识复核（不是二进制发行义务豁免） ----------
 const WEAK_ALLOW = [[/^lightningcss/, "当前仅构建依赖；进入生产图时需重新核对 MPL 源码提供义务"]];
 function weakAllowReason(r) {
-  if (r.isProd) return null;
+  if (r.isProd) return prodReviewedReason(r);
   for (const [re, why] of WEAK_ALLOW) if (re.test(r.name)) return why;
+  return null;
+}
+
+// ---------- 生产图内弱版权依赖的人工复核结论（须写明义务依据与日期） ----------
+const PROD_REVIEWED = [
+  [
+    /^elkjs$/,
+    "EPL-2.0，经 mermaid 传递引入（图表布局库）；未修改的库级依赖、库边界隔离，THIRD-PARTY-NOTICES 已带许可文本与源码链接；人工复核通过 2026-09-30（lead）",
+  ],
+];
+function prodReviewedReason(r) {
+  for (const [re, why] of PROD_REVIEWED) if (re.test(r.name)) return why;
   return null;
 }
 

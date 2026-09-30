@@ -1,7 +1,10 @@
 import { randomBytes } from "node:crypto";
 import type { HttpClientPort, HttpClientRunOptions, TraceContext } from "@zcode/contracts";
+import { buildRuntimeZCodeApiUrl } from "@zcode/shared";
 
-const DEFAULT_ZCODE_OAUTH_BASE_URL = "https://zcode.z.ai/api/v1";
+// 缺省 OAuth base 跟随 @zcode/shared 的产品端点主开关（ZCODE_BASE_URL/ZCODE_ENDPOINT_ORIGIN），
+// 未设置环境变量时回落到产品默认 origin，不再硬编码上游 vendor 地址。
+const DEFAULT_ZCODE_OAUTH_BASE_URL = buildRuntimeZCodeApiUrl(process.env, "/api/v1");
 export type CliOAuthProviderId = "zai" | "bigmodel";
 const POLL_TOKEN_BYTES = 32;
 const JSON_CONTENT_TYPE = "application/json";

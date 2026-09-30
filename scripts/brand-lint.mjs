@@ -2,9 +2,11 @@
 // Latch brand lint — Node, no dependencies.
 //
 // Strict scope: git-tracked files under product/, EXCEPT
-// product/identity/brand.yaml (the single overlay file allowed to carry
-// upstream names). Any occurrence of ZCode / Z.ai / GLM (case-insensitive) in
-// the strict scope is a violation and exits 1.
+// product/identity/brand.yaml and product/identity/DECISIONS.md (the two
+// overlay files allowed to carry upstream names: the brand manifest, and the
+// written product decisions that must name the vendor terms they govern). Any
+// occurrence of the scanned terms (case-insensitive) in the strict scope is a
+// violation and exits 1.
 //
 // Informational scope: every other git-tracked file, including the root
 // README.md. Upstream names in upstream files are expected at this stage;
@@ -24,13 +26,23 @@ const repoRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
   encoding: 'utf8',
 }).trim();
 
-const TERMS = ['ZCode', 'Z.ai', 'GLM'];
+// The retired client id is the upstream OAuth client id retired in FP-0
+// (evidence/fp0/edit-pass-1.md); it must never return as a baked-in default.
+const TERMS = [
+  'ZCode',
+  'Z.ai',
+  'GLM',
+  'bigmodel',
+  'zhipu',
+  'client_P8X5CMWmlaRO9gyO-KSqtg',
+];
 const PATTERNS = TERMS.map((term) => ({
   term,
   re: new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'),
 }));
 
 const BRAND_FILE = 'product/identity/brand.yaml';
+const DECISIONS_FILE = 'product/identity/DECISIONS.md';
 const STRICT_PREFIX = 'product/';
 const EVIDENCE_PATH = path.join(
   repoRoot,
@@ -89,10 +101,11 @@ try {
   // informational only; ignore
 }
 const allTracked = trackedFiles(null);
-const strictFiles = productTracked.filter((f) => f !== BRAND_FILE);
+const overlayFiles = new Set([BRAND_FILE, DECISIONS_FILE]);
+const strictFiles = productTracked.filter((f) => !overlayFiles.has(f));
 const strictSet = new Set(productTracked);
 const informationalFiles = allTracked.filter(
-  (f) => !strictSet.has(f) && f !== BRAND_FILE,
+  (f) => !strictSet.has(f) && !overlayFiles.has(f),
 );
 
 // --- scan -------------------------------------------------------------------
@@ -101,6 +114,9 @@ const strictViolations = strictResults.filter((r) => r.total > 0);
 const brandResult = strictSet.has(BRAND_FILE)
   ? scan(BRAND_FILE)
   : { file: BRAND_FILE, status: 'not-tracked', counts: {}, total: 0 };
+const decisionsResult = strictSet.has(DECISIONS_FILE)
+  ? scan(DECISIONS_FILE)
+  : { file: DECISIONS_FILE, status: 'not-tracked', counts: {}, total: 0 };
 
 const informationalResults = informationalFiles.map(scan);
 const informationalHits = informationalResults
@@ -185,7 +201,8 @@ const report = {
     clean: mirrorFailures.length === 0,
   },
   strict: {
-    scope: 'git-tracked files under product/ excluding product/identity/brand.yaml',
+    scope:
+      'git-tracked files under product/ excluding product/identity/brand.yaml and product/identity/DECISIONS.md',
     filesScanned: strictResults.length,
     violations: strictViolations,
     clean: strictViolations.length === 0,
@@ -194,6 +211,11 @@ const report = {
     file: BRAND_FILE,
     note: 'allowed to carry upstream names; exempt from the strict scope',
     ...brandResult,
+  },
+  decisionsFile: {
+    file: DECISIONS_FILE,
+    note: 'written product decisions (product/identity/DECISIONS.md); must name the vendor terms it governs, so exempt like brand.yaml',
+    ...decisionsResult,
   },
   informational: {
     note: 'upstream names in upstream files are expected at this stage; counted only, never fails the lint',

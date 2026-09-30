@@ -1,11 +1,15 @@
-@arms/rum-electron@0.0.3
+agent-base@6.0.2
 Publisher-declared license: MIT
-Evidence: https://registry.npmjs.org/%40arms%2frum-electron%400.0.3
+Evidence: https://registry.npmjs.org/agent-base%406.0.2
 The published package/upstream snapshot did not supply a separate copyright notice.
-No copyright holder or year has been inferred from the npm author field.
+The npm author field is Nathan Rajlich <nathan@tootallnate.net> (http://n8.io/); the upstream
+GitHub repository LICENSE carries the matching MIT copyright line. The copyright line below is
+reproduced from the upstream repository LICENSE, not inferred for this npm snapshot.
 The following is the standard license text, not a claim that an upstream LICENSE file was published.
 
 MIT License
+
+Copyright (c) 2013 Nathan Rajlich <nathan@tootallnate.net> (http://n8.io/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
