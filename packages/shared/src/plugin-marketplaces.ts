@@ -34,7 +34,7 @@ export const DEFAULT_PLUGIN_MARKETPLACES: DefaultPluginMarketplace[] = [
     // ZCode 官方唯一市场：本地 seed 分片与 CDN 分片在 Agent storage 内合并。
     // CDN manifest 的 name 必须与该 canonical id 一致。
     id: ZCODE_OFFICIAL_PLUGIN_MARKETPLACE_ID,
-    source: "https://latch.gridframes.app/plugins/marketplace.json",
+    source: "https://latch.xlaunch.work/plugins/marketplace.json",
     name: ZCODE_OFFICIAL_PLUGIN_MARKETPLACE_ID,
     description: "Official Latch plugins marketplace: built-in and community plugins for Latch.",
     pluginCount: 0,

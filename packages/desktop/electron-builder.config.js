@@ -459,7 +459,7 @@ export default {
   extraMetadata: {
     version: buildMetadata.appVersion,
     zcodeProductFlavor: desktopProductIdentity.flavor,
-    homepage: "https://latch.gridframes.app",
+    homepage: "https://latch.xlaunch.work",
     author: {
       name: "ZCode",
       email: "ops@northlatch.com",

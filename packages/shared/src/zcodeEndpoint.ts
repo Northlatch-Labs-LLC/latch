@@ -1,12 +1,15 @@
 import type { ZCodeEnv } from "./env.js";
 
 // Northlatch (Latch) product origins: vendor defaults retired 2026-09-29 (FP-0).
-// Unset env resolves to the Latch product home so un-migrated flows fail safe
-// against OUR origin (404) instead of phoning the upstream vendor.
-export const DEFAULT_ZCODE_ENDPOINT_ORIGIN = "https://latch.gridframes.app";
-export const DEFAULT_BIGMODEL_API_ORIGIN = "https://latch.gridframes.app";
-export const DEFAULT_ZAI_OAUTH_ORIGIN = "https://latch.gridframes.app";
-export const DEFAULT_ZAI_BUSINESS_BASE_URL = "https://latch.gridframes.app";
+// Canonical map (founder, 2026-09-30): the Latch harness is served at
+// latch.xlaunch.work; its gateway (API backend) is gateway.xlaunch.work.
+// latch.gridframes.app was a wrong install from the orchestrator era — never use it.
+// Vendor defaults stay pinned to the Latch home so un-migrated flows fail safe
+// against OUR origin (404) instead of phoning the upstream vendor or the gateway.
+export const DEFAULT_ZCODE_ENDPOINT_ORIGIN = "https://gateway.xlaunch.work";
+export const DEFAULT_BIGMODEL_API_ORIGIN = "https://latch.xlaunch.work";
+export const DEFAULT_ZAI_OAUTH_ORIGIN = "https://latch.xlaunch.work";
+export const DEFAULT_ZAI_BUSINESS_BASE_URL = "https://latch.xlaunch.work";
 export const DEFAULT_ZAI_OAUTH_CLIENT_ID = "";
 
 // 构建仅注入公开链接；Node 调用方仍可显式传 env，避免读取另一进程的配置。

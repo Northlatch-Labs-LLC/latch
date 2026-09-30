@@ -1,8 +1,8 @@
 {
-  "feedback_url": "https://latch.gridframes.app/feedback",
+  "feedback_url": "https://latch.xlaunch.work/feedback",
   "feedback_use_external_form": false,
   "community_urls": {
-    "zh-CN": "https://latch.gridframes.app/community&qr_code=true",
-    "en-US": "https://latch.gridframes.app/community"
+    "zh-CN": "https://latch.xlaunch.work/community&qr_code=true",
+    "en-US": "https://latch.xlaunch.work/community"
   }
 }
