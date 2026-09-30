@@ -301,6 +301,12 @@ for (const code of [
   "project_spend_limit_exceeded",
   "organization_usage_limit_exceeded",
   "exceeded_current_quota_error",
+  // Xlaunch Gateway（Latch 内嵌 provider）的配额契约（routes/proxy.ts enforceSpendCap）：
+  // 402 account_balance_exhausted（余额耗尽，充值才可继续）与 429 client_profile_cap_reached
+  // （key 的 token 上限，Retry-After 为 1h/24h）。两者重试必然再失败，必须终止并交给
+  // UI 的升级/充值横幅，而不是进入退避循环（更不能按 Retry-After 睡一小时）。
+  "account_balance_exhausted",
+  "client_profile_cap_reached",
   "2056",
   "20097",
   "1316",

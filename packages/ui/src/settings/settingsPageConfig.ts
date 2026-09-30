@@ -18,6 +18,7 @@ import {
   WandSparkles,
   Keyboard,
   FileSearch,
+  UserRound,
 } from "lucide-react";
 import { isSettingsSectionEnabled, type SettingsSectionId } from "@/lib/settingsNavigation.js";
 import type { Theme } from "@/useTheme.js";
@@ -59,6 +60,14 @@ const BASE_SETTINGS_SECTIONS: SettingsSectionDefinition[] = [
     id: "general",
     icon: Settings2,
     titleId: "settings.systemTitle",
+    groupId: "basics",
+  },
+  // Latch 账号（gateway customer-api 登录态）放在模型配置之前：
+  // 账号是推理 Key 与计费的来源，用户先看账号再看它驱动的 provider。
+  {
+    id: "latchAccount",
+    icon: UserRound,
+    titleId: "settings.latch.title",
     groupId: "basics",
   },
   {

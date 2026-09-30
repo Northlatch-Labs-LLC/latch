@@ -18,8 +18,10 @@ export const zhCN: ZCodeCopy = {
   app-server 运行 Latch Protocol stdio app server
   commands   列出自定义 slash commands（\`commands list\`）
   doctor     检查运行时和打包假设
-  login [zai|bigmodel]  通过浏览器授权登录
-  logout     删除共享的 Latch 登录凭据
+  login      使用 Latch 账号登录（终端输入邮箱和密码）
+  login zai|bigmodel  通过浏览器授权登录（自定义 provider）
+  logout     删除 Latch 账号会话与共享登录凭据
+  whoami     查看已登录的 Latch 账号、套餐与余额
   plugins    管理插件与市场（\`plugins list|install|uninstall|enable|disable|update|validate|marketplace ...\`；别名 plugin）
   skills     列出本地 skills（\`skills list\`）
   tui        打开终端 UI
@@ -54,8 +56,8 @@ export const zhCN: ZCodeCopy = {
 
 Slash Commands:
   /help [command]       显示 slash command 帮助
-  /login                使用 Xlaunch Gateway Key 登录
-  /logout               删除共享的 Latch 登录凭据
+  /login                使用 Latch 账号（或 Xlaunch Gateway Key）登录
+  /logout               删除 Latch 账号会话与共享登录凭据
   /compact [instructions]  压缩当前对话
   /expert [status|resume|stop|<task>]  运行或管理 expert workflow
   /dwf [list|cancel|resume]  列出、取消或恢复 dynamic workflow run
@@ -116,6 +118,24 @@ Slash Commands:
           pendingSecondary: "请在浏览器里完成登录，授权成功后会自动继续配置。",
           primary: "BigModel Coding Plan",
           secondary: "打开浏览器登录，CLI 会自动查询授权结果。",
+        },
+        latchAccount: {
+          emptyStatus: "请输入邮箱。",
+          inputPrimary: "输入 Latch 账号邮箱",
+          inputSecondary: "你的 Latch 账号邮箱，下一步会输入密码。",
+          placeholder: "you@example.com",
+          primary: "Latch 账号",
+          secondary: "使用 Latch 账号邮箱和密码登录，无需浏览器。",
+          submitStatus: "已记录邮箱，请输入密码。",
+        },
+        latchAccountPassword: {
+          emptyStatus: "请输入密码。",
+          inputPrimary: "输入 Latch 账号密码",
+          inputSecondary: "输入过程中不会显示明文。",
+          placeholder: "密码",
+          primary: "Latch 账号密码",
+          secondary: "至少 10 个字符，输入过程中不会显示明文。",
+          submitStatus: "正在登录...",
         },
         zaiApiKey: {
           inputPrimary: "输入 Xlaunch Gateway API Key",

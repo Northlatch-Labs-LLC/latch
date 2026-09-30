@@ -174,6 +174,23 @@ export type CommandCenterApiKeyOptions = {
   providerId: "bigmodel" | "zai";
 };
 
+/** Latch 账号（customer-api）登录入参；密码只进请求体，不落任何本地状态。 */
+export type CommandCenterLatchAccountLoginOptions = {
+  email: string;
+  password: string;
+};
+
+export type CommandCenterLatchAccountLoginResult = {
+  configPath: string;
+  credentialsPath: string;
+  email: string;
+  gatewayUrl: string;
+  keyId: number;
+  manageUrl: string;
+  maskedKey: string;
+  model: string;
+};
+
 export type CommandCenterApiKeyResult = {
   configPath: string;
   model: string;
@@ -308,6 +325,10 @@ export type CommandCenterDeps = {
   loginBigmodel?: (
     options?: CommandCenterBigmodelLoginOptions,
   ) => Promise<CommandCenterBigmodelLoginResult>;
+  /** Latch 账号登录（默认账号流）：email + 密码换 gateway 推理 Key，无需浏览器。 */
+  loginLatchAccount?: (
+    options: CommandCenterLatchAccountLoginOptions,
+  ) => Promise<CommandCenterLatchAccountLoginResult>;
   configureApiKey?: (options: CommandCenterApiKeyOptions) => Promise<CommandCenterApiKeyResult>;
   loadCustomCommand?: (name: string) => Promise<CommandCenterCustomCommandContent>;
   newApp?: () => Promise<CommandCenterApp>;

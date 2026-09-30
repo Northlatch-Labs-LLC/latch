@@ -25,6 +25,22 @@ export const TID_LOGIN_API_KEY_CANCEL_BUTTON = "login-api-key-cancel-button";
 export const TID_LOGIN_API_KEY_SKIP_BUTTON = "login-api-key-skip-button";
 /** API Key 登录错误提示 */
 export const TID_LOGIN_API_KEY_ERROR = "login-api-key-error";
+/** Latch 账号登录邮箱输入框 */
+export const TID_LOGIN_LATCH_EMAIL_INPUT = "login-latch-email-input";
+/** Latch 账号登录密码输入框 */
+export const TID_LOGIN_LATCH_PASSWORD_INPUT = "login-latch-password-input";
+/** Latch 账号登录提交按钮 */
+export const TID_LOGIN_LATCH_SUBMIT_BUTTON = "login-latch-submit-button";
+/** Latch 账号登录/注册模式切换按钮 */
+export const TID_LOGIN_LATCH_MODE_TOGGLE = "login-latch-mode-toggle";
+/** Latch 账号“改用登录”切换按钮（注册撞已注册邮箱时） */
+export const TID_LOGIN_LATCH_SWITCH_TO_SIGN_IN = "login-latch-switch-to-sign-in";
+/** Latch 账号登录错误提示 */
+export const TID_LOGIN_LATCH_ERROR = "login-latch-error";
+/** Latch 登录页切换到 API Key 登录方式按钮 */
+export const TID_LOGIN_LATCH_USE_API_KEY_BUTTON = "login-latch-use-api-key-button";
+/** Latch 登录页切换到 OAuth 渠道列表按钮 */
+export const TID_LOGIN_LATCH_MORE_OPTIONS_BUTTON = "login-latch-more-options-button";
 /** OAuth 弹窗内的登录按钮 */
 export const TID_OAUTH_LOGIN_BUTTON = "oauth-login-button";
 /** OAuth 弹窗取消按钮 */
@@ -321,6 +337,10 @@ export const TID_SETTINGS_PAGE = "settings-page";
 export const TID_SETTINGS_BACK_BUTTON = "settings-back-button";
 /** 设置页左侧分区入口（动态后缀为 section id） */
 export const TID_SETTINGS_SECTION_NAV = "settings-section-nav";
+/** 设置页 Latch 账号分区“管理账单”按钮 */
+export const TID_SETTINGS_LATCH_MANAGE_BILLING = "settings-latch-manage-billing";
+/** 设置页 Latch 账号分区“退出登录”按钮 */
+export const TID_SETTINGS_LATCH_SIGN_OUT = "settings-latch-sign-out";
 /** 常规设置中的增强 Find/Grep 开关 */
 export const TID_SETTINGS_NATIVE_SEARCH_SWITCH = "settings-native-search-switch";
 /** 常规设置中的数据存储路径只读输入框 */
@@ -423,6 +443,8 @@ export const TID_SETTINGS_USAGE_TAB = "settings-usage-tab";
 export const TID_SIDEBAR_USAGE_REMAINING_TRIGGER = "sidebar-usage-remaining-trigger";
 /** 侧边栏头像菜单使用统计入口 */
 export const TID_SIDEBAR_CODING_PLAN_USAGE_BUTTON = "sidebar-coding-plan-usage-button";
+/** 侧栏 footer 的 Latch 套餐 + 余额 chip */
+export const TID_SIDEBAR_LATCH_USAGE_CHIP = "sidebar-latch-usage-chip";
 
 // Model Provider Settings
 /** 模型供应商顶部添加按钮 */

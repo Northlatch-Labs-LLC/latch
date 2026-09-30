@@ -19,19 +19,21 @@ export const BUILTIN_ZCODE_SLASH_COMMAND_HELP_ENTRIES: readonly BuiltinZCodeSlas
     },
     {
       details: [
-        "Opens a Coding Plan setup picker when called without arguments.",
-        "Z.ai and BigModel browser login poll for authorization, then securely save credentials and refresh available models.",
-        "Manual API key variants accept the API key as an argument.",
+        "Latch account sign-in prompts for the account email and then the password (input is hidden); no browser is needed. On success a gateway key is minted and connected automatically.",
+        "Opens a setup picker when called without arguments; the manual API key variants accept the key as an argument.",
+        "BigModel and Z.ai Coding Plan variants remain available as user-configured custom providers.",
       ],
       name: "login",
-      summary: "Set up a Coding Plan provider.",
+      summary: "Sign in with your Latch account or a gateway key.",
       usage:
-        "/login [zai-coding-plan|bigmodel-coding-plan|zai-coding-plan-api-key <api-key>|bigmodel-coding-plan-api-key <api-key>]",
+        "/login [latch-account <email>|zai-coding-plan|bigmodel-coding-plan|zai-coding-plan-api-key <api-key>|bigmodel-coding-plan-api-key <api-key>]",
     },
     {
-      details: ["Deletes Z.ai OAuth credentials from the shared Latch credential store."],
+      details: [
+        "Signs out of the Latch account (revoking the CLI gateway key and clearing the local session) and deletes gateway and Coding Plan OAuth credentials from the shared Latch credential store.",
+      ],
       name: "logout",
-      summary: "Remove the shared Z.ai login credentials.",
+      summary: "Remove the Latch account session and shared gateway credentials.",
       usage: "/logout",
     },
     {

@@ -75,6 +75,80 @@ export { ISettingService } from "./setting/setting.js";
 // Credential service — ICredentialService is both a type (interface) and value (descriptor)
 export { ICredentialService } from "./credential/credential.js";
 
+// Latch 账号服务：xlaunch gateway customer-api 的客户端集成（登录、余额、推理 Key）。
+// 全部 browser-safe：fetch 可注入，不引 Node 专属模块；实现文件从这里直接再导出。
+export {
+  DEFAULT_LATCH_ACCOUNT_API_BASE_URL,
+  DEFAULT_LATCH_ACCOUNT_MANAGE_URL,
+  DEFAULT_LATCH_ACCOUNT_PURCHASE_URL,
+  LATCH_ACCOUNT_API_URL_ENV_KEY,
+  LATCH_ACCOUNT_MANAGE_URL_ENV_KEY,
+  LATCH_ACCOUNT_PURCHASE_URL_ENV_KEY,
+  LATCH_ACCOUNT_TOKEN_CREDENTIAL_KEY,
+  LATCH_ACCOUNT_EMAIL_CREDENTIAL_KEY,
+  LATCH_ACCOUNT_KEY_ID_CREDENTIAL_KEY,
+  LATCH_GATEWAY_PROVIDER_TEMPLATE_ID,
+  LATCH_MIN_PASSWORD_LENGTH,
+  buildLatchAccountApiUrl,
+  normalizeLatchAccountApiBaseUrl,
+  readLatchAccountEnv,
+  resolveLatchAccountApiBaseUrl,
+  resolveLatchAccountManageUrl,
+  resolveLatchAccountPurchaseUrl,
+  type RuntimeLatchAccountEnv,
+} from "./latch-account/config.js";
+export {
+  LatchAccountError,
+  isValidLatchEmail,
+  isValidLatchPassword,
+  type LatchAccountAuthResult,
+  type LatchAccountErrorKind,
+  type LatchAccountPlanHeld,
+  type LatchAccountPlanId,
+  type LatchAccountSession,
+  type LatchAccountStatus,
+  type LatchAccountTreasury,
+  type LatchGatewayKeyMinted,
+  type LatchGatewayKeySummary,
+  type LatchLedger,
+  type LatchLedgerEntry,
+  type LatchLedgerEntryKind,
+} from "./latch-account/latchAccountTypes.js";
+export {
+  clearLatchAccountSession,
+  createLatchAccountSessionStore,
+  loadLatchAccountSession,
+  loadLatchGatewayKeyId,
+  saveLatchAccountSession,
+  setLatchAccountCredentialService,
+  resolveLatchAccountCredentialService,
+  type LatchAccountSessionStore,
+  type LatchAccountStoreOptions,
+} from "./latch-account/latchAccountSession.js";
+export {
+  fetchLatchAccountStatus,
+  fetchLatchLedger,
+  latchLogout,
+  latchSignIn,
+  latchSignUp,
+  listLatchKeys,
+  logLatchAccountWarning,
+  mintLatchGatewayKey,
+  revokeLatchKey,
+  type LatchAccountFetch,
+  type LatchAccountRequestOptions,
+} from "./latch-account/latchAccountService.js";
+export {
+  provisionLatchGatewayProvider,
+  type LatchProviderSettingsSource,
+} from "./latch-account/latchAccountProvisioning.js";
+export {
+  invalidateLatchAccountStatusSummary,
+  latchAccountStatusSummary,
+  type LatchAccountStatusSummary,
+  type LatchAccountStatusSummaryOptions,
+} from "./latch-account/latchAccountStatusSummary.js";
+
 // Broadcast service — IBroadcastService is both a type (interface) and value (descriptor)
 export { IBroadcastService } from "./broadcast/broadcast.js";
 

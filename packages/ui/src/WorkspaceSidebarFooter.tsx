@@ -50,6 +50,7 @@ import {
   WorkspaceSidebarFooterUsageSummaryContent,
   useWorkspaceSidebarFooterUsageSummaryState,
 } from "@/WorkspaceSidebarFooterUsageSummary.js";
+import { WorkspaceSidebarFooterLatchUsageChip } from "@/WorkspaceSidebarFooterLatchUsageChip.js";
 
 const DESKTOP_ZOOM_MIN_LEVEL = -3;
 const DESKTOP_ZOOM_MAX_LEVEL = 5;
@@ -166,6 +167,9 @@ export const WorkspaceSidebarFooter = memo(function WorkspaceSidebarFooterCompon
             {profileBadge}
           </span>
           {user ? <WorkspaceSidebarFooterPlanBadge state={usageSummaryState} /> : null}
+          {/* Latch 账号（gateway 客户账号）套餐+余额 chip：本地 session 驱动，
+              与 OAuth user 独立，未登录时组件自身渲染 null。 */}
+          <WorkspaceSidebarFooterLatchUsageChip />
         </div>
       </div>
     </>

@@ -62,6 +62,24 @@ export interface TuiCopy {
         primary: string;
         secondary: string;
       };
+      latchAccount: {
+        emptyStatus: string;
+        inputPrimary: string;
+        inputSecondary: string;
+        placeholder: string;
+        primary: string;
+        secondary: string;
+        submitStatus: string;
+      };
+      latchAccountPassword: {
+        emptyStatus: string;
+        inputPrimary: string;
+        inputSecondary: string;
+        placeholder: string;
+        primary: string;
+        secondary: string;
+        submitStatus: string;
+      };
       zaiApiKey: {
         inputPrimary: string;
         inputSecondary: string;

@@ -181,6 +181,12 @@ export class ZaiWebOAuthProvider {
       return `${this.config.bigmodelAuthorizeUrl}?${query.toString()}`;
     }
 
+    // 未配置 VITE_ZAI_OAUTH_CLIENT_ID 时不构造授权 URL，避免拼出空/退役 client_id 的
+    // vendor 授权跳转；Web 端第一方登录走 Latch gateway key。
+    if (!this.config.clientId) {
+      throw new Error("Z.ai web OAuth is not configured (missing VITE_ZAI_OAUTH_CLIENT_ID)");
+    }
+
     const query = new URLSearchParams({
       redirect_uri: redirectUri,
       response_type: "code",

@@ -45,7 +45,8 @@ export namespace ProxyChannel {
    */
   export function fromService<TContext>(
     service: unknown,
-    disposables?: DisposableStore,
+    // 兼容签名保留位：调用方可以传 DisposableStore，当前实现按需缓存事件，用不到。
+    _disposables?: DisposableStore,
   ): IServerChannel<TContext> {
     const handler = service as { [key: string]: unknown };
 

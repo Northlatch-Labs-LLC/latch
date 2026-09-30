@@ -18,8 +18,10 @@ Commands:
   app-server Run the Latch Protocol stdio app server
   commands   List custom slash commands (\`commands list\`)
   doctor     Inspect runtime and packaging assumptions
-  login [zai|bigmodel]  Sign in through browser authorization
-  logout     Remove the shared Latch login credentials
+  login      Sign in with your Latch account (email + password prompts)
+  login zai|bigmodel  Sign in through browser authorization (custom providers)
+  logout     Remove the Latch account session and shared login credentials
+  whoami     Show the signed-in Latch account, plan, and balance
   plugins    Manage plugins and marketplaces (\`plugins list|install|uninstall|enable|disable|update|validate|marketplace ...\`; alias: plugin)
   skills     List local skills (\`skills list\`)
   tui        Open the terminal UI
@@ -54,8 +56,8 @@ Options:
 
 Slash Commands:
   /help [command]       Show slash command help
-  /login                Sign in with your Xlaunch Gateway key
-  /logout               Remove the shared Latch login credentials
+  /login                Sign in with your Latch account (or an Xlaunch Gateway key)
+  /logout               Remove the Latch account session and shared login credentials
   /compact [instructions]  Compact the current conversation
   /expert [status|resume|stop|<task>]  Run or manage the expert workflow
   /dwf [list|cancel|resume]  List, cancel, or resume dynamic workflow runs
@@ -118,6 +120,24 @@ Slash Commands:
             "Complete sign-in in your browser. Authorization is detected automatically.",
           primary: "BigModel Coding Plan",
           secondary: "Open browser login; authorization is detected automatically.",
+        },
+        latchAccount: {
+          emptyStatus: "Email is required.",
+          inputPrimary: "Enter your Latch account email",
+          inputSecondary: "The email of your Latch account. Next you will enter your password.",
+          placeholder: "you@example.com",
+          primary: "Latch Account",
+          secondary: "Sign in with your Latch account email and password. No browser needed.",
+          submitStatus: "Email accepted. Enter your password.",
+        },
+        latchAccountPassword: {
+          emptyStatus: "Password is required.",
+          inputPrimary: "Enter your Latch account password",
+          inputSecondary: "Input is hidden while typing.",
+          placeholder: "Password",
+          primary: "Latch Account Password",
+          secondary: "At least 10 characters. Input is hidden while typing.",
+          submitStatus: "Signing in...",
         },
         zaiApiKey: {
           inputPrimary: "Enter Xlaunch Gateway API Key",

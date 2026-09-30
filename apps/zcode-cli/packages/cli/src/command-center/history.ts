@@ -2,7 +2,9 @@ import type { TuiPromptInput } from "@zcode/tui";
 import type { SlashCommand } from "./slash-command-types.js";
 import type { CommandCenterDeps } from "./types.js";
 
-const API_KEY_LOGIN_PATTERN = /(?:^|\s)(?:bigmodel|zai)-coding-plan-api-key(?:\s|$)/u;
+// 携带机密的 /login 变体不进输入历史：API key 与 Latch 账号密码同理。
+const SENSITIVE_LOGIN_PATTERN =
+  /(?:^|\s)(?:(?:bigmodel|zai)-coding-plan-api-key|latch-account-password)(?:\s|$)/u;
 
 export async function recordSlashCommandInHistory(
   deps: CommandCenterDeps,
@@ -20,5 +22,5 @@ export async function recordSlashCommandInHistory(
 function shouldRecordSlashCommand(command: SlashCommand): boolean {
   if (command.type !== "known") return true;
   if (command.name !== "login") return true;
-  return !API_KEY_LOGIN_PATTERN.test(command.args);
+  return !SENSITIVE_LOGIN_PATTERN.test(command.args);
 }

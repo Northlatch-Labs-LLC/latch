@@ -25,12 +25,15 @@ import {
   parseSlashCommand,
 } from "./slash-commands.js";
 import {
+  buildLatchAccountPasswordSelection,
   buildLoginSelection,
   emitLoginAuthorizeMessage,
+  formatLatchAccountLoginResult,
   formatLoginResult,
   formatProviderSetupResult,
   loginSetupResponse,
   parseApiKeyLoginArgs,
+  parseLatchAccountLoginArgs,
 } from "./login-flow.js";
 import { loginRequiredResponse } from "../tui-login-state.js";
 import type { CommandCenterDeps } from "./types.js";
@@ -93,10 +96,9 @@ export function createCommandCenter(deps: CommandCenterDeps): TuiSubmitPrompt {
         }
         if (command.args === "zai-coding-plan") {
           if (!deps.login) {
-            return {
-              mode: deps.getMode?.(),
-              response: "Xlaunch Gateway login is not available in this client.",
-            };
+            // 无浏览器 OAuth 能力的客户端不再死路：转起默认的 Latch 账号登录
+            // （终端输入 email/密码，无需浏览器）。账号登录也不可用时才提示不可用。
+            return latchAccountLoginEntry(deps);
           }
 
           return {
@@ -144,6 +146,47 @@ export function createCommandCenter(deps: CommandCenterDeps): TuiSubmitPrompt {
           };
         }
 
+        const latchAccountCommand = parseLatchAccountLoginArgs(command.args);
+        if (latchAccountCommand) {
+          // 默认账号流：email 输入步（或直接带 email 参数）→ 密码输入步 → 登录。
+          if (!deps.loginLatchAccount) {
+            return {
+              mode: deps.getMode?.(),
+              response: "Latch account login is not available in this client.",
+            };
+          }
+          if (latchAccountCommand.kind === "latch-account-password") {
+            if (!latchAccountCommand.email || !latchAccountCommand.password) {
+              return {
+                mode: deps.getMode?.(),
+                response: "Usage: /login latch-account-password <email> <password>",
+              };
+            }
+            return {
+              loginRequired: false,
+              mode: deps.getMode?.(),
+              response: formatLatchAccountLoginResult(
+                await deps.loginLatchAccount({
+                  email: latchAccountCommand.email,
+                  password: latchAccountCommand.password,
+                }),
+              ),
+            };
+          }
+          if (!latchAccountCommand.email) {
+            return latchAccountLoginEntry(deps);
+          }
+          return {
+            loginRequired: false,
+            mode: deps.getMode?.(),
+            response: loginSetupResponse(deps.getLocale?.()),
+            selection: buildLatchAccountPasswordSelection(
+              deps.getLocale?.(),
+              latchAccountCommand.email,
+            ),
+          };
+        }
+
         const apiKeyCommand = parseApiKeyLoginArgs(command.args);
         if (apiKeyCommand) {
           if (!deps.configureApiKey) {
@@ -174,7 +217,7 @@ export function createCommandCenter(deps: CommandCenterDeps): TuiSubmitPrompt {
         return {
           mode: deps.getMode?.(),
           response:
-            "Usage: /login [zai-coding-plan|bigmodel-coding-plan|zai-coding-plan-api-key <api-key>|bigmodel-coding-plan-api-key <api-key>]",
+            "Usage: /login [latch-account <email>|zai-coding-plan|bigmodel-coding-plan|zai-coding-plan-api-key <api-key>|bigmodel-coding-plan-api-key <api-key>]",
         };
       }
 
@@ -393,4 +436,23 @@ async function isLoginRequired(deps: CommandCenterDeps): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+/**
+ * 进入 Latch 账号登录的第一步：返回带 email 输入项的 /login 选择。
+ * 账号登录能力也不可用的客户端保持显式“不可用”提示。
+ */
+function latchAccountLoginEntry(deps: CommandCenterDeps) {
+  if (!deps.loginLatchAccount) {
+    return {
+      mode: deps.getMode?.(),
+      response: "Latch account login is not available in this client.",
+    };
+  }
+  return {
+    loginRequired: false,
+    mode: deps.getMode?.(),
+    response: loginSetupResponse(deps.getLocale?.()),
+    selection: buildLoginSelection(deps.getLocale?.()),
+  };
 }

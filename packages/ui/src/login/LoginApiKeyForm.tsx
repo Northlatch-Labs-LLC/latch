@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { isApiKeyAccess } from "@zcode/provider";
-import { Loader2Icon, TriangleAlertIcon } from "lucide-react";
+import { KeyRound, Loader2Icon, TriangleAlertIcon } from "lucide-react";
 import {
   BIGMODEL_PROVIDER_ID,
   TID_LOGIN_API_KEY_CANCEL_BUTTON,
@@ -175,6 +175,16 @@ export function LoginApiKeyForm({ onCancel, onSaved, onSkipped }: LoginApiKeyFor
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="end" className="rounded-lg">
+                {/* xlaunch-gateway 是默认选项（resolveLoginApiKeyDefaultProvider），
+                    必须出现在 Select 里，否则默认值无对应条目、显示为空。 */}
+                <SelectItem
+                  value="xlaunch-gateway"
+                  className="rounded-md"
+                  data-testid={testId(TID_LOGIN_API_KEY_PROVIDER_ITEM, "xlaunch-gateway")}
+                >
+                  <KeyRound className="size-4" />
+                  {intl.formatMessage({ id: "login.apiKey.provider.xlaunchGateway" })}
+                </SelectItem>
                 <SelectItem
                   value="zai"
                   className="rounded-md"

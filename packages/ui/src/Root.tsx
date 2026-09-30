@@ -9,6 +9,9 @@ import {
 } from "@zcode/shared";
 import { TooltipProvider } from "@/components/ui/tooltip.js";
 import { Button } from "@/components/ui/button.js";
+import { loadLatchAccountSession } from "@zcode/services";
+import { buildLoginApiKeySkipSettings } from "@/login/LoginApiKeyForm.helpers.js";
+import { buildLatchIdentityUser } from "@/login/latchAccountIdentity.js";
 import { PlatformProvider } from "@/hooks/usePlatform.js";
 import { ServiceProvider } from "@/hooks/useServices.js";
 import { useDynamicWorkflowAvailabilityLoader } from "@/hooks/useDynamicWorkflowAvailability.js";
@@ -870,8 +873,35 @@ function RootInner({
   const handleOpenLoginEntry = () => {
     setWelcomeScreenOpenReason("manual-login");
   };
+  // Latch 账号登录收尾：对齐 useRootOAuthEffects 的 OAuth 成功链路 ——
+  // setUser 驱动 onboarding 匿名记录认领（OccupationOnboarding 按 user.id 重判），
+  // providerFamilyDomain 落 zai（gateway 模板所属 family，与 API Key 路径同一映射），
+  // 最后统一刷新 Account Source 与 Registry。Latch 没有 OAuth selectedKey 校正链路，
+  // 推理 Key 已在登录表单里铸造并接进内嵌 provider，这里不再重复。
+  const handleLatchAccountLoginComplete = useCallback(async () => {
+    try {
+      const session = await loadLatchAccountSession({
+        credentialService: services.credentialService,
+      });
+      if (session) {
+        setUser(buildLatchIdentityUser(session.email));
+      }
+    } catch (error) {
+      // 会话读取失败不阻断收尾：provider 已接线，身份展示退回未登录态即可。
+      logger.warn("[Root] Latch 登录后读取本地会话失败", { error });
+    }
+    try {
+      await updateAppSettings(buildLoginApiKeySkipSettings("xlaunch-gateway", Date.now()));
+    } catch (error) {
+      logger.warn("[Root] Latch 登录后写入 providerFamilyDomain 失败", { error });
+    }
+    await refreshProviderState();
+  }, [refreshProviderState, services.credentialService, setUser, updateAppSettings]);
   const handleWelcomeScreenComplete = useCallback(
     async (reason: LoginCompleteReason) => {
+      if (reason === "latchAccount") {
+        await handleLatchAccountLoginComplete();
+      }
       await refreshAppSettings();
       if (
         welcomeScreenOpenReason !== "startup-provider-required" ||
@@ -896,6 +926,7 @@ function RootInner({
     [
       allowOpenWorkspace,
       handleEnsureConversationWorkspace,
+      handleLatchAccountLoginComplete,
       refreshAppSettings,
       welcomeScreenOpenReason,
       workspaceShellPath,

@@ -81,6 +81,9 @@ export interface RunDependencies extends PluginsCommandOverrides {
   configureCodingPlanApiKey?: (
     options: ConfigureCodingPlanApiKeyOptions,
   ) => ReturnType<typeof configureCodingPlanApiKey>;
+  /** Latch 账号登录后的 gateway provider 接线（bootstrap latch-gateway-provider）。 */
+  configureLatchGatewayProvider?: BootstrapModule["configureLatchGatewayProvider"];
+  removeLatchGatewayProviders?: BootstrapModule["removeLatchGatewayProviders"];
   loadDotenv?: (options?: LoadCliDotenvOptions) => DotenvLoadResult;
   prepareZCodeTelemetryEnv?: typeof prepareZCodeTelemetryEnv;
   projectConfigPath?: string;

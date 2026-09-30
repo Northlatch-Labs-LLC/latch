@@ -28,12 +28,18 @@ import { cn } from "./components/lib/utils.js";
 import { toast } from "./components/ui/toast.js";
 import { useFeedbackStore } from "@/feedback/feedbackStore.js";
 import { getProviderBusinessErrorMessageId } from "@/lib/providerBusinessError.js";
-import { buildErrorFeedbackDescription } from "@/lib/errorFeedbackDraft.js";
+import { buildErrorCopyText, buildErrorFeedbackDescription } from "@/lib/errorFeedbackDraft.js";
 import {
   isSuspiciousEmptyModelResultMessage,
   resolveOffPeakTicketExpiredBusinessCode,
 } from "@/lib/providerBusinessError.js";
+import {
+  classifyLatchGatewayQuotaError,
+  formatLatchGatewayRetryWait,
+  LATCH_GATEWAY_QUOTA_MESSAGE_IDS,
+} from "@/lib/latchGatewayQuotaError.js";
 import type { ZCodeUiError } from "@/lib/zcodeUiError.js";
+import { ChatErrorBannerLatchGatewayActions } from "./ChatErrorBannerLatchGatewayActions.js";
 
 const HISTORICAL_MODEL_UNAVAILABLE_MESSAGES = [
   "历史任务使用的模型已不可用",
@@ -74,6 +80,12 @@ export function resolveChatErrorBannerDisplayMessage(
 ): string {
   if (isModelConfigMissingError(error)) {
     return intl.formatMessage({ id: "chat.error.noAvailableModel" });
+  }
+
+  // 网关配额错误（402/429/401）走专属横幅文案；重试等待提示由横幅按 retryAfterMs 追加。
+  const latchGatewayKind = classifyLatchGatewayQuotaError(error)?.kind;
+  if (latchGatewayKind) {
+    return intl.formatMessage({ id: LATCH_GATEWAY_QUOTA_MESSAGE_IDS[latchGatewayKind] });
   }
 
   const providerBusinessCode =
@@ -128,6 +140,15 @@ export function ChatErrorBanner({
   const localizedErrorMessage = resolveChatErrorBannerDisplayMessage(error, intl);
   const modelConfigMissing = isModelConfigMissingError(error);
   const hookBlocked = error.code === "fault.runtime.hookBlocked";
+  // 网关配额/鉴权错误：402 余额耗尽、429 token 上限、401 key 失效。
+  // 分类见 lib/latchGatewayQuotaError.ts（纯函数，带完整到达路径注释）。
+  const latchGatewayQuota = classifyLatchGatewayQuotaError(error);
+  const latchGatewayRetryWait =
+    latchGatewayQuota?.kind === "token-cap-reached"
+      ? formatLatchGatewayRetryWait(latchGatewayQuota.retryAfterMs, (id, values) =>
+          intl.formatMessage({ id }, values),
+        )
+      : null;
   if (shouldSuppressChatErrorBanner(error)) {
     return null;
   }
@@ -189,6 +210,7 @@ export function ChatErrorBanner({
       <div
         data-testid={TID_CHAT_ERROR_BANNER}
         data-error-code={error.code}
+        data-latch-gateway-quota={latchGatewayQuota?.kind}
         className={cn(
           "w-full flex flex-wrap items-center gap-2 rounded-xl bg-surface backdrop-blur-md border border-border px-3 py-2",
         )}
@@ -203,7 +225,12 @@ export function ChatErrorBanner({
           ) : (
             <InfoIcon aria-hidden="true" className="size-4 shrink-0" />
           )}
-          <div className="min-w-0 truncate font-medium">{localizedErrorMessage}</div>
+          <div className="min-w-0 truncate font-medium">
+            {localizedErrorMessage}
+            {latchGatewayRetryWait ? (
+              <span className="text-foreground-subtle"> {latchGatewayRetryWait}</span>
+            ) : null}
+          </div>
         </div>
 
         {modelConfigMissing ? (
@@ -238,7 +265,16 @@ export function ChatErrorBanner({
           </>
         ) : null}
 
-        {!modelConfigMissing && error.detail ? (
+        {latchGatewayQuota ? (
+          // 订阅门三旅程的按钮组（充值/Get Pro/重新登录）拆到
+          // ChatErrorBannerLatchGatewayActions，保持本文件在 lint 行数约束内。
+          <ChatErrorBannerLatchGatewayActions
+            quota={latchGatewayQuota}
+            actionButtonClassName={actionButtonClassName}
+          />
+        ) : null}
+
+        {!modelConfigMissing && !latchGatewayQuota && error.detail ? (
           <>
             <Button
               type="button"
@@ -270,7 +306,7 @@ export function ChatErrorBanner({
           </>
         ) : null}
 
-        {!modelConfigMissing ? (
+        {!modelConfigMissing && !latchGatewayQuota ? (
           <Button
             type="button"
             variant="outline"
@@ -288,7 +324,7 @@ export function ChatErrorBanner({
 
         {/* 错误横幅本身就是异常态，不能再经过 Radix Tooltip 的 Popper/Slot 状态链。
             这里改成普通 Button，避免无可用模型等错误触发横幅时发生 Maximum update depth 循环。 */}
-        {!modelConfigMissing ? (
+        {!modelConfigMissing && !latchGatewayQuota ? (
           <Button
             type="button"
             variant="outline"
@@ -306,7 +342,7 @@ export function ChatErrorBanner({
           </Button>
         ) : null}
 
-        {!modelConfigMissing && onRetry ? (
+        {!modelConfigMissing && !latchGatewayQuota && onRetry ? (
           <Button variant="outline" size="sm" onClick={onRetry} disabled={retryDisabled}>
             {retryLabel ?? intl.formatMessage({ id: "chat.error.retry" })}
           </Button>
@@ -328,30 +364,4 @@ export function ChatErrorBanner({
       </div>
     </div>
   );
-}
-
-function buildErrorCopyText({
-  message,
-  detail,
-  traceId,
-  formatMessage,
-}: {
-  message: string;
-  detail?: string;
-  traceId?: string;
-  formatMessage: (id: string, values?: Record<string, string>) => string;
-}) {
-  return [
-    formatMessage("feedback.submit.template.section.copyErrorHeading"),
-    "",
-    formatMessage("feedback.submit.template.section.errorSummary"),
-    message,
-    "",
-    traceId ? formatMessage("feedback.submit.template.section.errorTraceId", { traceId }) : null,
-    detail
-      ? ["", formatMessage("feedback.submit.template.section.errorDetail"), detail].join("\n")
-      : null,
-  ]
-    .filter((line): line is string => line != null)
-    .join("\n");
 }

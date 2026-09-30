@@ -142,7 +142,19 @@ test("a non-401 gateway failure maps to GatewayHttpError with status and body", 
   }
 });
 
-test("planGate is a stub that allows every model and reports plan unknown", () => {
-  assert.deepEqual(planGate("fusion"), { allowed: true, plan: "unknown" });
-  assert.deepEqual(planGate("any-other-model"), { allowed: true, plan: "unknown" });
+test("planGate projects an account status: billing off allows, billing on requires balance", () => {
+  // 详尽用例见 test/plan-gate.test.ts；这里只钉客户端契约的主干。
+  assert.deepEqual(planGate(undefined), { allowed: true, plan: "unknown" });
+  assert.deepEqual(
+    planGate({ billingEnabled: false, balanceMicros: 0, plan: null }),
+    { allowed: true, plan: "free" },
+  );
+  assert.deepEqual(
+    planGate({ billingEnabled: true, balanceMicros: 0, plan: { plan: "pro" } }),
+    { allowed: false, plan: "pro" },
+  );
+  assert.deepEqual(
+    planGate({ billingEnabled: true, balanceMicros: 1, plan: { plan: "pro" } }),
+    { allowed: true, plan: "pro" },
+  );
 });

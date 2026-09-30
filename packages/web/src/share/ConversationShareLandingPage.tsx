@@ -23,7 +23,7 @@ import {
 } from "./conversationSharePreviewClient.js";
 import { resolveShareHeaderView, type ShareHeaderView } from "./shareHeaderLayout.js";
 
-/** 登录入口的展示顺序，与桌面端登录卡片一致（z.ai 在上）。 */
+/** 登录入口的展示顺序，与桌面端登录卡片一致（Latch 网关在上）。 */
 const SHARE_LOGIN_PROVIDERS: readonly WebOAuthProviderId[] = [
   ZAI_PROVIDER_ID,
   BIGMODEL_PROVIDER_ID,
@@ -58,6 +58,8 @@ interface Copy {
   loginTitle: string;
   loginDescription: string;
   login: string;
+  /** 第一方登录入口（Latch 账号 = xlaunch 网关账号）的按钮文案。 */
+  loginWithLatch: string;
   /** 每个 provider 的登录按钮文案与区域徽标，对齐桌面端 login.oauth.* 口径。 */
   loginWith: Record<WebOAuthProviderId, string>;
   loginRegion: Record<WebOAuthProviderId, string>;
@@ -98,6 +100,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     loginTitle: "登录后查看分享",
     loginDescription: "请登录后确认你是否有权限查看这个分享。",
     login: "登录",
+    loginWithLatch: "使用 Latch 账号登录",
     loginWith: {
       zai: "连接 Latch 继续使用",
       bigmodel: "连接 BigModel 继续使用",
@@ -108,7 +111,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     notFoundTitle: "找不到分享内容",
     notFoundDescription: "链接可能无效、分享已被移除，或当前登录账号无法访问。",
     notFoundAccountHint:
-      "Z.ai 与 BigModel 的账号数据不互通。请检查是否选错了登录平台或使用了其他账号。",
+      "不同登录平台的账号数据不互通。请检查是否选错了登录平台或使用了其他账号。",
     backToHome: "回到首页",
     networkTitle: "暂时无法加载分享",
     networkDescription: "请检查网络后重试。",
@@ -135,6 +138,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     loginTitle: "Sign in to view this share",
     loginDescription: "Sign in to check whether you can view this shared conversation.",
     login: "Sign in",
+    loginWithLatch: "Sign in with a Latch account",
     loginWith: {
       zai: "Connect to Latch",
       bigmodel: "Connect to BigModel",
@@ -146,7 +150,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     notFoundDescription:
       "The link may be invalid, the share may have been removed, or your current account may not have access.",
     notFoundAccountHint:
-      "Z.ai and BigModel do not share account data. Check whether you selected the wrong sign-in platform or used a different account.",
+      "Sign-in platforms do not share account data. Check whether you selected the wrong sign-in platform or used a different account.",
     backToHome: "Back to home",
     networkTitle: "Unable to load share",
     networkDescription: "Check your network connection and try again.",
@@ -583,11 +587,17 @@ export function ConversationShareLandingStatus({
   state,
   locale,
   onLogin,
+  onLatchAccountLogin,
+  vendorLoginEnabled = false,
   onRetry,
 }: {
   state: Exclude<ConversationShareLandingState, { kind: "ready" }>;
   locale?: ConversationShareLandingLocale;
   onLogin?: (provider: WebOAuthProviderId) => void;
+  /** 第一方登录入口（/signin）：未提供时不渲染该按钮。 */
+  onLatchAccountLogin?: () => void;
+  /** vendor web OAuth 仅在显式配置时作为回退入口展示；未配置时整组隐藏（不渲染）。 */
+  vendorLoginEnabled?: boolean;
   onRetry?: () => void;
 }) {
   const copy = COPY[localeOf(locale)];
@@ -638,27 +648,45 @@ export function ConversationShareLandingStatus({
           </p>
         ) : null}
         {/*
-          两个 provider 竖排全宽，对齐桌面端登录卡片（图标 + 文案 + 区域徽标）。
-          必须两个都给：private 分享的 owner 身份是 provider 特定的，页面无法预先知道
-          这份分享属于哪一边——猜错就等于把用户挡在自己的分享外面。
+          登录区的主路径是第一方 Latch 账号（/signin，xlaunch 网关账号）。vendor web
+          OAuth 是 closure pass 留下的“配置才启用”回退：zaiWebOAuthConfigured 为 false
+          时整组 vendor 按钮不渲染（而不是点击后才报错），配置了才按原样式排在第一方
+          入口之后。
         */}
-        {showLogin && onLogin ? (
+        {showLogin && (onLatchAccountLogin || (onLogin && vendorLoginEnabled)) ? (
           <div className="mt-5 space-y-2">
-            {SHARE_LOGIN_PROVIDERS.map((provider) => (
+            {onLatchAccountLogin ? (
               <button
-                key={provider}
                 type="button"
-                data-share-login-provider={provider}
+                data-share-login-provider="latch-account"
                 className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-ui-base text-primary-foreground"
-                onClick={() => onLogin(provider)}
+                onClick={onLatchAccountLogin}
               >
-                {renderOAuthProviderIcon(provider, "size-4")}
-                <span className="min-w-0 truncate">{copy.loginWith[provider]}</span>
-                <span className="ml-1 inline-flex h-5 shrink-0 items-center rounded-full border border-primary-foreground/30 px-2 text-ui-xs font-medium leading-none text-primary-foreground/60">
-                  {copy.loginRegion[provider]}
-                </span>
+                <span className="min-w-0 truncate">{copy.loginWithLatch}</span>
               </button>
-            ))}
+            ) : null}
+            {/*
+              两个 provider 竖排全宽，对齐桌面端登录卡片（图标 + 文案 + 区域徽标）。
+              必须两个都给：private 分享的 owner 身份是 provider 特定的，页面无法预先知道
+              这份分享属于哪一边——猜错就等于把用户挡在自己的分享外面。
+            */}
+            {vendorLoginEnabled && onLogin
+              ? SHARE_LOGIN_PROVIDERS.map((provider) => (
+                  <button
+                    key={provider}
+                    type="button"
+                    data-share-login-provider={provider}
+                    className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-ui-base text-primary-foreground"
+                    onClick={() => onLogin(provider)}
+                  >
+                    {renderOAuthProviderIcon(provider, "size-4")}
+                    <span className="min-w-0 truncate">{copy.loginWith[provider]}</span>
+                    <span className="ml-1 inline-flex h-5 shrink-0 items-center rounded-full border border-primary-foreground/30 px-2 text-ui-xs font-medium leading-none text-primary-foreground/60">
+                      {copy.loginRegion[provider]}
+                    </span>
+                  </button>
+                ))
+              : null}
           </div>
         ) : null}
         {canRetry || isNotFound ? (
@@ -692,6 +720,8 @@ export function ConversationShareLandingLoader({
   client,
   getAccessToken,
   onLogin,
+  onLatchAccountLogin,
+  vendorLoginEnabled = false,
   onLogout,
   locale,
   theme,
@@ -702,6 +732,8 @@ export function ConversationShareLandingLoader({
   };
   getAccessToken?: () => string | null;
   onLogin?: (provider: WebOAuthProviderId) => void;
+  onLatchAccountLogin?: () => void;
+  vendorLoginEnabled?: boolean;
   onLogout?: () => void;
   locale?: ConversationShareLandingLocale;
   theme?: Theme;
@@ -767,6 +799,8 @@ export function ConversationShareLandingLoader({
       state={state}
       locale={locale}
       onLogin={onLogin}
+      onLatchAccountLogin={onLatchAccountLogin}
+      vendorLoginEnabled={vendorLoginEnabled}
       onRetry={() => void load()}
     />
   );

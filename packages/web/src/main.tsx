@@ -12,6 +12,7 @@ import {
 import "@zcode/ui/styles.css";
 import { connectViaWebSocket } from "@zcode/client";
 import { WebCallbackPage } from "./auth/WebCallbackPage.js";
+import { LatchSignInPage } from "./auth/LatchSignInPage.js";
 import { createWebAuthService } from "./auth/webAuthService.js";
 import { WEB_ZAI_OAUTH_CONFIG, resolveWebAuthDevReturnTo } from "./auth/webZaiOAuthConfig.js";
 import { parseOAuthState, resolveSafeAppReturnTo } from "./auth/oauthStateCodec.js";
@@ -114,6 +115,25 @@ function renderWebAuthCallbackPage(): void {
   );
 }
 
+function isLatchSignInPath(pathname: string): boolean {
+  return pathname === "/signin";
+}
+
+// 第一方登录入口：Latch 账号表单（登录/创建账号），成功后铸造 "Latch Web" Key 并接入
+// 内嵌 gateway provider，再按 ?return_to= 回跳（同源路径由页面侧校验）。
+function renderLatchSignInPage(): void {
+  document.title = "Latch - Sign In";
+  const returnTo = new URLSearchParams(window.location.search).get("return_to");
+  root.render(
+    <LatchSignInPage
+      returnTo={returnTo}
+      onDone={(target) => {
+        window.location.replace(target);
+      }}
+    />,
+  );
+}
+
 async function renderConversationSharePage(): Promise<void> {
   // 页面语言跟随路径前缀：/cn/share 中文，裸 /share 英文。
   const routeLocale = resolveConversationShareRouteLocale(window.location.pathname);
@@ -180,6 +200,14 @@ async function renderConversationSharePage(): Promise<void> {
           devReturnTo: resolveWebAuthDevReturnTo(WEB_ZAI_OAUTH_CONFIG),
         });
       }}
+      onLatchAccountLogin={() => {
+        // 第一方登录主路径：跳到 /signin 完成 Latch 账号登录（含 "Latch Web" Key 铸造与
+        // 内嵌 gateway provider 接线），带上当前分享路径以便登录后回跳。
+        window.location.assign(
+          `/signin?return_to=${encodeURIComponent(window.location.pathname)}`,
+        );
+      }}
+      vendorLoginEnabled={WEB_ZAI_OAUTH_CONFIG.zaiWebOAuthConfigured}
       onLogout={onLogout}
       locale={routeLocale}
       theme={resolveWebThemePreference("zai-light")}
@@ -431,6 +459,11 @@ async function bootstrapWebApp() {
 
   if (isConversationSharePath(window.location.pathname)) {
     await renderConversationSharePage();
+    return;
+  }
+
+  if (isLatchSignInPath(window.location.pathname)) {
+    renderLatchSignInPage();
     return;
   }
 

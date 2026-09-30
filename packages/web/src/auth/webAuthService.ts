@@ -1,4 +1,4 @@
-import { ZAI_PROVIDER_ID, type UserInfo } from "@zcode/shared";
+import { BIGMODEL_PROVIDER_ID, ZAI_PROVIDER_ID, type UserInfo } from "@zcode/shared";
 import {
   BrowserOAuthCredentialRepo,
   type WebOAuthProviderId,
@@ -84,8 +84,13 @@ export class WebAuthService {
   }
 
   startLogin(options: WebAuthLoginOptions = {}): void {
-    const nonce = this.runtime.createNonce();
     const provider = options.provider ?? ZAI_PROVIDER_ID;
+    // Z.ai web OAuth 仅在显式配置（VITE_ZAI_OAUTH_CLIENT_ID / VITE_ZAI_OAUTH_ORIGIN）时可用；
+    // 未配置时拒绝发起，不落任何 pending 登录状态，也不构造授权跳转。
+    if (provider !== BIGMODEL_PROVIDER_ID && !this.config.zaiWebOAuthConfigured) {
+      throw new Error("Z.ai web OAuth is not configured");
+    }
+    const nonce = this.runtime.createNonce();
     this.repo.savePendingNonce(nonce);
     this.repo.savePendingProvider(provider);
 

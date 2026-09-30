@@ -26,7 +26,8 @@ stripped; an unset/empty `LATCH_API_KEY` yields `undefined`.
   (`prompt_tokens`, `completion_tokens`, `total_tokens`) into
   `{ promptTokens, completionTokens, totalTokens }`; invalid/absent input
   returns `undefined`.
-- `planGate(model)` — **stub**; see below.
+- `planGate(status)` — advisory client gate over a customer-api account
+  status; see "Plan gate" below.
 
 Errors: any non-2xx response throws `GatewayHttpError` (with `status` and the
 raw body); HTTP 401/403 throw its subclass `GatewayAuthError`. A missing API
@@ -73,11 +74,14 @@ Request headers this client sends on every `{base}/v1/*` call (owned by
   to resolve the caller (identity, plan entitlements, billing).
 - `Content-Type: application/json` — on `POST /v1/chat/completions` only.
 
-Plan gate: `planGate(model)` is a stub returning `{ allowed: true, plan:
-"unknown" }`. The gateway is expected to enforce plan access server-side,
-keyed on the Authorization header above. The response headers that will carry
-plan entitlements are **not defined yet**, so this stub invents no header
-names; when the gateway contract lands, `planGate` will map it.
+Plan gate: `planGate(status)` is a **pure, advisory** projection of a Latch
+account status (the customer-api `GET /me` shape, or the flatter status
+summary — both accepted structurally). `billingEnabled !== true` always
+allows; with billing on, `allowed = balanceMicros > 0` (mirroring the
+gateway's HTTP 402 `account_balance_exhausted` refusal), and `plan` reports
+`"pro"` / `"team"` from the status, `"free"` for a real pay-as-you-go
+account, or `"unknown"` when no status was provided. The gateway remains the
+only enforcement point (INV-5): the gate never blocks a request by itself.
 
 ## Tests
 

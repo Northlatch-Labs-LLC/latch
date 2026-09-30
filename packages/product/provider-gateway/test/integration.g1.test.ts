@@ -10,7 +10,7 @@
  *    (wired from the environment through readConfig); an unknown key gets 401
  *    from the gateway and surfaces as GatewayAuthError.
  * 3. Plan gating — the gateway enforces it server-side, keyed on the bearer
- *    header; planGate() is a stub until the entitlement-header contract lands.
+ *    header; planGate() advises from the customer-api account status.
  * 4. Metering — 100 seeded chat completions accumulate a cost that equals the
  *    arithmetic sum exactly, compared in integer cents (the G1 "to the cent"
  *    gate) and, stronger, in integer nano-USD.
@@ -191,17 +191,15 @@ function recordingSink(): MeteringSink & { events: MeteringEvent[] } {
   return { events, emit: (event) => void events.push(event) };
 }
 
-test("G1 catalog and plan gating: /v1/models serves two models, one gated; enforcement is server-side and planGate stays a stub", async () => {
-  // STUB BOUNDARY (src/plan-gate.ts:1-21): the gateway defines no response
-  // headers carrying plan entitlements yet, so planGate(model) cannot reflect
-  // the gated model — it reports { allowed: true, plan: "unknown" } for
-  // everything and invents no header names. Until that contract lands, plan
-  // gating is enforced where it can see the credential: server-side, keyed on
-  // the `Authorization: Bearer <LATCH_API_KEY>` header (README "Header
-  // contract"). This test pins both halves — the server-side enforcement
-  // below, and the stub's non-decision — so wiring planGate to real headers
-  // later means flipping the stub assertions here to expect a denial for the
-  // free key against GATED_MODEL.
+test("G1 catalog and plan gating: /v1/models serves two models, one gated; enforcement is server-side and planGate decides from account status", async () => {
+  // GATE BOUNDARY (src/plan-gate.ts): the gateway defines no response headers
+  // carrying per-model plan entitlements, so planGate never sees the model —
+  // it projects a customer-api /me status into the advisory client decision
+  // (billing off allows; billing on requires a positive balance). Plan
+  // gating itself is enforced where it can see the credential: server-side,
+  // keyed on the `Authorization: Bearer <LATCH_API_KEY>` header (README
+  // "Header contract"). This test pins both halves — the server-side
+  // enforcement below, and the account-status decision at the end.
   // One gated seed: the free key's refusal consumes nothing, the entitled
   // key's pass serves seeds[0].
   const seeds: SeededCall[] = [
@@ -245,9 +243,19 @@ test("G1 catalog and plan gating: /v1/models serves two models, one gated; enfor
     });
     assert.equal(allowed.content, "g1 reply 0");
 
-    // The stub, pinned: it decides nothing yet, for either model.
-    assert.deepEqual(planGate(GATED_MODEL), { allowed: true, plan: "unknown" });
-    assert.deepEqual(planGate(OPEN_MODEL), { allowed: true, plan: "unknown" });
+    // The client-side gate, pinned to the account-status contract (see
+    // src/plan-gate.ts): it decides from a /me-shaped status, never from the
+    // model. The free key's account (no plan, no balance) is denied; the
+    // entitled key's account (pro with credit) is allowed. Enforcement of the
+    // gated MODEL itself stays server-side above — planGate does not see it.
+    assert.deepEqual(
+      planGate({ billingEnabled: true, balanceMicros: 0, plan: null }),
+      { allowed: false, plan: "free" },
+    );
+    assert.deepEqual(
+      planGate({ billingEnabled: true, balanceMicros: 5_000_000, plan: { plan: "pro" } }),
+      { allowed: true, plan: "pro" },
+    );
   } finally {
     await mock.close();
   }

@@ -18,6 +18,7 @@ export type {
   ZCodeModelOption,
 } from "./app/types.js";
 export * from "./auth-login.js";
+export * from "./latch-gateway-provider.js";
 export {
   inspectZCodeCustomCommand,
   listZCodeCustomCommands,

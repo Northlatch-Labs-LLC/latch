@@ -155,7 +155,10 @@ export class Emitter<T> implements IDisposable {
     if (this.disposed) {
       return;
     }
-    for (const listener of [...this.listeners]) {
+    // 先拍快照再遍历：listener 可能在回调里 dispose（把自己或别的 listener 从 Set
+    // 删除），Set 迭代期间删除未访问元素会跳过它们；快照保证本次 fire 语义稳定。
+    const listeners = Array.from(this.listeners);
+    for (const listener of listeners) {
       listener(event);
     }
   }

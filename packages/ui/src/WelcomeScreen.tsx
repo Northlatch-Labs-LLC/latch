@@ -21,6 +21,7 @@ import { Button } from "./components/ui/button.js";
 import { ZCodeAboutLogo } from "@/components/ui/ZCodeAboutLogo.js";
 import { useOAuth } from "./hooks/useOAuth.js";
 import { useZCodeIntl } from "./i18n/IntlProvider.js";
+import { LatchAccountForm } from "./login/LatchAccountForm.js";
 import { LoginApiKeyForm } from "./login/LoginApiKeyForm.js";
 import { renderOAuthProviderIcon } from "./lib/oauthProviderIcon.js";
 import { ThemeHeroVisual } from "./openWorkspacePageThemeHero.js";
@@ -30,7 +31,7 @@ interface WelcomeScreenProps {
   onComplete: (reason: LoginCompleteReason) => void | Promise<void>;
 }
 
-export type LoginCompleteReason = "oauth" | "apiKey" | "skip";
+export type LoginCompleteReason = "oauth" | "apiKey" | "skip" | "latchAccount";
 
 export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
   return (
@@ -89,7 +90,9 @@ function LoginPanel({ active, onComplete }: LoginPanelProps) {
   const loginEntryRequest = useZCodeStore((s) => s.loginEntryRequest);
   const clearLoginEntryRequest = useZCodeStore((s) => s.clearLoginEntryRequest);
   const markLoginEntryAttemptStatus = useZCodeStore((s) => s.markLoginEntryAttemptStatus);
-  const [loginMode, setLoginMode] = useState<"providers" | "apiKey">("providers");
+  // latch（Latch 账号 email+password）是默认首屏；providers（OAuth 渠道）与
+  // apiKey（存量 key 回退）保留为次级入口。Root 的各打开原因都复用同一个默认值。
+  const [loginMode, setLoginMode] = useState<"latch" | "providers" | "apiKey">("latch");
   const wasActiveRef = useRef(active);
   const consumedLoginRequestRef = useRef<number | null>(null);
   const observedOAuthSuccessSeqRef = useRef(oauthSuccessSeq);
@@ -244,7 +247,9 @@ function LoginPanel({ active, onComplete }: LoginPanelProps) {
   ]);
 
   const resetApiKeyForm = useCallback(() => {
-    setLoginMode("providers");
+    // 关闭/完成后回到默认首屏（Latch 账号登录），OAuth 渠道从首屏的
+    // “更多登录方式”再次进入，避免残留在一个非默认中间态。
+    setLoginMode("latch");
   }, []);
 
   useEffect(() => {
@@ -288,6 +293,16 @@ function LoginPanel({ active, onComplete }: LoginPanelProps) {
       </LoginPanelHeader>
 
       <div className="space-y-6">
+        {/* 默认首屏：Latch 账号（email+password）直连 gateway customer-api。
+            OAuth 等待/失败态照常接管整个面板，与其它登录模式互斥。 */}
+        {status === "idle" && !oauthError && loginMode === "latch" ? (
+          <LatchAccountForm
+            onSignedIn={() => onComplete("latchAccount")}
+            onUseApiKey={() => setLoginMode("apiKey")}
+            onUseProviderLogin={() => setLoginMode("providers")}
+          />
+        ) : null}
+
         {/* Root 层写入 oauthError（轮询/回调失败）后 effect 会把 useOAuth reset 回 idle，
             若只判断 status==="idle" 会让失败块和渠道按钮列表同屏、状态纠缠。
             失败期间统一由下方失败块接管（重新登录/取消），渠道列表等错误清掉后再回来。 */}
@@ -356,7 +371,7 @@ function LoginPanel({ active, onComplete }: LoginPanelProps) {
 
         {status === "idle" && loginMode === "apiKey" ? (
           <LoginApiKeyForm
-            onCancel={() => setLoginMode("providers")}
+            onCancel={resetApiKeyForm}
             onSaved={() => {
               resetApiKeyForm();
               return onComplete("apiKey");
