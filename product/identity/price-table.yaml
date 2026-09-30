@@ -7,9 +7,9 @@
 # The table is optional: a model absent from it is priced at $0, and metering
 # still records its token counts, so the cost HUD shows free usage rather than
 # dropping the request.
-latch-large:
+fusion:
   prompt: 0.003
   completion: 0.015
-latch-small:
+auto:
   prompt: 0.0005
   completion: 0.0015

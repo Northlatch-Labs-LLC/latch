@@ -29,7 +29,7 @@ test("listModels fetches the catalog from /v1/models with the bearer header", as
   const mock = await startMockServer((_request, respond) => {
     respond(200, {
       object: "list",
-      data: [{ id: "latch-large", owned_by: "latch" }, { id: "latch-small" }],
+      data: [{ id: "fusion", owned_by: "latch" }, { id: "auto" }],
     });
   });
   try {
@@ -38,7 +38,7 @@ test("listModels fetches the catalog from /v1/models with the bearer header", as
     assert.equal(catalog.object, "list");
     assert.deepEqual(
       catalog.data.map((model) => model.id),
-      ["latch-large", "latch-small"],
+      ["fusion", "auto"],
     );
 
     const [request] = mock.requests;
@@ -57,7 +57,7 @@ test("chatCompletion posts the authorized JSON shape to /v1/chat/completions", a
       respond(200, {
         id: "chatcmpl-1",
         object: "chat.completion",
-        model: "latch-large",
+        model: "fusion",
         choices: [
           {
             index: 0,
@@ -73,7 +73,7 @@ test("chatCompletion posts the authorized JSON shape to /v1/chat/completions", a
   try {
     const config: GatewayConfig = { baseUrl: mock.url, apiKey: "test-key" };
     const request: ChatCompletionRequest = {
-      model: "latch-large",
+      model: "fusion",
       messages: [{ role: "user", content: "ping" }],
     };
     const completion = await chatCompletion(config, request);
@@ -90,7 +90,7 @@ test("chatCompletion posts the authorized JSON shape to /v1/chat/completions", a
     assert.equal(captured.headers.authorization, "Bearer test-key");
     assert.equal(captured.headers["content-type"], "application/json");
     assert.deepEqual(JSON.parse(captured.rawBody), {
-      model: "latch-large",
+      model: "fusion",
       messages: [{ role: "user", content: "ping" }],
     });
   } finally {
@@ -111,7 +111,7 @@ test("a 401 from the gateway maps to GatewayAuthError", async () => {
       return true;
     });
     const request: ChatCompletionRequest = {
-      model: "latch-large",
+      model: "fusion",
       messages: [{ role: "user", content: "ping" }],
     };
     await assert.rejects(chatCompletion(config, request), (error: unknown) => {
@@ -143,6 +143,6 @@ test("a non-401 gateway failure maps to GatewayHttpError with status and body", 
 });
 
 test("planGate is a stub that allows every model and reports plan unknown", () => {
-  assert.deepEqual(planGate("latch-large"), { allowed: true, plan: "unknown" });
+  assert.deepEqual(planGate("fusion"), { allowed: true, plan: "unknown" });
   assert.deepEqual(planGate("any-other-model"), { allowed: true, plan: "unknown" });
 });

@@ -29,7 +29,7 @@ function recordingSink(): MeteringSink & { events: MeteringEvent[] } {
 /** A synthetic event with a distinguishable id. */
 function eventWithRequestId(requestId: string): MeteringEvent {
   return {
-    model: "latch-large",
+    model: "fusion",
     promptTokens: 1,
     completionTokens: 1,
     totalTokens: 2,
@@ -68,11 +68,11 @@ test("parseUsage rejects missing or malformed usage objects", () => {
 
 test("price tables price a split-rate usage to exact cents", () => {
   const table = createPriceTable({
-    "latch-large": { prompt: "0.003", completion: "0.015" },
+    "fusion": { prompt: "0.003", completion: "0.015" },
   });
-  assert.deepEqual(table.priceFor("latch-large"), { prompt: 0.003, completion: 0.015 });
+  assert.deepEqual(table.priceFor("fusion"), { prompt: 0.003, completion: 0.015 });
   // 1500 * $0.003/1k + 500 * $0.015/1k = $0.0045 + $0.0075 — exact, no float drift.
-  assert.equal(table.costUsd("latch-large", USAGE_1500_500), 0.012);
+  assert.equal(table.costUsd("fusion", USAGE_1500_500), 0.012);
 });
 
 test("a scalar price entry rates prompt and completion alike", () => {
@@ -88,7 +88,7 @@ test("price entries given as JS numbers stay exact to the micro-dollar", () => {
 });
 
 test("a model absent from the price table costs $0 but keeps its tokens", () => {
-  const table = createPriceTable({ "latch-large": { prompt: "0.003", completion: "0.015" } });
+  const table = createPriceTable({ "fusion": { prompt: "0.003", completion: "0.015" } });
   assert.deepEqual(table.priceFor("unknown-model"), { prompt: 0, completion: 0 });
   assert.equal(table.costUsd("unknown-model", USAGE_1500_500), 0);
 });
@@ -106,11 +106,11 @@ test("invalid price entries throw PriceTableError", () => {
 
 test("loadPriceTable reads the shipped product/identity/price-table.yaml", () => {
   const table = loadPriceTable(defaultPriceTablePath());
-  assert.deepEqual(table.priceFor("latch-large"), { prompt: 0.003, completion: 0.015 });
-  assert.deepEqual(table.priceFor("latch-small"), { prompt: 0.0005, completion: 0.0015 });
-  assert.equal(table.costUsd("latch-large", USAGE_1500_500), 0.012);
+  assert.deepEqual(table.priceFor("fusion"), { prompt: 0.003, completion: 0.015 });
+  assert.deepEqual(table.priceFor("auto"), { prompt: 0.0005, completion: 0.0015 });
+  assert.equal(table.costUsd("fusion", USAGE_1500_500), 0.012);
   assert.equal(
-    table.costUsd("latch-small", { promptTokens: 1000, completionTokens: 1000, totalTokens: 2000 }),
+    table.costUsd("auto", { promptTokens: 1000, completionTokens: 1000, totalTokens: 2000 }),
     0.002,
   );
   assert.equal(table.costUsd("not-in-table", USAGE_1500_500), 0);
@@ -142,13 +142,13 @@ test("loadPriceTable parses comments, blocks and scalar entries from a file", ()
 
 test("a missing price table file is an empty optional table ($0 everywhere)", () => {
   const table = loadPriceTable(join(tmpdir(), "latch-price-table-that-does-not-exist.yaml"));
-  assert.deepEqual(table.priceFor("latch-large"), { prompt: 0, completion: 0 });
-  assert.equal(table.costUsd("latch-large", USAGE_1500_500), 0);
+  assert.deepEqual(table.priceFor("fusion"), { prompt: 0, completion: 0 });
+  assert.equal(table.costUsd("fusion", USAGE_1500_500), 0);
 });
 
 test("malformed YAML fails with the offending file and line", () => {
   assert.throws(
-    () => parsePriceTableYaml("latch-large:\n  prompt: zero-dollars\n", "test-table.yaml"),
+    () => parsePriceTableYaml("fusion:\n  prompt: zero-dollars\n", "test-table.yaml"),
     (error: unknown) => {
       assert.ok(error instanceof PriceTableError);
       assert.match(error.message, /test-table\.yaml, line 2/);
@@ -216,17 +216,17 @@ test("chatCompletion returns content, usage and metering, and feeds the sink", a
     const sink = recordingSink();
     const result = await chatCompletion(
       config,
-      { model: "latch-large", messages: [{ role: "user", content: "ping" }] },
+      { model: "fusion", messages: [{ role: "user", content: "ping" }] },
       {
         sink,
-        priceTable: createPriceTable({ "latch-large": { prompt: "0.003", completion: "0.015" } }),
+        priceTable: createPriceTable({ "fusion": { prompt: "0.003", completion: "0.015" } }),
       },
     );
 
     assert.equal(result.content, "pong");
     assert.deepEqual(result.usage, USAGE_1500_500);
     assert.deepEqual(result.metering, {
-      model: "latch-large",
+      model: "fusion",
       promptTokens: 1500,
       completionTokens: 500,
       totalTokens: 2000,
@@ -251,7 +251,7 @@ test("chatCompletion without injections uses the default log and shipped price t
     try {
       const config: GatewayConfig = { baseUrl: mock.url, apiKey: "test-key" };
       const result = await chatCompletion(config, {
-        model: "latch-large",
+        model: "fusion",
         messages: [{ role: "user", content: "ping" }],
       });
       // Priced by product/identity/price-table.yaml: 1500*$0.003/1k + 500*$0.015/1k.
@@ -269,19 +269,19 @@ test("chatCompletion without injections uses the default log and shipped price t
 
 test("chatCompletion with no usage in the response still emits a zero-cost event", async () => {
   const mock = await startMockServer((_request, respond) => {
-    respond(200, chatCompletionBody({ id: "chatcmpl-nousage", usage: undefined, model: "latch-small" }));
+    respond(200, chatCompletionBody({ id: "chatcmpl-nousage", usage: undefined, model: "auto" }));
   });
   try {
     const config: GatewayConfig = { baseUrl: mock.url, apiKey: "test-key" };
     const sink = recordingSink();
     const result = await chatCompletion(
       config,
-      { model: "latch-small", messages: [{ role: "user", content: "ping" }] },
-      { sink, priceTable: createPriceTable({ "latch-small": "9" }) }, // any rate: cost stays 0
+      { model: "auto", messages: [{ role: "user", content: "ping" }] },
+      { sink, priceTable: createPriceTable({ "auto": "9" }) }, // any rate: cost stays 0
     );
     assert.equal(result.usage, undefined);
     assert.deepEqual(result.metering, {
-      model: "latch-small",
+      model: "auto",
       promptTokens: 0,
       completionTokens: 0,
       totalTokens: 0,

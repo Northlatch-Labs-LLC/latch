@@ -32,8 +32,8 @@ import {
 } from "../src/index.js";
 import { chatCompletionBody, startMockServer, type MockHandler } from "./mock-gateway.js";
 
-const GATED_MODEL = "latch-large";
-const OPEN_MODEL = "latch-small";
+const GATED_MODEL = "fusion";
+const OPEN_MODEL = "auto";
 /** Key whose plan ("pro") entitles the gated model. */
 const ENTITLED_KEY = "latch-key-pro";
 /** Valid key whose plan ("free") does not entitle the gated model. */
@@ -41,7 +41,7 @@ const FREE_KEY = "latch-key-free";
 
 /**
  * Reconciliation price table — mirrors product/identity/price-table.yaml
- * (latch-large 0.003/0.015, latch-small 0.0005/0.0015, USD per 1k tokens).
+ * (fusion 0.003/0.015, auto 0.0005/0.0015, USD per 1k tokens).
  * The test recomputes every cost from these literals independently of
  * src/metering.ts (see MICRO_RATES_PER_1K below), so agreement is a true
  * reconciliation, not a restatement.
@@ -65,7 +65,7 @@ const NANO_USD = 1e9;
 /** One cent is $0.01 = 1e7 nano-USD. */
 const NANO_USD_PER_CENT = 1e7;
 
-/** GET /v1/models body: two models, latch-large marked as plan-gated. */
+/** GET /v1/models body: two models, fusion marked as plan-gated. */
 const CATALOG = {
   object: "list",
   data: [
@@ -213,7 +213,7 @@ test("G1 catalog and plan gating: /v1/models serves two models, one gated; enfor
     assert.equal(catalog.object, "list");
     assert.deepEqual(
       catalog.data.map((model) => model.id).sort(),
-      [GATED_MODEL, OPEN_MODEL], // lexicographic: "latch-large" < "latch-small"
+      [OPEN_MODEL, GATED_MODEL], // lexicographic: "auto" < "fusion"
     );
     // The catalog marks the gated model. `plan_required` is this mock's
     // marker; the real gateway will carry entitlements in response headers

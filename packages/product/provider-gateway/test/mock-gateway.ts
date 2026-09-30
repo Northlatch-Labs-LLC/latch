@@ -61,7 +61,7 @@ export function chatCompletionBody(overrides: Record<string, unknown> = {}): Rec
   return {
     id: "chatcmpl-1",
     object: "chat.completion",
-    model: "latch-large",
+    model: "fusion",
     choices: [
       {
         index: 0,

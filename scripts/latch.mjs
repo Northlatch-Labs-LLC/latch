@@ -32,7 +32,7 @@ const home = process.env.LATCH_HOME?.trim() || path.join(process.env.HOME ?? '.'
 const configDir = path.join(home, 'v2');
 const configFile = path.join(configDir, 'provider_config.json');
 
-const FALLBACK_MODELS = ['latch-small', 'latch-large'];
+const FALLBACK_MODELS = ['auto', 'fusion'];
 
 async function fetchCatalog() {
   try {
@@ -63,6 +63,20 @@ function findHarnessBin() {
 }
 
 const { models, live } = await fetchCatalog();
+
+// Preserve an existing key: LATCH_API_KEY is only exported in shells that
+// opt in; the stored config must survive keyless launches (e.g. `latch --version`).
+let effectiveApiKey = apiKey;
+if (!effectiveApiKey) {
+  try {
+    const existing = JSON.parse(readFileSync(configFile, 'utf8'));
+    const stored = existing?.config?.providerConfigRules?.providerRules?.find(
+      (rule) => rule.providerId === 'latch-gateway',
+    )?.config?.access?.apiKey;
+    if (typeof stored === 'string' && stored && stored !== 'unset') effectiveApiKey = stored;
+  } catch {}
+}
+
 const config = {
   schemaVersion: 1,
   config: {
@@ -73,7 +87,7 @@ const config = {
           providerId: 'latch-gateway',
           config: {
             group: 'standard-personal',
-            access: { type: 'api-key', apiKey: apiKey || 'unset' },
+            access: { type: 'api-key', apiKey: effectiveApiKey || 'unset' },
             api: { type: 'openai-chat-completions', baseUrl: `${gatewayUrl}/v1` },
             personalModelIds: models,
             modelOrder: models,
@@ -83,14 +97,14 @@ const config = {
       ],
     },
     modelConfigRules: { providerModelRules: [], manualProviderModelRules: [] },
-    defaultModelSelection: { providerId: 'latch-gateway', modelId: models[0] },
+    defaultModelSelection: { providerId: 'latch-gateway', modelId: models.includes('auto') ? 'auto' : models[0] },
   },
 };
 
 mkdirSync(configDir, { recursive: true });
 writeFileSync(configFile, JSON.stringify(config, null, 2) + '\n', { mode: 0o600 });
 
-if (!apiKey) {
+if (!effectiveApiKey) {
   console.error(`latch: LATCH_API_KEY is not set — the harness will launch, but every model call will be refused (401) by the gateway. Run \`pnpm run doctor\` for the six-check diagnosis.`);
 } else if (!live) {
   console.error(`latch: gateway catalog unreachable at ${gatewayUrl} — using manifest default models. Run \`pnpm run doctor\` for the six-check diagnosis.`);

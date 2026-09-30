@@ -21,8 +21,8 @@ import {
 import { startMockServer } from "./mock-gateway.js";
 
 const PRICE_TABLE = createPriceTable({
-  "latch-small": { prompt: "0.0005", completion: "0.0015" },
-  "latch-large": { prompt: "0.003", completion: "0.015" },
+  "auto": { prompt: "0.0005", completion: "0.0015" },
+  "fusion": { prompt: "0.003", completion: "0.015" },
 });
 
 let clockMs = 0;
@@ -42,10 +42,10 @@ function meteredEvent(model: string, costUsd: number): MeteringEvent {
 
 test("rail reading: spend accumulates exactly in nano-USD and burn rate derives from the event window", () => {
   const ledger = createSessionCapLedger({ capUsd: 1, now: () => clockMs });
-  // latch-small 1k/1k costs exactly 0.002; three calls = 0.006.
-  ledger.record(meteredEvent("latch-small", 0.002));
-  ledger.record(meteredEvent("latch-small", 0.002));
-  ledger.record(meteredEvent("latch-small", 0.002));
+  // auto 1k/1k costs exactly 0.002; three calls = 0.006.
+  ledger.record(meteredEvent("auto", 0.002));
+  ledger.record(meteredEvent("auto", 0.002));
+  ledger.record(meteredEvent("auto", 0.002));
   const rail = ledger.railReading();
   assert.equal(rail.spendUsd, 0.006);
   assert.equal(rail.capUsd, 1);
@@ -60,7 +60,7 @@ test("rail reading: spend accumulates exactly in nano-USD and burn rate derives 
 
 test("rail reading: uncapped ledger renders burn rate but null cap math", () => {
   const ledger = createSessionCapLedger({ now: () => clockMs });
-  ledger.record(meteredEvent("latch-large", 0.018));
+  ledger.record(meteredEvent("fusion", 0.018));
   const rail = ledger.railReading();
   assert.equal(rail.capUsd, null);
   assert.equal(rail.remainingUsd, null);
@@ -70,10 +70,10 @@ test("rail reading: uncapped ledger renders burn rate but null cap math", () => 
 
 test("projection: exact pre-flight cost, per-call ceiling verdict, one-shot warning at the threshold", () => {
   const ledger = createSessionCapLedger({ capUsd: 0.1, perCallCeilingUsd: 0.02, now: () => clockMs });
-  // 0.004 spent; a latch-large 2k/1k call costs exactly 0.021 (2*0.003 + 1*0.015).
-  ledger.record(meteredEvent("latch-small", 0.004));
+  // 0.004 spent; a fusion 2k/1k call costs exactly 0.021 (2*0.003 + 1*0.015).
+  ledger.record(meteredEvent("auto", 0.004));
   const projection = ledger.projectCall({
-    model: "latch-large",
+    model: "fusion",
     promptTokens: 2000,
     maxCompletionTokens: 1000,
     priceTable: PRICE_TABLE,
@@ -85,10 +85,10 @@ test("projection: exact pre-flight cost, per-call ceiling verdict, one-shot warn
   assert.equal(projection.warning, null); // 0.025 < 80% of 0.1
 
   // A call that first crosses 80% of the cap warns exactly once.
-  // spend 0.059 + a latch-large 2k/1k call (0.021) = 0.080 — exactly the threshold.
-  ledger.record(meteredEvent("latch-large", 0.055));
+  // spend 0.059 + a fusion 2k/1k call (0.021) = 0.080 — exactly the threshold.
+  ledger.record(meteredEvent("fusion", 0.055));
   const crossing = ledger.projectCall({
-    model: "latch-large",
+    model: "fusion",
     promptTokens: 2000,
     maxCompletionTokens: 1000,
     priceTable: PRICE_TABLE,
@@ -99,7 +99,7 @@ test("projection: exact pre-flight cost, per-call ceiling verdict, one-shot warn
   assert.equal(ledger.warningFired(), true);
 
   const after = ledger.projectCall({
-    model: "latch-large",
+    model: "fusion",
     promptTokens: 1000,
     maxCompletionTokens: 1000,
     priceTable: PRICE_TABLE,
@@ -110,7 +110,7 @@ test("projection: exact pre-flight cost, per-call ceiling verdict, one-shot warn
 
 test("estimateCallCostUsd prices prompt plus the full completion allowance", () => {
   const estimate = estimateCallCostUsd(
-    { model: "latch-large", promptTokens: 1000, maxCompletionTokens: 500 },
+    { model: "fusion", promptTokens: 1000, maxCompletionTokens: 500 },
     PRICE_TABLE,
   );
   // 1k * 0.003 + 0.5k * 0.015 = 0.0105 — the ceiling-safe upper bound.
@@ -139,7 +139,7 @@ test("gateway 402 contract: per-call ceiling refusal maps to GatewayCapError, re
     await assert.rejects(
       chatCompletion(
         { baseUrl: server.url, apiKey: "latch-key-pro" },
-        { model: "latch-large", messages: [{ role: "user", content: "hi" }] },
+        { model: "fusion", messages: [{ role: "user", content: "hi" }] },
       ),
       (error: unknown) => {
         assert.ok(error instanceof GatewayCapError);
@@ -168,7 +168,7 @@ test("gateway 402 contract: session cap refusal maps to GatewayCapError, not ret
     await assert.rejects(
       chatCompletion(
         { baseUrl: server.url, apiKey: "latch-key-pro" },
-        { model: "latch-small", messages: [{ role: "user", content: "hi" }] },
+        { model: "auto", messages: [{ role: "user", content: "hi" }] },
       ),
       (error: unknown) => {
         assert.ok(error instanceof GatewayCapError);

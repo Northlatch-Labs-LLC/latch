@@ -10,14 +10,14 @@
             "group": "standard-personal",
             "access": { "type": "api-key", "apiKey": "latch-key-pro" },
             "api": { "type": "openai-chat-completions", "baseUrl": "http://127.0.0.1:8787/v1" },
-            "personalModelIds": ["latch-small", "latch-large"],
-            "modelOrder": ["latch-small", "latch-large"],
+            "personalModelIds": ["auto", "fusion"],
+            "modelOrder": ["auto", "fusion"],
             "visibility": "visible"
           }
         }
       ]
     },
     "modelConfigRules": { "providerModelRules": [], "manualProviderModelRules": [] },
-    "defaultModelSelection": { "providerId": "latch-gateway", "modelId": "latch-small" }
+    "defaultModelSelection": { "providerId": "latch-gateway", "modelId": "auto" }
   }
 }
