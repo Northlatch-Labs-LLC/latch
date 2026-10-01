@@ -1,41 +1,52 @@
-// Latch 自有订阅计费模块：Latch 产品的 Stripe（test 模式起步）Checkout 与 webhook，
-// 与 xlaunch 的计费服务完全分离 —— 不改 xlaunch billing service，只复用它的
-// gateway service-api 入账契约（POST /service-api/credits，paymentId 幂等）。
+// Latch-owned subscription billing: Stripe Checkout + webhooks (test mode first)
+// for the Latch product, fully separate from the xlaunch billing service — it
+// reuses only that service's gateway service-api credit contract (POST
+// /service-api/credits, idempotent by paymentId); the service itself is never
+// modified.
 //
-// 契约参考（只读）：xlaunch-agent-web/server/src/gateway.ts（applyCredit）、
-// src/webhook.ts（CreditInstruction / 事件到入账的判定）、src/checkout.ts（session 参数）。
+// Contract references (read-only): xlaunch-agent-web/server/src/gateway.ts
+// (applyCredit), src/webhook.ts (CreditInstruction / event-to-credit rules),
+// src/checkout.ts (session params).
 //
-// 安全口径：
-// - Stripe 密钥与 gateway service token 只从本进程 env 读取（LATCH_STRIPE_SECRET_KEY /
-//   LATCH_GATEWAY_SERVICE_TOKEN），绝不写入日志或响应体。
-// - webhook 不依赖签名密钥：解析出事件 id 后用密钥回查 GET /v1/events/:id，只处理
-//   回查到的事件 —— 真实性来自这次 API 调用，而不是请求体本身。
-// - 幂等：入账的 paymentId 用「被支付对象」的 id（session / invoice），gateway 按
-//   paymentId 去重；本进程内再用已处理事件 id 集合兜一层，同一事件不重复入账。
+// Security stance:
+// - The Stripe key and gateway service token are read only from this process
+//   env (LATCH_STRIPE_SECRET_KEY / LATCH_GATEWAY_SERVICE_TOKEN); never logged
+//   or echoed in responses.
+// - The webhook relies on no signing secret: parse the event id, re-fetch it
+//   with GET /v1/events/:id using the secret key, and process only the fetched
+//   event — authenticity comes from that API call, not the request body.
+// - Idempotency: the credited paymentId is the paid object's id (session /
+//   invoice); the gateway dedupes by paymentId, and an in-process
+//   processed-event-id set adds a second layer so one event is never credited
+//   twice.
 import type { Context, Hono } from "hono";
 import { buildLatchAccountApiUrl, readLatchAccountEnv } from "@zcode/services";
 
-// Stripe API 与 gateway service-api 的上游 15s/10s 超时：超时按上游不可达处理，
-// webhook 返回 5xx 让 Stripe 重试（Stripe 会对非 2xx 响应自动重投）。
+// Upstream timeouts for the Stripe API and gateway service-api (15s/10s): a
+// timeout is treated as an unreachable upstream; the webhook then returns 5xx
+// so Stripe retries (Stripe redelivers on non-2xx automatically).
 const STRIPE_API_TIMEOUT_MS = 15_000;
 const GATEWAY_SERVICE_TIMEOUT_MS = 10_000;
 
 const STRIPE_API_BASE_URL = "https://api.stripe.com/v1";
 
-// gateway service-api 基址：与 latchAccountProxy 的 customer-api 同一个 gateway 域，
-// env 可整体覆盖（LATCH_GATEWAY_SERVICE_API_URL），缺省为线上网关。
+// Gateway service-api base URL: same gateway domain as the customer-api used
+// by latchAccountProxy; fully overridable via env
+// (LATCH_GATEWAY_SERVICE_API_URL), defaulting to the production gateway.
 const DEFAULT_LATCH_GATEWAY_SERVICE_API_BASE_URL = "https://gateway.xlaunch.work/service-api";
 const LATCH_GATEWAY_SERVICE_API_URL_ENV_KEY = "LATCH_GATEWAY_SERVICE_API_URL";
 const LATCH_STRIPE_SECRET_KEY_ENV_KEY = "LATCH_STRIPE_SECRET_KEY";
 const LATCH_GATEWAY_SERVICE_TOKEN_ENV_KEY = "LATCH_GATEWAY_SERVICE_TOKEN";
 
-// Checkout 回跳地址：Latch 产品自己的 pricing 页（不是 xlaunch 的 account 页）。
+// Checkout redirect URLs: Latch's own pricing page (not the xlaunch account page).
 const LATCH_CHECKOUT_SUCCESS_URL = "https://latch.xlaunch.work/pricing?checkout=success";
 const LATCH_CHECKOUT_CANCEL_URL = "https://latch.xlaunch.work/pricing?checkout=cancelled";
 
-// 计划目录与入账额度。creditCents（订阅每期附赠的 gateway credit）是创始人可调
-// 政策常量，只在这一处定义：目录文案（config 接口）与 webhook 入账都读这里。
-// priceId 来自 Stripe API 实测（test 模式，GET /v1/prices?active=true）。
+// Plan catalog and credited amounts. creditCents (the gateway credit included
+// with each subscription period) is a founder-adjustable policy constant,
+// defined in this one place: both the catalog copy (config route) and the
+// webhook credit settlement read it here.
+// priceIds verified against the Stripe API (test mode, GET /v1/prices?active=true).
 interface LatchPlan {
   readonly id: "latch-monthly" | "latch-yearly";
   readonly name: string;
@@ -64,27 +75,31 @@ const LATCH_PLANS: readonly LatchPlan[] = [
   },
 ];
 
-// 键显式放宽为 string：webhook metadata / 请求体里的 planId 是任意字符串，
-// get() 要接受 string 再判空（Map 键若收窄成目录字面量联合，.get(string) 编不过）。
+// Map keys deliberately widened to string: plan ids arriving in webhook
+// metadata / request bodies are arbitrary strings, and get() must accept them
+// and then check for absence (a Map keyed on the literal union would not
+// compile against .get(string)).
 const LATCH_PLANS_BY_ID = new Map<string, (typeof LATCH_PLANS)[number]>(
   LATCH_PLANS.map((plan) => [plan.id, plan] as const),
 );
 
-// checkout 时写进 session 与 subscription 的 metadata 键：webhook 回查事件后靠它们
-// 定位入账账户（对齐 estate 的 META 用法，键名换成 Latch 命名空间）。
+// Metadata keys written onto the session and subscription at checkout: after
+// the webhook re-fetches the event, these locate the account to credit
+// (mirrors the estate's META usage, keys renamed to the Latch namespace).
 const LATCH_META = {
   kind: "latch_kind",
   email: "latch_customer_email",
   plan: "latch_plan",
 } as const;
 
-// 网关错误契约与 latchAccountProxy 同款：{ error: { message } }，Web 端错误分类统一读
-// error.message。
+// Gateway error contract, same shape as latchAccountProxy:
+// { error: { message } }; web error classification reads error.message.
 interface LatchBillingErrorBody {
   error: { message: string };
 }
 
-// 代理自身会回的状态码；Stripe 透传的 4xx/5xx 也收敛到这个集合，未知的按 502 兜底。
+// Statuses this proxy itself returns; Stripe-passed 4xx/5xx collapse into the
+// same set, unknown statuses fall back to 502.
 const BILLING_ERROR_STATUSES = [400, 401, 403, 404, 409, 422, 429, 500, 502, 503, 504] as const;
 
 type BillingErrorStatus = (typeof BILLING_ERROR_STATUSES)[number];
@@ -95,7 +110,7 @@ function billingError(c: Context, status: BillingErrorStatus, message: string): 
   });
 }
 
-/** Stripe 错误透传：4xx/5xx 原样映射（未知状态按 502），message 用 Stripe 的原文。 */
+/** Stripe error passthrough: 4xx/5xx mapped as-is (unknown statuses become 502), message kept verbatim. */
 function toBillingErrorStatus(status: number): BillingErrorStatus {
   return BILLING_ERROR_STATUSES.includes(status as BillingErrorStatus)
     ? (status as BillingErrorStatus)
@@ -107,7 +122,7 @@ function readEnvValue(name: string): string | undefined {
   return value ? value : undefined;
 }
 
-/** Stripe 密钥 / service token 缺失时计费不可用：返回 503，让前端提示而非静默失败。 */
+/** Without the Stripe key / service token billing is unavailable: return 503 so the frontend can say so, never fail silently. */
 function readStripeSecretKey(): string | undefined {
   const key = readEnvValue(LATCH_STRIPE_SECRET_KEY_ENV_KEY);
   return key && key.startsWith("sk_") ? key : undefined;
@@ -127,8 +142,9 @@ function readBearerToken(c: Context): string | null {
   return token ? token : null;
 }
 
-// 进程内已处理事件 id 集合：并发重投/手动重发时同一事件只入账一次；gateway 侧
-// paymentId 去重是最终防线。集合有上限，防长期运行内存泄漏。
+// In-process set of processed event ids: a concurrent redelivery or manual
+// replay credits the same event only once; the gateway's paymentId dedupe is
+// the final backstop. The set has a cap to bound memory on long runs.
 const PROCESSED_EVENT_IDS_LIMIT = 10_000;
 const processedEventIds = new Set<string>();
 
@@ -137,14 +153,15 @@ function markEventProcessed(eventId: string): boolean {
     return false;
   }
   if (processedEventIds.size >= PROCESSED_EVENT_IDS_LIMIT) {
-    // 简单淘汰：清空后重记。gateway paymentId 去重仍然兜底，不会造成重复入账。
+    // Simple eviction: clear, then re-add. The gateway paymentId dedupe still
+    // backstops, so this cannot double-credit.
     processedEventIds.clear();
   }
   processedEventIds.add(eventId);
   return true;
 }
 
-// ---- Stripe REST（fetch + form-encoded，不引入 Stripe SDK）------------------
+// ---- Stripe REST (fetch + form-encoded; no Stripe SDK) ----------------------
 
 function encodeStripeForm(fields: Record<string, string>): string {
   const params = new URLSearchParams();
@@ -160,7 +177,7 @@ interface StripeResult<T> {
   payload: T | { error: { message: string } };
 }
 
-/** Stripe 调用统一入口：Bearer 密钥鉴权、超时、错误透传；密钥与令牌不落日志。 */
+/** Stripe call funnel: Bearer auth, timeout, error passthrough; keys and tokens never logged. */
 async function callStripeApi(
   secretKey: string,
   path: string,
@@ -218,7 +235,7 @@ function metadataOf(value: unknown): Record<string, unknown> {
   return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : {};
 }
 
-// ---- webhook 事件 → 入账指令（对齐 estate webhook.ts 的判定语义）-------------
+// ---- webhook event -> credit instruction (mirrors estate webhook.ts) ----------
 
 interface CreditInstruction {
   readonly customerEmail: string;
@@ -241,8 +258,9 @@ type EventOutcome =
   | { action: "ignore"; why: string };
 
 /**
- * 从 invoice 上读 metadata：Stripe 新版 API 放在 parent.subscription_details.metadata，
- * 旧版在 subscription_details.metadata（estate webhook.ts 同款兼容读法）。
+ * Reads metadata off an invoice: the new Stripe API puts it at
+ * parent.subscription_details.metadata, the old one at
+ * subscription_details.metadata (same compat read as estate webhook.ts).
  */
 function invoiceMetadataOf(invoice: Record<string, unknown>): Record<string, unknown> {
   const parent = metadataOf(invoice["parent"]);
@@ -250,7 +268,7 @@ function invoiceMetadataOf(invoice: Record<string, unknown>): Record<string, unk
   return metadataOf(details["metadata"]);
 }
 
-/** invoice 覆盖期结束时间（毫秒）；读不到给 null，绝不猜。 */
+/** Invoice coverage-period end (in ms); null when unreadable — never guessed. */
 function periodEndOf(invoice: Record<string, unknown>): number | null {
   const lines = metadataOf(invoice["lines"]);
   const data = Array.isArray(lines["data"]) ? lines["data"] : [];
@@ -271,16 +289,20 @@ function periodEndOf(invoice: Record<string, unknown>): number | null {
 }
 
 /**
- * 事件到入账指令的判定，语义对齐 estate webhook.ts outcomeOf：
- * - checkout.session.completed 只在 payment 模式下入账（Latch 在售的只有订阅，
- *   订阅 session 不入账，由它的第一期 invoice.paid 入账，避免首月双份）；
- * - invoice.paid 携带 Latch subscription metadata 才入账，额度用目录里的
- *   creditCents（创始人可调常量）。
+ * Event -> settlement instruction, semantics aligned with estate webhook.ts
+ * outcomeOf:
+ * - checkout.session.completes credit only in payment mode (Latch sells only
+ *   subscriptions; subscription sessions are NOT credited here — their first
+ *   invoice.paid does it, avoiding a double first-period credit);
+ * - invoice.paid credits only when it carries Latch subscription metadata, in
+ *   the catalog's creditCents amount (the founder-adjustable constant).
  *
- * 关键前提：founder 的 Latch test key 与 xlaunch estate 计费服务共用同一个 Stripe
- * 账户（已实测：账户下同时挂着 billing.xlaunch.work / synapse / gridframes 的
- * webhook），所以本 webhook 也会收到 estate 的事件 —— 缺少 Latch metadata 的事件
- * 一律忽略，绝不按 customer_email 兜底入账，否则会把 estate 的支付双份入账。
+ * Critical premise: the founder's Latch test key shares one Stripe account
+ * with the xlaunch estate billing services (verified: that account also
+ * carries the billing.xlaunch.work / synapse / gridframes webhooks), so this
+ * webhook also receives estate events — any event missing Latch metadata is
+ * ignored and NEVER credited by customer_email fallback, or estate payments
+ * would be double-credited.
  */
 function outcomeOf(event: Record<string, unknown>): EventOutcome {
   const type = readText(event["type"]);
@@ -288,7 +310,7 @@ function outcomeOf(event: Record<string, unknown>): EventOutcome {
   const metadata = metadataOf(object["metadata"]);
 
   if (type === "checkout.session.completed") {
-    // 只认 Latch 自己写的 metadata（checkout 时写入 session）。
+    // Only Latch's own metadata counts (written onto the session at checkout).
     if (metadata[LATCH_META.kind] !== "subscription") {
       return { action: "ignore", why: "not a Latch checkout session" };
     }
@@ -322,8 +344,9 @@ function outcomeOf(event: Record<string, unknown>): EventOutcome {
   if (type === "invoice.paid") {
     const id = readText(object["id"]);
     const invoiceMetadata = invoiceMetadataOf(object);
-    // 只认 subscription metadata 里的 Latch 账户（estate 的 invoice 不带 Latch
-    // metadata，在这里被忽略）。绝不用 customer_email 兜底。
+    // Only the Latch account inside subscription metadata counts (estate
+    // invoices carry no Latch metadata and are dropped here). Never fall back
+    // to customer_email.
     if (invoiceMetadata[LATCH_META.kind] !== "subscription") {
       return { action: "ignore", why: "not a Latch subscription invoice" };
     }
@@ -365,7 +388,7 @@ function outcomeOf(event: Record<string, unknown>): EventOutcome {
   return { action: "ignore", why: `event type ${type ?? "(unknown)"} moves no credit` };
 }
 
-// ---- gateway service-api（对齐 estate gateway.ts applyCredit / applyPlan）----
+// ---- gateway service-api (mirrors estate gateway.ts applyCredit / applyPlan) --
 
 type GatewayCallResult =
   | { state: "applied" | "already-applied" | "recorded" | "no-such-customer" }
@@ -398,8 +421,10 @@ async function callGatewayServiceApi(
       message: timedOut ? "gateway service API timed out" : "gateway service API is unreachable",
     };
   }
-  // 404 = 账户不存在（estate 语义：视为已处理，不重试）；401/5xx 等按不可达处理，
-  // webhook 返回 5xx 让 Stripe 重试（payment 是真实的，不能因 token 轮换而丢弃）。
+  // 404 = account does not exist (estate semantics: treat as settled, do not
+  // retry); 401/5xx etc. are treated as unreachable — the webhook returns 5xx
+  // so Stripe retries (the payment is real and must not be lost to a token
+  // rotation).
   if (response.status === 404) {
     return { state: "no-such-customer" };
   }
@@ -410,9 +435,10 @@ async function callGatewayServiceApi(
 }
 
 /**
- * 用 Latch 服务器自己的 session token 换账户邮箱：与 /api/latch-account/me 同一条
- * customer-api 通路（"resolve the customer email like the account proxy does"）。
- * 邮箱绝不取自请求体。
+ * Exchange the Latch server's own session token for the account email: the
+ * same customer-api path as /api/latch-account/me ("resolve the customer
+ * email like the account proxy does"). The email is never taken from the
+ * request body.
  */
 async function resolveCustomerEmail(token: string): Promise<string | undefined> {
   const env = readLatchAccountEnv();
@@ -438,12 +464,13 @@ async function resolveCustomerEmail(token: string): Promise<string | undefined> 
 }
 
 /**
- * 注册 /api/latch-billing/* 路由。
+ * Registers the /api/latch-billing/* routes.
  *
- * @param app - http.ts 里创建的 Hono 实例；必须先于静态资源 catch-all 注册。
+ * @param app - The Hono instance created in http.ts; must be registered
+ * before the static-asset catch-all.
  */
 export function registerLatchBillingRoutes(app: Hono): void {
-  // 计划目录：公开（定价页未登录也要渲染），不涉及任何机密。
+  // Plan catalog: public (the pricing page renders signed-out too), no secrets.
   app.get("/api/latch-billing/config", (c) =>
     c.json(
       {
@@ -455,7 +482,8 @@ export function registerLatchBillingRoutes(app: Hono): void {
           creditCents: plan.creditCents,
           interval: plan.interval,
           currency: "usd",
-          // 文案口径：订阅含等额 gateway credit（'includes $14 / $99 of gateway credit'）。
+          // Copy line: each subscription includes an equal gateway credit
+          // ('includes $14 / $99 of gateway credit').
           creditLabel: `includes $${plan.creditCents / 100} of gateway credit`,
         })),
       },
@@ -464,7 +492,8 @@ export function registerLatchBillingRoutes(app: Hono): void {
     ),
   );
 
-  // 发起 Checkout：Bearer 为 Latch session token，邮箱从 customer-api /me 解析。
+  // Start a Checkout: the Bearer token is a Latch session token; the email is
+  // resolved from customer-api /me.
   app.post("/api/latch-billing/checkout", async (c) => {
     const secretKey = readStripeSecretKey();
     if (!secretKey) {
@@ -488,8 +517,9 @@ export function registerLatchBillingRoutes(app: Hono): void {
       return billingError(c, 401, "Sign in required");
     }
 
-    // metadata 同时写在 session 与 subscription 上：续期 invoice 只带 subscription 的
-    // metadata，webhook 靠它定位入账账户（estate checkout.ts 同款做法）。
+    // Metadata is written onto BOTH the session and the subscription: renewal
+    // invoices carry only the subscription's metadata, and the webhook uses it
+    // to locate the account to credit (same approach as estate checkout.ts).
     const latchMetadata = {
       [LATCH_META.kind]: "subscription",
       [LATCH_META.email]: email,
@@ -516,8 +546,9 @@ export function registerLatchBillingRoutes(app: Hono): void {
       body: form,
     });
     if (!result.ok) {
-      // payload 是宽型（T | {error}），`in` 收窄推不到 error.message；用显式类型的
-      // 局部变量读取 Stripe 错误文案，运行时行为不变。
+      // The payload is wide (T | {error}); `in` narrowing can't reach
+      // error.message — read Stripe's message through an explicitly typed
+      // local; runtime behavior unchanged.
       const errorPayload = result.payload as { error?: { message?: unknown } } | null;
       const message =
         typeof errorPayload === "object" &&
@@ -525,8 +556,9 @@ export function registerLatchBillingRoutes(app: Hono): void {
         typeof errorPayload.error?.message === "string"
           ? errorPayload.error.message
           : "Stripe checkout is unavailable";
-      // Stripe 自己的错误（400/402/429…）按原状态码与 message 透传；超时/不可达已在上层
-      // 折算成 504/502。
+      // Stripe's own errors (400/402/429…) pass through with the original
+      // status and message; timeout/unreachable already collapsed to 504/502
+      // upstream.
       return billingError(c, toBillingErrorStatus(result.status), message);
     }
     const sessionUrl = readText(metadataOf(result.payload)["url"]);
@@ -536,8 +568,10 @@ export function registerLatchBillingRoutes(app: Hono): void {
     return c.json({ url: sessionUrl }, 200, { "cache-control": "no-store" });
   });
 
-  // Stripe webhook：不验签名（API 建的端点按 founder 口径不持有签名密钥），改为
-  // 回查 GET /v1/events/:id —— 只处理回查到的事件，真实性来自这次 API 调用。
+  // Stripe webhook: no signature check (per the founder's constraint,
+  // API-created endpoints hold no signing secret). Instead the event is
+  // re-fetched via GET /v1/events/:id — only the fetched event is processed;
+  // authenticity comes from that API call.
   app.post("/api/latch-billing/webhook", async (c) => {
     const secretKey = readStripeSecretKey();
     if (!secretKey) {
@@ -545,7 +579,8 @@ export function registerLatchBillingRoutes(app: Hono): void {
     }
     const serviceToken = readEnvValue(LATCH_GATEWAY_SERVICE_TOKEN_ENV_KEY);
     if (!serviceToken) {
-      // 没有入账令牌时不能消费支付事件：回 5xx 让 Stripe 重试，而不是静默丢弃。
+      // Without the crediting token, payment events must not be consumed:
+      // return 5xx so Stripe retries rather than dropping them silently.
       return billingError(c, 503, "Latch billing is not configured");
     }
     const raw = await c.req.text().catch(() => "");
@@ -565,7 +600,8 @@ export function registerLatchBillingRoutes(app: Hono): void {
       method: "GET",
     });
     if (!fetched.ok) {
-      // 回查失败 = 事件不可信或 Stripe 不可达：一律 4xx/5xx 让 Stripe 重试。
+      // Fetch failure = the event is untrusted or Stripe is unreachable:
+      // return 4xx/5xx so Stripe retries.
       return billingError(c, 502, "Stripe event could not be verified");
     }
     const event = fetched.payload as Record<string, unknown>;
@@ -574,7 +610,7 @@ export function registerLatchBillingRoutes(app: Hono): void {
       return billingError(c, 400, "Stripe event could not be verified");
     }
     if (!markEventProcessed(eventId)) {
-      // 同一事件已在本次运行内处理过：直接确认，绝不二次入账。
+      // The event was already processed in this run: confirm it and never credit twice.
       return c.json({ received: true, outcome: "already-processed" }, 200, {
         "cache-control": "no-store",
       });
@@ -598,7 +634,8 @@ export function registerLatchBillingRoutes(app: Hono): void {
     if (creditResult.state === "unavailable") {
       return billingError(c, 502, creditResult.message);
     }
-    // plan 记录失败不回滚 credit：与 estate 一致，credit 先落账，plan 留给后续事件。
+    // A failed plan record does not roll back the credit: like the estate,
+    // credit lands first and the plan is left to a later event.
     if (outcome.plan) {
       await callGatewayServiceApi(serviceToken, "/plan", outcome.plan);
     }

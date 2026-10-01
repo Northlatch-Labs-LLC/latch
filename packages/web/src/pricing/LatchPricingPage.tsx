@@ -1,12 +1,17 @@
-// Latch 套餐页（第一方订阅入口，路由 /pricing）：套餐卡 + Stripe hosted Checkout 跳转。
-// 数据/契约见 latchBillingClient.ts；会话沿用 /signin 的浏览器本地 Latch 会话
-// （browserLatchAccountRepo）。设计要点：
-//   - 未登录：只给 "先去登录" CTA（/signin?return_to=/pricing…），登录后回跳原样续流程；
-//   - 已登录：点订阅 → POST /api/latch-billing/checkout（Bearer 会话 token）→ 整页跳转
-//     返回的 Stripe url；401 清掉过期会话回到登录提示；
-//   - ?checkout=success|cancelled：展示结果横幅，并经代理重打 /api/latch-account/me
-//     刷新账号状态（余额/套餐）；
-//   - ?plan=<id>（来自计费 seam 的 "选好套餐直达 checkout" 路径）：登录态下自动发起结账。
+// Latch plans page (first-party subscription entry, route /pricing): plan
+// cards + Stripe hosted Checkout redirect.
+// Data/contract in latchBillingClient.ts; the session is the browser-local
+// Latch session from /signin (browserLatchAccountRepo). Design notes:
+//   - Signed out: only a "sign in first" CTA (/signin?return_to=/pricing…);
+//     after login the flow resumes from the same spot.
+//   - Signed in: subscribe -> POST /api/latch-billing/checkout (Bearer
+//     session token) -> full-page redirect to the returned Stripe url; 401
+//     clears the stale session and falls back to the sign-in prompt;
+//   - ?checkout=success|cancelled: shows an outcome banner and re-fetches
+//     /api/latch-account/me through the proxy to refresh account state
+//     (balance/plan);
+//   - ?plan=<id> (the billing seam's "plan chosen, straight to checkout"
+//     path): starts checkout automatically when signed in.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2Icon, RocketIcon } from "lucide-react";
 import { Button } from "@zcode/ui";
@@ -44,7 +49,7 @@ function formatPlanPrice(locale: string, priceUsd: number): string {
   }).format(priceUsd);
 }
 
-/** balanceMicros 是 micro-USD；与设置页 LatchAccountSection 同一格式。 */
+/** balanceMicros is micro-USD; same format as the settings page's LatchAccountSection. */
 function formatBalanceUsd(locale: string, balanceMicros: number): string {
   return new Intl.NumberFormat(locale, {
     style: "currency",
@@ -67,17 +72,21 @@ export function LatchPricingPage() {
   const [outcome, setOutcome] = useState<"success" | "cancelled" | null>(null);
   const [pendingPlan, setPendingPlan] = useState<LatchBillingPlanId | null>(null);
   const [planError, setPlanError] = useState<string | null>(null);
-  // ?plan= 只在首帧解析一次：后续导航/回跳不再重复触发自动结账。
+  // ?plan= is parsed once on the first frame: later navigation/redirects do
+  // not retrigger the auto-checkout.
   const [autoPlan] = useState<LatchBillingPlanId | null>(() => {
     const plan = new URLSearchParams(window.location.search).get("plan");
     return isLatchBillingPlanId(plan) ? plan : null;
   });
 
-  // 会话与账号状态：每次进页都重打 /me（含 ?checkout= 回跳后的状态刷新）；401 清过期会话。
+  // Session + account status: /me is re-fetched on every page entry
+  // (including the state refresh after a ?checkout= redirect); 401 clears
+  // the stale session.
   useEffect(() => {
     const checkout = new URLSearchParams(window.location.search).get("checkout");
     setOutcome(isLatchCheckoutOutcome(checkout) ? checkout : null);
-    // 支付成功不让用户停在套餐页：短暂展示成功横幅后直接回工作区继续干活。
+    // A successful payment must not strand the user on the pricing page:
+    // show the success banner briefly, then return to the workspace.
     if (checkout === "success") {
       const redirect = window.setTimeout(() => window.location.assign("/"), 6000);
       return () => window.clearTimeout(redirect);
@@ -109,8 +118,9 @@ export function LatchPricingPage() {
     };
   }, []);
 
-  // 套餐面：服务端 /api/latch-billing/config 为准；拉取失败回落契约默认套餐，
-  // 保证 CTA 与结算入口不因一次 config 抖动整个不可用。
+  // Plan surface: the server's /api/latch-billing/config is the source of
+  // truth; on fetch failure fall back to the contract's default plans so a
+  // single config blip never takes the CTAs and checkout entry fully down.
   useEffect(() => {
     let cancelled = false;
     fetchLatchBillingConfig()
@@ -136,7 +146,8 @@ export function LatchPricingPage() {
       setPlanError(null);
       try {
         const { url } = await createLatchBillingCheckout(planId, activeSession.token);
-        // Stripe hosted Checkout：整页离开，成功/取消由 /pricing?checkout=… 接住。
+        // Stripe hosted Checkout: leaves the page entirely; success/cancel
+        // is caught by /pricing?checkout=….
         window.location.assign(url);
       } catch (error: unknown) {
         if (error instanceof LatchBillingCheckoutError) {
@@ -163,8 +174,9 @@ export function LatchPricingPage() {
     [copy],
   );
 
-  // ?plan= 自动结账：会话与套餐面就绪后发起一次；未登录时不自动跳，
-  // 登录 CTA 的 return_to 会带上 plan 参数，登录回来接着走这一步。
+  // ?plan= auto-checkout: starts once, when session + plan surface are ready;
+  // when signed out it never auto-redirects — the sign-in CTA's return_to
+  // carries the plan param so the flow resumes here after login.
   useEffect(() => {
     if (autoCheckoutStartedRef.current || !autoPlan || !sessionChecked || !config) {
       return;
