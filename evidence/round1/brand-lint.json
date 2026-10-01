@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-30T21:42:47.333Z",
+  "generatedAt": "2026-10-01T05:21:37.540Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -61,16 +61,16 @@
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7114,
-    "filesWithOccurrences": 3010,
-    "totalOccurrences": 31259,
+    "filesScanned": 7182,
+    "filesWithOccurrences": 3017,
+    "totalOccurrences": 31286,
     "byTerm": {
-      "ZCode": 28108,
-      "Z.ai": 204,
+      "ZCode": 28120,
+      "Z.ai": 211,
       "GLM": 877,
-      "bigmodel": 1897,
+      "bigmodel": 1904,
       "zhipu": 163,
-      "client_P8X5CMWmlaRO9gyO-KSqtg": 10
+      "client_P8X5CMWmlaRO9gyO-KSqtg": 11
     },
     "rootReadme": {
       "file": "README.md",
@@ -7779,6 +7779,16 @@
         "total": 14
       },
       {
+        "file": "deploy/web/README.md",
+        "counts": {
+          "ZCode": 5,
+          "Z.ai": 4,
+          "bigmodel": 6,
+          "client_P8X5CMWmlaRO9gyO-KSqtg": 1
+        },
+        "total": 16
+      },
+      {
         "file": "evidence/fp0/edit-pass-1.md",
         "counts": {
           "ZCode": 15,
@@ -7808,6 +7818,28 @@
         "file": "evidence/g2/slice2-rebrand.txt",
         "counts": {
           "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "evidence/qa-live/cta2.mjs",
+        "counts": {
+          "Z.ai": 1,
+          "bigmodel": 1
+        },
+        "total": 2
+      },
+      {
+        "file": "evidence/qa-live/dbg-zai.mjs",
+        "counts": {
+          "Z.ai": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "evidence/qa-live/post-qa.mjs",
+        "counts": {
+          "Z.ai": 1
         },
         "total": 1
       },
@@ -9864,6 +9896,13 @@
       },
       {
         "file": "packages/server/src/latchAccountProxy.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "packages/server/src/latchBilling.ts",
         "counts": {
           "ZCode": 1
         },
@@ -16476,6 +16515,13 @@
         "total": 2
       },
       {
+        "file": "packages/ui/src/lib/latchBillingNavigation.ts",
+        "counts": {
+          "ZCode": 4
+        },
+        "total": 4
+      },
+      {
         "file": "packages/ui/src/lib/latchGatewayQuotaError.ts",
         "counts": {
           "ZCode": 10
@@ -20941,6 +20987,13 @@
         "total": 17
       },
       {
+        "file": "packages/web/src/pricing/LatchPricingPage.tsx",
+        "counts": {
+          "ZCode": 2
+        },
+        "total": 2
+      },
+      {
         "file": "packages/web/src/share/ConversationShareLandingPage.tsx",
         "counts": {
           "ZCode": 20,
@@ -21513,6 +21566,42 @@
       "apps/zcode-cli/packages/dynamic-workflow/src/analysis/artifacts.ts",
       "apps/zcode-cli/packages/dynamic-workflow/src/analysis/causality-reduce.ts",
       "apps/zcode-cli/packages/dynamic-workflow/src/analysis/handoff-graph.ts",
+      "evidence/qa-live/evidence/qa-live/pay-fail-page.png",
+      "evidence/qa-live/post-01-signin-landing.png",
+      "evidence/qa-live/post-02-signup-mode.png",
+      "evidence/qa-live/post-03-workspace-after-signup.png",
+      "evidence/qa-live/post-04-workspace-after-reload.png",
+      "evidence/qa-live/post-05-after-signout.png",
+      "evidence/qa-live/post-05-connect-menu-signedin.png",
+      "evidence/qa-live/post-06-after-login.png",
+      "evidence/qa-live/post-07-after-login-reload.png",
+      "evidence/qa-live/post-08-connect-menu.png",
+      "evidence/qa-live/post-08-upgrade-cta-destination.png",
+      "evidence/qa-live/post-09-pricing.png",
+      "evidence/qa-live/post-10-settings-latch-section.png",
+      "evidence/qa-live/post-11-stripe-checkout.png",
+      "evidence/qa-live/post-15-message-sent.png",
+      "evidence/qa-live/post-16-zai-control.png",
+      "evidence/qa-live/post-17-zai-authorize.png",
+      "evidence/qa-live/qa-01-landing.png",
+      "evidence/qa-live/qa-02-connect-dropdown.png",
+      "evidence/qa-live/qa-03-signin-page.png",
+      "evidence/qa-live/qa-04-signup-mode.png",
+      "evidence/qa-live/qa-05-signup-validation.png",
+      "evidence/qa-live/qa-06-after-signup-typed.png",
+      "evidence/qa-live/qa-06-after-signup.png",
+      "evidence/qa-live/qa-08-signup-final.png",
+      "evidence/qa-live/qa-09-wrong-password.png",
+      "evidence/qa-live/qa-10-already-exists.png",
+      "evidence/qa-live/qa-11-signin-success.png",
+      "evidence/qa-live/qa-12-after-reload.png",
+      "evidence/qa-live/qa-13-after-signout.png",
+      "evidence/qa-live/qa-14-connect-menu.png",
+      "evidence/qa-live/qa-15-upgrade-click-result.png",
+      "evidence/qa-live/qa-15-upgrade-dialog.png",
+      "evidence/qa-live/qa-16-settings.png",
+      "evidence/qa-live/qa-18-share-landing.png",
+      "evidence/qa-live/qa-19-latch-account-section.png",
       "packages/desktop/build/dmg_background.png",
       "packages/desktop/build/dmg_background@2x.png",
       "packages/desktop/build/icon.icns",
