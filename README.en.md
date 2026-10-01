@@ -3,7 +3,7 @@
 </div>
 
 <p align="center">
-  <a href="https://latch.gridframes.app"><strong>NORTHLATCH · LATCH</strong></a>
+  <a href="https://github.com/Northlatch-Labs-LLC/latch"><strong>NORTHLATCH · LATCH</strong></a>
 </p>
 <p align="center">
   One key, metered per call. Every model call flows through the Northlatch gateway.
@@ -14,11 +14,22 @@
 
 ## What is Latch
 
-Latch is the AI coding harness from [Northlatch Labs](https://latch.gridframes.app): one coding agent in three shapes — a desktop app, web + server, and a terminal agent (TUI / CLI). This repository contains the clients, the backend services, the shared UI, and the agent CLI and runtime sources.
+Latch is the AI coding harness from [Northlatch Labs](https://github.com/Northlatch-Labs-LLC/latch): one coding agent in three shapes — a desktop app, web + server, and a terminal agent (TUI / CLI). This repository contains the clients, the backend services, the shared UI, and the agent CLI and runtime sources.
 
 - **Metered gateway**: every model call flows through the [Xlaunch Gateway](https://gateway.xlaunch.work) with one unified Latch gateway key, metered and priced per call; usage lives at [gateway.xlaunch.work/usage](https://gateway.xlaunch.work/usage).
 - **Built-in models**: the gateway ships two built-in models, `auto` and `fusion` (see [config/provider/zcode-builtin.json](config/provider/zcode-builtin.json)); other model vendors can be attached as user-configured custom providers.
 - **Sign-in is the key**: the first-party sign-in is the Latch gateway key — no separate vendor accounts required.
+
+## Architecture
+
+Desktop, web, and terminal — three shapes over one metered gateway and one server-side billing stack:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/latch-architecture.visual-check.1440x900.dark.png">
+  <img src="docs/latch-architecture.visual-check.1440x900.light.png" alt="Latch architecture diagram" width="720">
+</picture>
+
+Interactive version: [docs/latch-architecture.html](docs/latch-architecture.html). Every key edge is annotated with its repository source evidence (revision f298e08); the composition passed structural validation (9/9, showcase profile) and browser verification (4 viewports, readability).
 
 ## Install
 
@@ -66,4 +77,4 @@ Every shape shares the same gateway key and the same metering ledger. Usage, cos
 
 ## Fork provenance
 
-Latch is the productized fork maintained by [Northlatch Labs](https://latch.gridframes.app), based on upstream [zai-org/ZCode](https://github.com/zai-org/ZCode) v3.14.3, licensed under the **Apache License 2.0** with modifications (see [LICENSE](LICENSE)). The upstream project's own notices are preserved unmodified in [NOTICE.md](NOTICE.md), this fork's derivation and responsible party are recorded in [NOTICE](NOTICE), and third-party component notices live in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+Latch is the productized fork maintained by [Northlatch Labs](https://github.com/Northlatch-Labs-LLC/latch), based on upstream [zai-org/ZCode](https://github.com/zai-org/ZCode) v3.14.3, licensed under the **Apache License 2.0** with modifications (see [LICENSE](LICENSE)). The upstream project's own notices are preserved unmodified in [NOTICE.md](NOTICE.md), this fork's derivation and responsible party are recorded in [NOTICE](NOTICE), and third-party component notices live in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

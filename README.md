@@ -3,7 +3,7 @@
 </div>
 
 <p align="center">
-  <a href="https://latch.gridframes.app"><strong>NORTHLATCH · LATCH</strong></a>
+  <a href="https://github.com/Northlatch-Labs-LLC/latch"><strong>NORTHLATCH · LATCH</strong></a>
 </p>
 <p align="center">
   一把密钥，逐次计量。每一次模型调用都经由 Northlatch 网关。
@@ -14,11 +14,22 @@
 
 ## Latch 是什么
 
-Latch 是 [Northlatch Labs](https://latch.gridframes.app) 的 AI 编程 harness：一个编码 Agent，同时提供三种形态——桌面应用、Web + 服务端，以及终端 Agent（TUI / CLI）。本仓库包含客户端、后端服务、共享 UI，以及 Agent CLI 与运行时源码。
+Latch 是 [Northlatch Labs](https://github.com/Northlatch-Labs-LLC/latch) 的 AI 编程 harness：一个编码 Agent，同时提供三种形态——桌面应用、Web + 服务端，以及终端 Agent（TUI / CLI）。本仓库包含客户端、后端服务、共享 UI，以及 Agent CLI 与运行时源码。
 
 - **计量网关**：每一次模型调用都经由 [Xlaunch Gateway](https://gateway.xlaunch.work) 转发，使用一把统一的 Latch 网关密钥，逐次计量与计价，用量在 [gateway.xlaunch.work/usage](https://gateway.xlaunch.work/usage) 查看。
 - **内置模型**：网关内置 `auto` 与 `fusion` 两个模型（见 [config/provider/zcode-builtin.json](config/provider/zcode-builtin.json)）；其他模型商可作为用户自配的自定义供应商接入。
 - **登录即密钥**：第一方登录方式是 Latch 网关密钥；无需注册多个模型商账号。
+
+## 架构
+
+桌面、Web 与终端三种形态，经由同一计量网关与同一服务端计费栈：
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/latch-architecture.visual-check.1440x900.dark.png">
+  <img src="docs/latch-architecture.visual-check.1440x900.light.png" alt="Latch 架构图" width="720">
+</picture>
+
+交互式架构图：[docs/latch-architecture.html](docs/latch-architecture.html)。图中每一处关键路径都标注了仓库源码依据（修订 f298e08），构图通过结构校验（9/9，showcase 级）与浏览器验证（4 个视口、可读性）。
 
 ## 安装
 
@@ -66,4 +77,4 @@ Latch 的数据主目录是 `~/.latch`：网关密钥、会话、配置与日志
 
 ## Fork 说明（provenance）
 
-Latch 是 [Northlatch Labs](https://latch.gridframes.app) 维护的产品化 fork，基于上游 [zai-org/ZCode](https://github.com/zai-org/ZCode) v3.14.3，依照 **Apache License 2.0** 授权并带有修改（见 [LICENSE](LICENSE)）。上游项目自身的声明完整保留在 [NOTICE.md](NOTICE.md)，本 fork 的派生关系与责任方记录在 [NOTICE](NOTICE)，第三方组件声明见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。
+Latch 是 [Northlatch Labs](https://github.com/Northlatch-Labs-LLC/latch) 维护的产品化 fork，基于上游 [zai-org/ZCode](https://github.com/zai-org/ZCode) v3.14.3，依照 **Apache License 2.0** 授权并带有修改（见 [LICENSE](LICENSE)）。上游项目自身的声明完整保留在 [NOTICE.md](NOTICE.md)，本 fork 的派生关系与责任方记录在 [NOTICE](NOTICE)，第三方组件声明见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。

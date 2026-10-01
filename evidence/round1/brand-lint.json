@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-10-01T05:21:37.540Z",
+  "generatedAt": "2026-10-01T08:37:39.057Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -61,16 +61,16 @@
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7182,
+    "filesScanned": 7184,
     "filesWithOccurrences": 3017,
-    "totalOccurrences": 31286,
+    "totalOccurrences": 31297,
     "byTerm": {
-      "ZCode": 28120,
-      "Z.ai": 211,
+      "ZCode": 28124,
+      "Z.ai": 215,
       "GLM": 877,
-      "bigmodel": 1904,
+      "bigmodel": 1906,
       "zhipu": 163,
-      "client_P8X5CMWmlaRO9gyO-KSqtg": 11
+      "client_P8X5CMWmlaRO9gyO-KSqtg": 12
     },
     "rootReadme": {
       "file": "README.md",
@@ -7846,14 +7846,14 @@
       {
         "file": "evidence/round1/brand-lint.json",
         "counts": {
-          "ZCode": 4224,
-          "Z.ai": 63,
+          "ZCode": 4228,
+          "Z.ai": 67,
           "GLM": 111,
-          "bigmodel": 185,
+          "bigmodel": 187,
           "zhipu": 39,
-          "client_P8X5CMWmlaRO9gyO-KSqtg": 7
+          "client_P8X5CMWmlaRO9gyO-KSqtg": 8
         },
-        "total": 4629
+        "total": 4640
       },
       {
         "file": "evidence/round1/dependency-audit.json",
