@@ -1,8 +1,8 @@
 import {
   createContext,
   useCallback,
-  useEffect,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -18,7 +18,6 @@ import {
   type CodingPlanEntryInventory,
 } from "@/hooks/useCodingPlanEntryPlanList.js";
 import { usePlatform } from "@/hooks/usePlatform.js";
-import { reportCodingPlanUpgradeClick } from "@/lib/codingPlanFunnelTelemetry.js";
 import { isWebRuntime, openLatchBillingEntry } from "@/lib/latchBillingNavigation.js";
 
 interface CodingPlanUpgradeDialogContextValue {
@@ -36,8 +35,6 @@ const CodingPlanUpgradeDialogContext = createContext<CodingPlanUpgradeDialogCont
 export function CodingPlanUpgradeDialogProvider({ children }: { children: ReactNode }) {
   const platform = usePlatform();
   const inventory = useCodingPlanEntryPlanList();
-  const inventoryRef = useRef(inventory);
-  inventoryRef.current = inventory;
   const [target, setTarget] = useState<CodingPlanUpgradeDialogTarget | undefined>(undefined);
   const [openVersion, setOpenVersion] = useState(0);
   const opening = useRef<((opened: boolean) => void) | null>(null);
@@ -45,55 +42,24 @@ export function CodingPlanUpgradeDialogProvider({ children }: { children: ReactN
   useEffect(() => () => opening.current?.(false), []);
   const openCodingPlanUpgrade = useCallback(
     (
-      nextTarget: CodingPlanUpgradeDialogTarget,
+      _nextTarget: CodingPlanUpgradeDialogTarget,
       observation?: { signal: AbortSignal; onResult: (opened: boolean) => void },
     ) => {
-      // 所有入口统一守卫；查询完成后不自动重放之前被拦截的点击。
-      const { status, entryPlanList } = inventoryRef.current;
       if (observation?.signal.aborted) return false;
-      // Web 端没有 Electron <webview>：升级入口统一改走 Latch 计费 seam（已登录进
-      // /pricing，未登录先 /signin）。这里必须在挂载弹窗之前分流，否则浏览器里会
-      // 渲染一个空白的 "Upgrade Plan" 对话框（webview 标签不存在，loadError 兜底
-      // 也永远不触发）。桌面行为保持不变。
+      // The web app has no Electron <webview>: every upgrade entry routes through the
+      // Latch billing seam instead (signed-in users go to /pricing, signed-out users
+      // go to /signin first). The split has to happen before mounting the dialog,
+      // otherwise the browser renders a blank "Upgrade Plan" dialog (the webview tag
+      // does not exist and the loadError fallback never fires).
       if (isWebRuntime()) {
         openLatchBillingEntry({ platform, intent: "purchase" });
         return true;
       }
-      // 桌面端同样不再打开供应商套餐 webview：Latch 订阅（$14/月、$99/年）统一在
-      // Latch pricing 页完成，系统浏览器打开，供应商内嵌升级弹窗整体退役。
+      // Desktop no longer opens the provider plan webview either: Latch subscriptions
+      // ($14/month, $99/year) complete on the Latch pricing page in the system
+      // browser, and the embedded provider upgrade dialog is retired as a whole.
       openLatchBillingEntry({ platform, intent: "purchase" });
       observation?.onResult(true);
-      return true;
-      if (status !== "ready") {
-        if (observation && status === "error") inventoryRef.current.retry();
-        return false;
-      }
-      opening.current?.(false);
-      if (observation) {
-        const finish = (opened: boolean) => {
-          if (opening.current !== finish) return;
-          opening.current = null;
-          observation.signal.removeEventListener("abort", abort);
-          if (!opened) setTarget(undefined);
-          observation.onResult(opened);
-        };
-        const abort = () => finish(false);
-        opening.current = finish;
-        observation.signal.addEventListener("abort", abort, { once: true });
-      }
-      // 原入口只携带当前卡片的套餐；在点击时冻结全连接列表，App 与 WebView 共用同一快照。
-      nextTarget = nextTarget.funnelContext
-        ? {
-            ...nextTarget,
-            funnelContext: { ...nextTarget.funnelContext, entryPlanList },
-          }
-        : nextTarget;
-      if (nextTarget.funnelContext) {
-        void reportCodingPlanUpgradeClick(platform, nextTarget.funnelContext);
-      }
-      setTarget(nextTarget);
-      // 每次显式打开隔离旧 webview 事件，旧 dom-ready 不能确认新的观察请求。
-      setOpenVersion((version) => version + 1);
       return true;
     },
     [platform],
@@ -131,7 +97,8 @@ export function useCodingPlanUpgradeDialog() {
 }
 
 /**
- * 可独立挂载的 conversation pane 使用可选上下文；完整 App Root 仍会注入真实购买面板。
+ * A conversation pane that can be mounted standalone uses the optional context;
+ * the full app root still injects the real purchase panel.
  */
 export function useOptionalCodingPlanUpgradeDialog() {
   return useContext(CodingPlanUpgradeDialogContext);
