@@ -11,7 +11,7 @@ on:
 
 jobs:
   ci:
-    name: CI (brand-lint, audit, product tests, build, typecheck, lint)
+    name: CI (brand-lint, audit, product tests, server/account/billing tests, build, typecheck, lint)
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -39,6 +39,11 @@ jobs:
 
       - name: Product tests
         run: pnpm run test:product
+
+      # Server + account + billing regression gate: latchBilling routes (Stripe
+      # mocked), the gateway account client, and the quota error classifier.
+      - name: Server, account, and billing tests
+        run: pnpm run test:server
 
       # The repo's tsc -b resolves @zcode/* subpaths through built dist output,
       # so the workspace packages must be built before typecheck can see them.

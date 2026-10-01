@@ -48,7 +48,8 @@
     "architecture:baseline:update": "node scripts/architecture/architecture-check.mjs baseline:update",
     "architecture:context": "node scripts/architecture/architecture-check.mjs context",
     "doctor": "node scripts/latch-doctor.mjs",
-    "latch": "node scripts/latch.mjs"
+    "latch": "node scripts/latch.mjs",
+    "test:server": "tsx --test packages/server/test/*.test.ts packages/services/test/latch-account.test.ts packages/ui/test/latchGatewayQuotaError.test.ts"
   },
   "dependencies": {
     "border-beam": "^1.0.1",
