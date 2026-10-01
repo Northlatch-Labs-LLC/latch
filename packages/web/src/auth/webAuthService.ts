@@ -85,9 +85,14 @@ export class WebAuthService {
 
   startLogin(options: WebAuthLoginOptions = {}): void {
     const provider = options.provider ?? ZAI_PROVIDER_ID;
-    // Z.ai web OAuth 仅在显式配置（VITE_ZAI_OAUTH_CLIENT_ID / VITE_ZAI_OAUTH_ORIGIN）时可用；
-    // 未配置时拒绝发起，不落任何 pending 登录状态，也不构造授权跳转。
-    if (provider !== BIGMODEL_PROVIDER_ID && !this.config.zaiWebOAuthConfigured) {
+    // vendor web OAuth 只在显式配置时可用：Z.ai 看 VITE_ZAI_OAUTH_CLIENT_ID /
+    // VITE_ZAI_OAUTH_ORIGIN，BigModel 看 VITE_BIGMODEL_OAUTH_ORIGIN。未配置时拒绝
+    // 发起，不落任何 pending 登录状态，也不构造授权跳转（绝不借生产 origin 兜底）。
+    if (provider === BIGMODEL_PROVIDER_ID) {
+      if (!this.config.bigmodelWebOAuthConfigured) {
+        throw new Error("BigModel web OAuth is not configured");
+      }
+    } else if (!this.config.zaiWebOAuthConfigured) {
       throw new Error("Z.ai web OAuth is not configured");
     }
     const nonce = this.runtime.createNonce();

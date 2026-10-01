@@ -10,15 +10,7 @@ import type { LatchAccountPlanId, LatchAccountStatusSummary } from "@zcode/servi
 import { TID_SIDEBAR_LATCH_USAGE_CHIP } from "@zcode/shared";
 import { useZCodeIntl } from "@/i18n/IntlProvider.js";
 import { useLatchAccountStatusSummary } from "@/hooks/useLatchAccountStatusSummary.js";
-
-/** 余额展示：≥$0.01 保留两位小数；正但不足一分钱时显示 <$0.01，避免被舍入成“已耗尽”。 */
-export function formatLatchBalanceUsd(balanceMicros: number): string {
-  const usd = balanceMicros / 1_000_000;
-  if (usd > 0 && usd < 0.01) {
-    return "<$0.01";
-  }
-  return `$${usd.toFixed(2)}`;
-}
+import { formatLatchBalanceUsd } from "@/lib/latchBalanceFormat.js";
 
 function latchPlanLabelId(plan: LatchAccountPlanId | undefined): string {
   switch (plan) {

@@ -1,15 +1,13 @@
 // 设置页「Latch 账号」分区：展示 gateway customer-api 的登录态摘要
 // （email / 套餐 / 余额，来自 latchAccountStatusSummary），提供「管理账单」外链与退出登录。
 // 退出只销毁 Latch 账号会话；已接线的 xlaunch-gateway provider 保持原样（key 仍可用）。
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  DEFAULT_LATCH_ACCOUNT_MANAGE_URL,
   clearLatchAccountSession,
   invalidateLatchAccountStatusSummary,
   latchAccountStatusSummary,
   latchLogout,
   loadLatchAccountSession,
-  resolveLatchAccountManageUrl,
   type LatchAccountStatusSummary,
 } from "@zcode/services";
 import { ExternalLinkIcon, Loader2Icon, RefreshCwIcon } from "lucide-react";
@@ -25,6 +23,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.js";
 import { usePlatform } from "@/hooks/usePlatform.js";
+import { openLatchBillingEntry } from "@/lib/latchBillingNavigation.js";
 import { useServices } from "@/hooks/useServices.js";
 import { useZCodeIntl } from "@/i18n/IntlProvider.js";
 import { isLatchIdentityUser } from "@/login/latchAccountIdentity.js";
@@ -94,17 +93,10 @@ export function LatchAccountSection() {
     void loadSummary();
   }, [loadSummary]);
 
-  const manageUrl = useMemo(() => {
-    try {
-      return resolveLatchAccountManageUrl();
-    } catch {
-      // LATCH_ACCOUNT_MANAGE_URL 配置了非法值时回落产品默认域，不能让设置分区崩掉。
-      return DEFAULT_LATCH_ACCOUNT_MANAGE_URL;
-    }
-  }, []);
-
   const handleManageBilling = () => {
-    platform.openExternal(manageUrl);
+    // 管理账单入口统一走 seam：桌面 openExternal 账户页；Web 端应用内 /pricing
+    //（本按钮只在已登录时渲染，seam 的 Web 登录判定会命中）。
+    openLatchBillingEntry({ platform, intent: "manage" });
   };
 
   const handleSignOut = async () => {

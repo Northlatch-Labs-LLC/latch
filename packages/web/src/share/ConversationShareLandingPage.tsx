@@ -9,7 +9,6 @@ import {
   type MouseEvent,
 } from "react";
 import { ArrowUpRightIcon, MoonIcon, SunIcon } from "lucide-react";
-import { BIGMODEL_PROVIDER_ID, ZAI_PROVIDER_ID } from "@zcode/shared";
 import type { ConversationSharePreview } from "@zcode/shared";
 import { ConversationShareReadonlyTimeline } from "@zcode/ui/conversation-share-readonly";
 import { renderOAuthProviderIcon } from "@zcode/ui/oauth-provider-icon";
@@ -22,12 +21,6 @@ import {
   type ConversationSharePreviewErrorKind,
 } from "./conversationSharePreviewClient.js";
 import { resolveShareHeaderView, type ShareHeaderView } from "./shareHeaderLayout.js";
-
-/** 登录入口的展示顺序，与桌面端登录卡片一致（Latch 网关在上）。 */
-const SHARE_LOGIN_PROVIDERS: readonly WebOAuthProviderId[] = [
-  ZAI_PROVIDER_ID,
-  BIGMODEL_PROVIDER_ID,
-];
 
 type ConversationShareLandingLocale = "zh-CN" | "en-US";
 type ConversationShareLandingState =
@@ -110,8 +103,7 @@ const COPY: Record<ConversationShareLandingLocale, Copy> = {
     expiredDescription: "这个分享链接已经过期，请让分享者重新生成链接。",
     notFoundTitle: "找不到分享内容",
     notFoundDescription: "链接可能无效、分享已被移除，或当前登录账号无法访问。",
-    notFoundAccountHint:
-      "不同登录平台的账号数据不互通。请检查是否选错了登录平台或使用了其他账号。",
+    notFoundAccountHint: "不同登录平台的账号数据不互通。请检查是否选错了登录平台或使用了其他账号。",
     backToHome: "回到首页",
     networkTitle: "暂时无法加载分享",
     networkDescription: "请检查网络后重试。",
@@ -588,7 +580,7 @@ export function ConversationShareLandingStatus({
   locale,
   onLogin,
   onLatchAccountLogin,
-  vendorLoginEnabled = false,
+  vendorLoginProviders = [],
   onRetry,
 }: {
   state: Exclude<ConversationShareLandingState, { kind: "ready" }>;
@@ -596,8 +588,12 @@ export function ConversationShareLandingStatus({
   onLogin?: (provider: WebOAuthProviderId) => void;
   /** 第一方登录入口（/signin）：未提供时不渲染该按钮。 */
   onLatchAccountLogin?: () => void;
-  /** vendor web OAuth 仅在显式配置时作为回退入口展示；未配置时整组隐藏（不渲染）。 */
-  vendorLoginEnabled?: boolean;
+  /**
+   * 可用的 vendor web OAuth 登录 provider，逐个按配置判定（Z.ai 看 client id + origin，
+   * BigModel 看 VITE_BIGMODEL_OAUTH_ORIGIN）；列表为空时整组隐藏（不渲染），
+   * 与「点击后才报错」相比，未配置的入口必须先从 UI 上消失。
+   */
+  vendorLoginProviders?: readonly WebOAuthProviderId[];
   onRetry?: () => void;
 }) {
   const copy = COPY[localeOf(locale)];
@@ -653,7 +649,7 @@ export function ConversationShareLandingStatus({
           时整组 vendor 按钮不渲染（而不是点击后才报错），配置了才按原样式排在第一方
           入口之后。
         */}
-        {showLogin && (onLatchAccountLogin || (onLogin && vendorLoginEnabled)) ? (
+        {showLogin && (onLatchAccountLogin || (onLogin && vendorLoginProviders.length > 0)) ? (
           <div className="mt-5 space-y-2">
             {onLatchAccountLogin ? (
               <button
@@ -666,12 +662,13 @@ export function ConversationShareLandingStatus({
               </button>
             ) : null}
             {/*
-              两个 provider 竖排全宽，对齐桌面端登录卡片（图标 + 文案 + 区域徽标）。
-              必须两个都给：private 分享的 owner 身份是 provider 特定的，页面无法预先知道
-              这份分享属于哪一边——猜错就等于把用户挡在自己的分享外面。
+              可用 provider 竖排全宽，对齐桌面端登录卡片（图标 + 文案 + 区域徽标）。
+              配置了的都要给：private 分享的 owner 身份是 provider 特定的，页面无法预先知道
+              这份分享属于哪一边——猜错就等于把用户挡在自己的分享外面。未配置的 provider
+              不渲染（vendorLoginProviders 由宿主按 webZaiOAuthConfig 逐个判定）。
             */}
-            {vendorLoginEnabled && onLogin
-              ? SHARE_LOGIN_PROVIDERS.map((provider) => (
+            {vendorLoginProviders.length > 0 && onLogin
+              ? vendorLoginProviders.map((provider) => (
                   <button
                     key={provider}
                     type="button"
@@ -721,7 +718,7 @@ export function ConversationShareLandingLoader({
   getAccessToken,
   onLogin,
   onLatchAccountLogin,
-  vendorLoginEnabled = false,
+  vendorLoginProviders = [],
   onLogout,
   locale,
   theme,
@@ -733,7 +730,8 @@ export function ConversationShareLandingLoader({
   getAccessToken?: () => string | null;
   onLogin?: (provider: WebOAuthProviderId) => void;
   onLatchAccountLogin?: () => void;
-  vendorLoginEnabled?: boolean;
+  /** 可用的 vendor 登录 provider（按配置逐个判定，见 ConversationShareLandingStatus）。 */
+  vendorLoginProviders?: readonly WebOAuthProviderId[];
   onLogout?: () => void;
   locale?: ConversationShareLandingLocale;
   theme?: Theme;
@@ -800,7 +798,7 @@ export function ConversationShareLandingLoader({
       locale={locale}
       onLogin={onLogin}
       onLatchAccountLogin={onLatchAccountLogin}
-      vendorLoginEnabled={vendorLoginEnabled}
+      vendorLoginProviders={vendorLoginProviders}
       onRetry={() => void load()}
     />
   );

@@ -74,13 +74,13 @@
     "@types/yazl": "^3.3.1",
     "@vitejs/plugin-react": "^6.0.1",
     "electron": "41.0.3",
-    "electron-builder": "^26.8.1",
+    "electron-builder": "^26.15.0",
     "http-mitm-proxy": "^1.1.0",
     "istanbul-lib-instrument": "^6.0.3",
     "tailwindcss": "^4.2.2",
     "tsup": "^8.5.0",
     "typescript": "^6.0.2",
-    "vite": "^8.0.2"
+    "vite": "^8.0.16"
   },
   "productName": "Latch"
 }

@@ -14,6 +14,8 @@ import {
 } from "@zcode/shared";
 import type { ProviderSettingsFormProvider } from "@/lib/providerSettingsFormTypes.js";
 import { getProviderFormLabel } from "@/lib/providerSettingsFormTypes.js";
+// Latch 状态卡的"管理"外链与计费 seam 共用同一常量，openExternal 调用点靠它识别接管。
+import { LATCH_GATEWAY_USAGE_URL } from "@/lib/latchBillingNavigation.js";
 
 export function generateId(): string {
   return createUuid();
@@ -80,14 +82,14 @@ export const CODING_PLAN_PROVIDER_SPECS: CodingPlanProviderSpec[] = [
     oauthProviderId: ZAI_PROVIDER_ID,
     label: "Latch - Coding Plan",
     providerName: "Z.ai",
-    purchaseUrl: "https://gateway.xlaunch.work/usage", // Latch subscription: managed on the Xlaunch Gateway estate
+    purchaseUrl: LATCH_GATEWAY_USAGE_URL, // Latch subscription: managed on the Xlaunch Gateway estate
   },
   {
     id: BUILTIN_MODEL_PROVIDER_IDS.zaiIndividualCodingPlan,
     oauthProviderId: ZAI_PROVIDER_ID,
     label: "Latch - Coding Plan",
     providerName: "Z.ai",
-    purchaseUrl: "https://gateway.xlaunch.work/usage", // Latch subscription: managed on the Xlaunch Gateway estate
+    purchaseUrl: LATCH_GATEWAY_USAGE_URL, // Latch subscription: managed on the Xlaunch Gateway estate
   },
   {
     id: BUILTIN_MODEL_PROVIDER_IDS.bigmodelIndividualCodingPlan,

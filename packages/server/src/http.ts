@@ -40,6 +40,7 @@ import {
 } from "@zcode/shared";
 import { connectRemote, createRemoteBackend, type RemoteConnection } from "./remote/index.js";
 import { registerLatchAccountProxyRoutes } from "./latchAccountProxy.js";
+import { registerLatchBillingRoutes } from "./latchBilling.js";
 import { createHostCapabilityStore } from "./hostCapability.js";
 
 function wrapWebSocket(ws: WebSocket): ISocket {
@@ -418,6 +419,10 @@ export function createHttpServer(
   // Latch 账号（第一方登录）同源代理：/api/latch-account/* 转发到 gateway customer-api。
   // 注册在静态资源 catch-all 之前；token 鉴权中间件（若配置）已覆盖全部 /api/* 路径。
   registerLatchAccountProxyRoutes(app);
+
+  // Latch 自有订阅计费（Stripe test 起步）：/api/latch-billing/*，注册在静态资源
+  // catch-all 之前；token 鉴权中间件（若配置）已覆盖全部 /api/* 路径。
+  registerLatchBillingRoutes(app);
 
   // 远程连接的 WebSocket 端点，将远程 services 桥接给浏览器
   app.get(

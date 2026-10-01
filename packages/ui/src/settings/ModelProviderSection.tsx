@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button.js";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog.js";
 import { useModelProviders } from "@/hooks/useModelProviders.js";
 import { resolveEntitledAccountProviderAccess } from "@/lib/accountProviderAccess.js";
+import { openExternalOrLatchBilling } from "@/lib/latchBillingNavigation.js";
 import { usePlatform } from "@/hooks/usePlatform.js";
 import { useServices } from "@/hooks/useServices.js";
 import { useZCodeStore } from "@/store/StoreProvider.js";
@@ -777,6 +778,11 @@ export function ModelProviderSection({
     (url: string) => {
       const normalizedUrl = url.trim();
       if (!normalizedUrl) {
+        return;
+      }
+      // Latch 计费外链（账户页 / gateway 用量页）走环境感知 seam：Web 端进应用内
+      // /pricing（未登录先 /signin），桌面保持 openExternal。其余供应商外链原样放行。
+      if (openExternalOrLatchBilling(normalizedUrl, platform)) {
         return;
       }
       platform.openExternal(normalizedUrl);

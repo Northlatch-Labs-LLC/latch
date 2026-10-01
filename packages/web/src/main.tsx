@@ -13,6 +13,7 @@ import "@zcode/ui/styles.css";
 import { connectViaWebSocket } from "@zcode/client";
 import { WebCallbackPage } from "./auth/WebCallbackPage.js";
 import { LatchSignInPage } from "./auth/LatchSignInPage.js";
+import { LatchPricingPage } from "./pricing/LatchPricingPage.js";
 import { createWebAuthService } from "./auth/webAuthService.js";
 import { WEB_ZAI_OAUTH_CONFIG, resolveWebAuthDevReturnTo } from "./auth/webZaiOAuthConfig.js";
 import { parseOAuthState, resolveSafeAppReturnTo } from "./auth/oauthStateCodec.js";
@@ -29,7 +30,13 @@ import {
   isConversationSharePath,
   resolveConversationShareCodeFromPath,
 } from "./share/conversationShareRoute.js";
-import type { IPlatformService, RemoteTarget, ServerRemoteInfo } from "@zcode/shared";
+import {
+  BIGMODEL_PROVIDER_ID,
+  ZAI_PROVIDER_ID,
+  type IPlatformService,
+  type RemoteTarget,
+  type ServerRemoteInfo,
+} from "@zcode/shared";
 import { WEB_DEFAULT_THEME, resolveWebInitialTheme } from "./webThemeSeed.js";
 
 function resolveWebThemePreference(defaultTheme: Theme = WEB_DEFAULT_THEME): Theme {
@@ -119,6 +126,12 @@ function isLatchSignInPath(pathname: string): boolean {
   return pathname === "/signin";
 }
 
+// Latch 套餐页（第一方订阅入口）：独立渲染，不进 workspace shell；与 /signin 同为
+// 同源 SPA fallback 可直达的路径。?checkout=success|cancelled 与 ?plan= 由页面自解析。
+function isLatchPricingPath(pathname: string): boolean {
+  return pathname === "/pricing";
+}
+
 // 第一方登录入口：Latch 账号表单（登录/创建账号），成功后铸造 "Latch Web" Key 并接入
 // 内嵌 gateway provider，再按 ?return_to= 回跳（同源路径由页面侧校验）。
 function renderLatchSignInPage(): void {
@@ -132,6 +145,11 @@ function renderLatchSignInPage(): void {
       }}
     />,
   );
+}
+
+function renderLatchPricingPage(): void {
+  document.title = "Latch - Pricing";
+  root.render(<LatchPricingPage />);
 }
 
 async function renderConversationSharePage(): Promise<void> {
@@ -203,11 +221,14 @@ async function renderConversationSharePage(): Promise<void> {
       onLatchAccountLogin={() => {
         // 第一方登录主路径：跳到 /signin 完成 Latch 账号登录（含 "Latch Web" Key 铸造与
         // 内嵌 gateway provider 接线），带上当前分享路径以便登录后回跳。
-        window.location.assign(
-          `/signin?return_to=${encodeURIComponent(window.location.pathname)}`,
-        );
+        window.location.assign(`/signin?return_to=${encodeURIComponent(window.location.pathname)}`);
       }}
-      vendorLoginEnabled={WEB_ZAI_OAUTH_CONFIG.zaiWebOAuthConfigured}
+      // vendor 按钮逐 provider 按配置判定：未配置的（如缺 VITE_BIGMODEL_OAUTH_ORIGIN）
+      // 从 UI 上消失，而不是点击后才由 startLogin 拒绝。
+      vendorLoginProviders={[
+        ...(WEB_ZAI_OAUTH_CONFIG.zaiWebOAuthConfigured ? [ZAI_PROVIDER_ID] : []),
+        ...(WEB_ZAI_OAUTH_CONFIG.bigmodelWebOAuthConfigured ? [BIGMODEL_PROVIDER_ID] : []),
+      ]}
       onLogout={onLogout}
       locale={routeLocale}
       theme={resolveWebThemePreference("zai-light")}
@@ -464,6 +485,11 @@ async function bootstrapWebApp() {
 
   if (isLatchSignInPath(window.location.pathname)) {
     renderLatchSignInPage();
+    return;
+  }
+
+  if (isLatchPricingPath(window.location.pathname)) {
+    renderLatchPricingPage();
     return;
   }
 

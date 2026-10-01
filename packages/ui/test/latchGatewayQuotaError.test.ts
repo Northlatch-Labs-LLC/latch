@@ -7,7 +7,9 @@ import {
   classifyLatchGatewayQuotaError,
   formatLatchGatewayRetryWait,
 } from "../src/lib/latchGatewayQuotaError.js";
-import { formatLatchBalanceUsd } from "../src/WorkspaceSidebarFooterLatchUsageChip.js";
+// formatLatchBalanceUsd 从纯 lib 导入：组件文件带 @/ 别名的 runtime import，
+// 根目录 tsx 直跑解析不到（tsconfig paths 不生效），纯函数必须留在无依赖的 lib 里。
+import { formatLatchBalanceUsd } from "../src/lib/latchBalanceFormat.js";
 
 test("402 account_balance_exhausted classifies as out-of-credit from error.code", () => {
   assert.deepEqual(

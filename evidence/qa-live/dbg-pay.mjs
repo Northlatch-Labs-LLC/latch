@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const url = process.argv[2];
+const b = await chromium.launch();
+const p = await b.newPage();
+await p.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+console.log('title:', await p.title());
+console.log('url:', p.url());
+const frames = p.frames().map(f => f.url().slice(0, 80));
+console.log('frames:', JSON.stringify(frames, null, 1));
+const btns = await p.locator('button').allTextContents();
+console.log('buttons:', JSON.stringify(btns.slice(0, 8)));
+await p.screenshot({ path: 'dbg-pay.png', fullPage: true });
+await b.close();

@@ -1,6 +1,6 @@
 {
   "tool": "scripts/brand-lint.mjs",
-  "generatedAt": "2026-09-30T09:52:30.110Z",
+  "generatedAt": "2026-09-30T21:42:47.333Z",
   "terms": [
     "ZCode",
     "Z.ai",
@@ -48,22 +48,29 @@
   "decisionsFile": {
     "file": "product/identity/DECISIONS.md",
     "note": "written product decisions (product/identity/DECISIONS.md); must name the vendor terms it governs, so exempt like brand.yaml",
-    "status": "not-tracked",
-    "counts": {},
-    "total": 0
+    "status": "scanned",
+    "counts": {
+      "ZCode": 5,
+      "Z.ai": 2,
+      "GLM": 1,
+      "bigmodel": 3,
+      "zhipu": 2,
+      "client_P8X5CMWmlaRO9gyO-KSqtg": 2
+    },
+    "total": 15
   },
   "informational": {
     "note": "upstream names in upstream files are expected at this stage; counted only, never fails the lint",
-    "filesScanned": 7109,
-    "filesWithOccurrences": 2988,
-    "totalOccurrences": 31108,
+    "filesScanned": 7114,
+    "filesWithOccurrences": 3010,
+    "totalOccurrences": 31259,
     "byTerm": {
-      "ZCode": 28003,
-      "Z.ai": 196,
-      "GLM": 876,
-      "bigmodel": 1864,
-      "zhipu": 162,
-      "client_P8X5CMWmlaRO9gyO-KSqtg": 7
+      "ZCode": 28108,
+      "Z.ai": 204,
+      "GLM": 877,
+      "bigmodel": 1897,
+      "zhipu": 163,
+      "client_P8X5CMWmlaRO9gyO-KSqtg": 10
     },
     "rootReadme": {
       "file": "README.md",
@@ -901,13 +908,20 @@
         "total": 34
       },
       {
+        "file": ".dockerignore",
+        "counts": {
+          "ZCode": 2
+        },
+        "total": 2
+      },
+      {
         "file": ".env.example",
         "counts": {
-          "ZCode": 8,
+          "ZCode": 10,
           "Z.ai": 2,
-          "bigmodel": 1
+          "bigmodel": 4
         },
-        "total": 11
+        "total": 16
       },
       {
         "file": ".github/workflows/ci.yml",
@@ -2990,6 +3004,13 @@
         "total": 52
       },
       {
+        "file": "apps/zcode-cli/packages/bootstrap/src/latch-gateway-provider.ts",
+        "counts": {
+          "ZCode": 19
+        },
+        "total": 19
+      },
+      {
         "file": "apps/zcode-cli/packages/bootstrap/src/log-retention.ts",
         "counts": {
           "ZCode": 1
@@ -4163,6 +4184,14 @@
           "ZCode": 1
         },
         "total": 1
+      },
+      {
+        "file": "apps/zcode-cli/packages/cli/src/latch-account-flow.ts",
+        "counts": {
+          "ZCode": 9,
+          "bigmodel": 1
+        },
+        "total": 10
       },
       {
         "file": "apps/zcode-cli/packages/cli/src/locale.ts",
@@ -7733,6 +7762,23 @@
         "total": 336
       },
       {
+        "file": "deploy/web/.dockerignore",
+        "counts": {
+          "ZCode": 2
+        },
+        "total": 2
+      },
+      {
+        "file": "deploy/web/Dockerfile",
+        "counts": {
+          "ZCode": 7,
+          "Z.ai": 3,
+          "bigmodel": 3,
+          "client_P8X5CMWmlaRO9gyO-KSqtg": 1
+        },
+        "total": 14
+      },
+      {
         "file": "evidence/fp0/edit-pass-1.md",
         "counts": {
           "ZCode": 15,
@@ -7768,14 +7814,14 @@
       {
         "file": "evidence/round1/brand-lint.json",
         "counts": {
-          "ZCode": 4204,
-          "Z.ai": 60,
-          "GLM": 110,
-          "bigmodel": 180,
-          "zhipu": 38,
-          "client_P8X5CMWmlaRO9gyO-KSqtg": 5
+          "ZCode": 4224,
+          "Z.ai": 63,
+          "GLM": 111,
+          "bigmodel": 185,
+          "zhipu": 39,
+          "client_P8X5CMWmlaRO9gyO-KSqtg": 7
         },
-        "total": 4597
+        "total": 4629
       },
       {
         "file": "evidence/round1/dependency-audit.json",
@@ -9817,6 +9863,13 @@
         "total": 24
       },
       {
+        "file": "packages/server/src/latchAccountProxy.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
         "file": "packages/server/src/remote/backend.ts",
         "counts": {
           "ZCode": 1
@@ -10741,6 +10794,27 @@
           "ZCode": 101
         },
         "total": 101
+      },
+      {
+        "file": "packages/services/src/latch-account/config.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "packages/services/src/latch-account/index.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "packages/services/src/latch-account/latchAccountProvisioning.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
       },
       {
         "file": "packages/services/src/logger/serviceLogger.ts",
@@ -13145,6 +13219,13 @@
         "total": 16
       },
       {
+        "file": "packages/ui/src/ChatErrorBannerLatchGatewayActions.tsx",
+        "counts": {
+          "ZCode": 4
+        },
+        "total": 4
+      },
+      {
         "file": "packages/ui/src/ChatMediaAttachmentPreviewDialog.tsx",
         "counts": {
           "ZCode": 2
@@ -14084,9 +14165,9 @@
       {
         "file": "packages/ui/src/WorkspaceSidebar.tsx",
         "counts": {
-          "ZCode": 15
+          "ZCode": 14
         },
-        "total": 15
+        "total": 14
       },
       {
         "file": "packages/ui/src/WorkspaceSidebar/ReconnectingRemoteWorkspaceLogTooltip.tsx",
@@ -14108,6 +14189,13 @@
           "ZCode": 9
         },
         "total": 9
+      },
+      {
+        "file": "packages/ui/src/WorkspaceSidebarFooterLatchUsageChip.tsx",
+        "counts": {
+          "ZCode": 4
+        },
+        "total": 4
       },
       {
         "file": "packages/ui/src/WorkspaceSidebarFooterPlanBadgeHelpers.ts",
@@ -15570,6 +15658,13 @@
         "total": 2
       },
       {
+        "file": "packages/ui/src/hooks/useLatchAccountStatusSummary.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
         "file": "packages/ui/src/hooks/useModelProviders.ts",
         "counts": {
           "ZCode": 2
@@ -16379,6 +16474,13 @@
           "ZCode": 2
         },
         "total": 2
+      },
+      {
+        "file": "packages/ui/src/lib/latchGatewayQuotaError.ts",
+        "counts": {
+          "ZCode": 10
+        },
+        "total": 10
       },
       {
         "file": "packages/ui/src/lib/launchToInputReport.ts",
@@ -17224,6 +17326,13 @@
         "total": 8
       },
       {
+        "file": "packages/ui/src/login/LatchAccountForm.tsx",
+        "counts": {
+          "ZCode": 5
+        },
+        "total": 5
+      },
+      {
         "file": "packages/ui/src/login/LoginApiKeyForm.helpers.ts",
         "counts": {
           "ZCode": 3,
@@ -17239,6 +17348,14 @@
           "bigmodel": 5
         },
         "total": 11
+      },
+      {
+        "file": "packages/ui/src/login/latchAccountIdentity.ts",
+        "counts": {
+          "ZCode": 1,
+          "bigmodel": 1
+        },
+        "total": 2
       },
       {
         "file": "packages/ui/src/mentions/MentionPlugin.tsx",
@@ -17876,6 +17993,13 @@
           "ZCode": 8
         },
         "total": 8
+      },
+      {
+        "file": "packages/ui/src/settings/LatchAccountSection.tsx",
+        "counts": {
+          "ZCode": 7
+        },
+        "total": 7
       },
       {
         "file": "packages/ui/src/settings/McpFailurePresentation.tsx",
@@ -20704,7 +20828,35 @@
         "total": 5
       },
       {
+        "file": "packages/web/src/auth/LatchSignInPage.tsx",
+        "counts": {
+          "ZCode": 3
+        },
+        "total": 3
+      },
+      {
+        "file": "packages/web/src/auth/LatchSignedInCard.tsx",
+        "counts": {
+          "ZCode": 2
+        },
+        "total": 2
+      },
+      {
         "file": "packages/web/src/auth/WebCallbackPage.tsx",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "packages/web/src/auth/browserLatchAccountRepo.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "packages/web/src/auth/browserLatchCredentialService.ts",
         "counts": {
           "ZCode": 1
         },
@@ -20719,6 +20871,20 @@
         "total": 33
       },
       {
+        "file": "packages/web/src/auth/latchAccountProxyClient.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
+        "file": "packages/web/src/auth/latchSignInCopy.ts",
+        "counts": {
+          "ZCode": 1
+        },
+        "total": 1
+      },
+      {
         "file": "packages/web/src/auth/oauthStateCodec.ts",
         "counts": {
           "ZCode": 3
@@ -20730,18 +20896,18 @@
         "counts": {
           "ZCode": 3,
           "Z.ai": 2,
-          "bigmodel": 2
+          "bigmodel": 6
         },
-        "total": 7
+        "total": 11
       },
       {
         "file": "packages/web/src/auth/webZaiOAuthConfig.ts",
         "counts": {
-          "ZCode": 14,
-          "Z.ai": 3,
-          "bigmodel": 16
+          "ZCode": 15,
+          "Z.ai": 4,
+          "bigmodel": 28
         },
-        "total": 33
+        "total": 47
       },
       {
         "file": "packages/web/src/auth/zaiWebOAuthProvider.ts",
@@ -20769,14 +20935,16 @@
       {
         "file": "packages/web/src/main.tsx",
         "counts": {
-          "ZCode": 13
+          "ZCode": 13,
+          "bigmodel": 4
         },
-        "total": 13
+        "total": 17
       },
       {
         "file": "packages/web/src/share/ConversationShareLandingPage.tsx",
         "counts": {
-          "ZCode": 21,
+          "ZCode": 20,
+          "Z.ai": 1,
           "bigmodel": 8
         },
         "total": 29
@@ -21418,39 +21586,11 @@
       "public/logo/icons/icon.icns",
       "public/logo/icons/icon.ico"
     ],
-    "unreadable": [
-      "fp0-batch2.cjs",
-      "packages/desktop/src/main/appARMSBootstrap.ts",
-      "packages/desktop/src/main/armsBrowserPerfLoadNudge.ts",
-      "packages/desktop/src/main/armsEventRedaction.ts",
-      "packages/desktop/src/main/armsUserIdentity.ts",
-      "packages/desktop/src/main/databaseStartupTelemetry.ts",
-      "packages/desktop/src/main/desktopMcpTelemetry.ts",
-      "packages/desktop/src/main/desktopStabilityTelemetry.ts",
-      "packages/desktop/src/main/desktopZCodeDataSizeTelemetry.ts",
-      "packages/desktop/src/main/longTaskAttributionSummary.ts",
-      "packages/desktop/src/main/startupTelemetryDelivery.ts",
-      "packages/desktop/src/main/zcodeDataSizeScanner.ts",
-      "packages/desktop/src/main/zcodeDataSizeTelemetryState.ts",
-      "packages/desktop/src/main/zcodeDataSizeWorker.ts",
-      "packages/desktop/src/main/zcodeDataSizeWorkerClient.ts",
-      "packages/desktop/src/shared/armsRumBridgeForward.ts",
-      "packages/desktop/src/shared/armsRumShared.d.ts",
-      "packages/desktop/src/shared/armsRumShared.d.ts.map",
-      "packages/desktop/src/shared/armsRumShared.js",
-      "packages/desktop/src/shared/armsRumShared.js.map",
-      "packages/desktop/src/shared/armsRumShared.ts",
-      "patches/@arms__rum-electron@0.0.3.patch",
-      "third-party/upstream/2c976d327b293bd74c257cd53e9b4ecef97a06b1651baa3b24327c97192cb3de.txt",
-      "third-party/upstream/328eb7864c20ab77607b26ee1913b65a9b880f6300eea9e667b890da896a2f40.txt",
-      "third-party/upstream/38b6f63a0aa422b5c329e75f1aeecd2b02e83caab1747644c00810870d77bacb.txt"
-    ]
+    "unreadable": []
   },
   "untrackedUnderProduct": {
     "note": "untracked files under product/ are outside the git-tracked strict scope; listed here so they cannot hide",
-    "files": [
-      "product/identity/DECISIONS.md"
-    ]
+    "files": []
   },
   "exitCode": 0
 }

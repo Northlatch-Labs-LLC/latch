@@ -38,8 +38,6 @@ export function ProviderTemplatePicker({
   // Xlaunch Gateway is the mandatory provider: pinned as the first group.
   // Z.ai/BigModel templates are demoted to the custom group (tail).
   const gatewayIds = ["xlaunch-gateway"];
-  const inList = (ids: readonly string[]) => (template: { templateId: string }) =>
-    ids.includes(template.templateId);
   const groups = [
     {
       id: "gateway",
@@ -50,7 +48,8 @@ export function ProviderTemplatePicker({
     {
       id: "other",
       templates: templates.filter(
-        (template) => !zhipuIds.includes(template.templateId) && !gatewayIds.includes(template.templateId),
+        (template) =>
+          !zhipuIds.includes(template.templateId) && !gatewayIds.includes(template.templateId),
       ),
     },
     {

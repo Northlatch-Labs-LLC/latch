@@ -19,6 +19,7 @@ import {
 } from "@/hooks/useCodingPlanEntryPlanList.js";
 import { usePlatform } from "@/hooks/usePlatform.js";
 import { reportCodingPlanUpgradeClick } from "@/lib/codingPlanFunnelTelemetry.js";
+import { isWebRuntime, openLatchBillingEntry } from "@/lib/latchBillingNavigation.js";
 
 interface CodingPlanUpgradeDialogContextValue {
   inventory: CodingPlanEntryInventory;
@@ -50,6 +51,19 @@ export function CodingPlanUpgradeDialogProvider({ children }: { children: ReactN
       // 所有入口统一守卫；查询完成后不自动重放之前被拦截的点击。
       const { status, entryPlanList } = inventoryRef.current;
       if (observation?.signal.aborted) return false;
+      // Web 端没有 Electron <webview>：升级入口统一改走 Latch 计费 seam（已登录进
+      // /pricing，未登录先 /signin）。这里必须在挂载弹窗之前分流，否则浏览器里会
+      // 渲染一个空白的 "Upgrade Plan" 对话框（webview 标签不存在，loadError 兜底
+      // 也永远不触发）。桌面行为保持不变。
+      if (isWebRuntime()) {
+        openLatchBillingEntry({ platform, intent: "purchase" });
+        return true;
+      }
+      // 桌面端同样不再打开供应商套餐 webview：Latch 订阅（$14/月、$99/年）统一在
+      // Latch pricing 页完成，系统浏览器打开，供应商内嵌升级弹窗整体退役。
+      openLatchBillingEntry({ platform, intent: "purchase" });
+      observation?.onResult(true);
+      return true;
       if (status !== "ready") {
         if (observation && status === "error") inventoryRef.current.retry();
         return false;

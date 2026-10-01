@@ -87,14 +87,16 @@ export async function prepareTasksIndexStorage(
         /* 不可扩展异常仍保留原错误。 */
       }
     }
-    throw error;
-  } finally {
-    try {
-      db.close();
-    } catch (error) {
-      if (!failure) throw error;
-    }
   }
+  // close 总要执行；首因优先：迁移/执行已失败时 close 失败不覆盖首因，成功路径上
+  // close 失败才是对外错误。不用 finally 里 throw —— 那会覆盖 try/catch 的控制流
+  // （no-unsafe-finally），改成顺序执行后在统一出口抛出，语义不变。
+  try {
+    db.close();
+  } catch (error) {
+    if (!failure) failure = error;
+  }
+  if (failure) throw failure;
   markTasksStorageMigrated(path);
   const repos = [
     new TaskIndexRepo(path, LOCK_WAIT_MS),
@@ -107,18 +109,19 @@ export async function prepareTasksIndexStorage(
     for (const repo of repos) await repo.ensureReady();
   } catch (error) {
     preparationFailure = error;
-    throw error;
-  } finally {
-    let closeFailure: unknown;
-    for (const repo of repos) {
-      try {
-        repo.close({ throwOnError: true });
-      } catch (error) {
-        closeFailure ??= error;
-      }
-    }
-    if (!preparationFailure && closeFailure) throw closeFailure;
   }
+  // close 总要执行；首因优先：准备已失败时 close 失败不覆盖，准备成功时 close 失败
+  // 才是对外错误。同样不用 finally 里 throw（no-unsafe-finally），顺序执行语义不变。
+  let closeFailure: unknown;
+  for (const repo of repos) {
+    try {
+      repo.close({ throwOnError: true });
+    } catch (error) {
+      closeFailure ??= error;
+    }
+  }
+  if (preparationFailure) throw preparationFailure;
+  if (closeFailure) throw closeFailure;
   markTasksStoragePrepared(path);
   report("ready", migration);
 }

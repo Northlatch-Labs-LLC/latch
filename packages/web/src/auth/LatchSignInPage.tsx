@@ -196,7 +196,9 @@ export function LatchSignInPage({
     } finally {
       setStage(null);
     }
-  }, [copy, email, mode, onDone, returnTo, runPostAuth, servicesRead.status]);
+    // password 必须在依赖里：copy 是稳定对象引用（COPY[locale]），只改密码不会重建
+    // 本回调，缺了它按钮/回车会闭包到上一次的空密码，误报“密码至少 10 个字符”。
+  }, [copy, email, mode, onDone, password, returnTo, runPostAuth, servicesRead.status]);
 
   const handleSignOut = useCallback(async () => {
     const stored = repoRef.current.loadSession();
